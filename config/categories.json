@@ -1,0 +1,34 @@
+{
+  "categories": [
+    {
+      "id": "ai_ml",
+      "name": "AI & Machine Learning",
+      "description": "Artificial intelligence, machine learning, and deep learning topics",
+      "keywords": ["AI", "ML", "neural networks", "deep learning", "transformers"]
+    },
+    {
+      "id": "cloud_infrastructure",
+      "name": "Cloud Infrastructure",
+      "description": "Cloud computing, serverless, and infrastructure topics",
+      "keywords": ["cloud", "serverless", "AWS", "Azure", "GCP", "kubernetes"]
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "description": "Cybersecurity, vulnerabilities, and security best practices",
+      "keywords": ["security", "vulnerability", "encryption", "authentication"]
+    },
+    {
+      "id": "devops",
+      "name": "DevOps",
+      "description": "DevOps practices, CI/CD, and automation",
+      "keywords": ["CI/CD", "automation", "deployment", "monitoring"]
+    },
+    {
+      "id": "research",
+      "name": "Research & Innovation",
+      "description": "Academic research and technological innovations",
+      "keywords": ["research", "innovation", "breakthrough", "academic"]
+    }
+  ]
+}
