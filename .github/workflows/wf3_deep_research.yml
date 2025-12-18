@@ -1,0 +1,44 @@
+name: WF3 - Deep Research
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  research:
+    if: contains(github.event.issue.labels.*.name, 'research')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: pip install -r requirements.txt tavily-python
+      
+      - name: Run Tri-Force Agents
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python src/wf3_triforce.py
+      
+      - name: Close Issue
+        run: |
+          gh issue close ${{ github.event.issue.number }} \
+            --comment "✅ Research completed and report generated."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

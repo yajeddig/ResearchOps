@@ -1,43 +1,28 @@
 {
-  "monitoring": {
-    "sources": [
-      {
-        "name": "arXiv",
-        "url": "https://arxiv.org/",
-        "type": "academic",
-        "enabled": true,
-        "check_frequency": "daily"
-      },
-      {
-        "name": "GitHub Trending",
-        "url": "https://github.com/trending",
-        "type": "code",
-        "enabled": true,
-        "check_frequency": "daily"
-      },
-      {
-        "name": "Hacker News",
-        "url": "https://news.ycombinator.com/",
-        "type": "community",
-        "enabled": true,
-        "check_frequency": "daily"
-      }
-    ],
-    "thresholds": {
-      "min_relevance_score": 0.7,
-      "max_content_age_days": 7,
-      "min_engagement_score": 5
+  "topics": [
+    {
+      "id": "n2o-emissions",
+      "name": "N₂O Emissions in WWTP",
+      "keywords_academic": [
+        "nitrous oxide wastewater treatment",
+        "N2O emissions modeling WWTP"
+      ],
+      "keywords_news": [
+        "nitrous oxide water treatment technology"
+      ],
+      "paper_limit": 3
     },
-    "notifications": {
-      "enabled": true,
-      "channels": ["email", "slack"],
-      "alert_on_high_relevance": true
-    },
-    "reporting": {
-      "daily_summary": true,
-      "weekly_digest": true,
-      "monthly_report": true,
-      "output_format": "markdown"
+    {
+      "id": "digital-twin",
+      "name": "Digital Twin WWTP",
+      "keywords_academic": [
+        "digital twin wastewater treatment",
+        "real-time WWTP simulation"
+      ],
+      "keywords_news": [
+        "digital twin water treatment innovation"
+      ],
+      "paper_limit": 3
     }
-  }
+  ]
 }

@@ -1,34 +1,24 @@
 {
   "categories": [
-    {
-      "id": "ai_ml",
-      "name": "AI & Machine Learning",
-      "description": "Artificial intelligence, machine learning, and deep learning topics",
-      "keywords": ["AI", "ML", "neural networks", "deep learning", "transformers"]
-    },
-    {
-      "id": "cloud_infrastructure",
-      "name": "Cloud Infrastructure",
-      "description": "Cloud computing, serverless, and infrastructure topics",
-      "keywords": ["cloud", "serverless", "AWS", "Azure", "GCP", "kubernetes"]
-    },
-    {
-      "id": "security",
-      "name": "Security",
-      "description": "Cybersecurity, vulnerabilities, and security best practices",
-      "keywords": ["security", "vulnerability", "encryption", "authentication"]
-    },
-    {
-      "id": "devops",
-      "name": "DevOps",
-      "description": "DevOps practices, CI/CD, and automation",
-      "keywords": ["CI/CD", "automation", "deployment", "monitoring"]
-    },
-    {
-      "id": "research",
-      "name": "Research & Innovation",
-      "description": "Academic research and technological innovations",
-      "keywords": ["research", "innovation", "breakthrough", "academic"]
-    }
-  ]
+    "Industrial_Digital_Transformation",
+    "Process_Chemical_Engineering",
+    "Process_Modeling_Simulation",
+    "Industrial_IT_OT",
+    "Scientific_Computing",
+    "Industrial_Data_Engineering",
+    "Data_Science_ML",
+    "Sustainability_Decarbonization",
+    "R_and_D_Strategy"
+  ],
+  "auto_tags": {
+    "Industrial_Digital_Transformation": ["industry-4.0", "digitalization", "smart-factory", "change-management"],
+    "Process_Chemical_Engineering": ["unit-operations", "reaction-engineering", "separation", "intensification"],
+    "Process_Modeling_Simulation": ["aspen", "gproms", "digital-twin", "dynamic-simulation", "cfd"],
+    "Industrial_IT_OT": ["scada", "plc", "cybersecurity", "edge-computing", "architecture"],
+    "Scientific_Computing": ["numerical-methods", "optimization", "solvers", "high-performance-computing"],
+    "Industrial_Data_Engineering": ["etl", "data-historian", "time-series", "mqtt", "opc-ua", "data-quality"],
+    "Data_Science_ML": ["piml", "hybrid-modeling", "reinforcement-learning", "predictive-maintenance", "soft-sensors"],
+    "Sustainability_Decarbonization": ["energy-efficiency", "carbon-capture", "lca", "circular-economy"],
+    "R_and_D_Strategy": ["innovation", "roadmap", "technology-watch", "roi"]
+  }
 }

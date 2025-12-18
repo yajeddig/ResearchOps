@@ -1,0 +1,41 @@
+name: WF1 - Daily Ingest
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  ingest:
+    if: contains(github.event.issue.labels.*.name, 'veille')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Process Input
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python src/wf1_ingest.py
+      
+      - name: Close Issue
+        run: |
+          gh issue close ${{ github.event.issue.number }} \
+            --comment "✅ Processed and archived"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
