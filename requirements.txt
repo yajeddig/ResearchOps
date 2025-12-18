@@ -1,10 +1,7 @@
-# LLM API clients
 google-generativeai
 anthropic
 openai
-
-# HTTP and networking
 requests
-
-# Retry and error handling
 tenacity
+google-search-results
+PyYAML
