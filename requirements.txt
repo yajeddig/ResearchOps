@@ -5,3 +5,5 @@ requests
 tenacity
 google-search-results
 PyYAML
+Pillow
+tavily-python
