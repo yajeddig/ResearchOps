@@ -5,7 +5,7 @@ import re
 import tempfile
 import mimetypes
 from datetime import datetime
-import google.generativeai as genai
+from google import genai
 from PIL import Image
 from utils.dedup import is_duplicate, add_to_history
 from utils.git_ops import safe_commit
@@ -18,16 +18,13 @@ ISSUE_TITLE = os.getenv("ISSUE_TITLE", "")
 ISSUE_BODY = os.getenv("ISSUE_BODY", "")
 ISSUE_NUMBER = os.getenv("ISSUE_NUMBER", "")
 
-genai.configure(api_key=GOOGLE_API_KEY)
+client = genai.Client(api_key=GOOGLE_API_KEY)
 generation_config = {
     "temperature": 0.3,
     "max_output_tokens": 8192,
     "response_mime_type": "application/json",
 }
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config
-)
+MODEL_NAME = "gemini-2.0-flash"
 
 CATEGORIES = json.load(open("config/categories.json"))["categories"]
 
@@ -90,17 +87,29 @@ def analyze_content(content_or_path, input_type="text"):
         if input_type == "image":
             # Vision Processing (JPG/PNG)
             img = Image.open(content_or_path)
-            response = model.generate_content([base_prompt, img])
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=[base_prompt, img],
+                config=generation_config
+            )
             
         elif input_type == "document":
             # Document Processing (PDF uploaded to Gemini)
-            uploaded_file = genai.upload_file(content_or_path)
-            response = model.generate_content([base_prompt, uploaded_file])
+            uploaded_file = client.files.upload(file=content_or_path)
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=[base_prompt, uploaded_file],
+                config=generation_config
+            )
             # Gemini handles TTL
             
         else:
             # Text / Web Processing
-            response = model.generate_content(f"{base_prompt}\nCONTENT:\n{content_or_path[:30000]}")
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=f"{base_prompt}\nCONTENT:\n{content_or_path[:30000]}",
+                config=generation_config
+            )
             
         return json.loads(response.text)
     except Exception as e:
