@@ -1,24 +1,136 @@
 {
-  "categories": [
-    "Industrial_Digital_Transformation",
-    "Process_Chemical_Engineering",
-    "Process_Modeling_Simulation",
-    "Industrial_IT_OT",
-    "Scientific_Computing",
-    "Industrial_Data_Engineering",
-    "Data_Science_ML",
-    "Sustainability_Decarbonization",
-    "R_and_D_Strategy"
+  "categories": {
+    "Process_Fundamentals": {
+      "description": "N1 GPGC - Thermo, cinétique, transport, bilans, maths",
+      "auto_tags": [
+        "n1:thermo-vle", "n1:thermo-lle", "n1:thermo-sle",
+        "n1:thermo-eos", "n1:thermo-activity", "n1:thermo-fugacity",
+        "n1:thermo-electrolyte", "n1:thermo-gibbs", "n1:thermo-exergy",
+        "n1:kinetics-chemical", "n1:kinetics-arrhenius", "n1:kinetics-catalyst",
+        "n1:kinetics-bio", "n1:kinetics-monod", "n1:kinetics-inhibition",
+        "n1:transport-fick", "n1:transport-fourier", "n1:transport-convection",
+        "n1:transport-correlations", "n1:transport-boundary-layer",
+        "n1:transport-gas-liquid", "n1:transport-kla",
+        "n1:fluids-navier-stokes", "n1:fluids-turbulence", "n1:fluids-rheology",
+        "n1:balance-mass", "n1:balance-energy", "n1:balance-momentum",
+        "n1:math-ode", "n1:math-pde", "n1:math-dae",
+        "sci:numerical-methods", "sci:solvers", "sci:optimization", "sci:hpc"
+      ]
+    },
+    "Process_Operations": {
+      "description": "N2 GPGC - Opérations unitaires",
+      "auto_tags": [
+        "n2:distillation", "n2:absorption", "n2:stripping", "n2:extraction-ll",
+        "n2:adsorption", "n2:crystallization", "n2:evaporation", "n2:drying",
+        "n2:membrane", "n2:mf", "n2:uf", "n2:nf", "n2:ro", "n2:mbr",
+        "n2:filtration", "n2:centrifugation", "n2:decantation",
+        "n2:reactor-batch", "n2:reactor-cstr", "n2:reactor-pfr",
+        "n2:reactor-bioreactor", "n2:reactor-fluidized", "n2:reactor-fixed-bed",
+        "n2:reactor-gas-liquid", "n2:reactor-slurry",
+        "n2:heat-exchanger", "n2:condenser", "n2:reboiler", "n2:evaporator",
+        "n2:solids-grinding", "n2:solids-fluidization", "n2:solids-granulation",
+        "n2:mixing-agitation", "n2:aeration"
+      ]
+    },
+    "Process_Engineering": {
+      "description": "N3 GPGC - Conception, simulation, contrôle, scale-up",
+      "auto_tags": [
+        "n3:flowsheet", "n3:pinch-analysis", "n3:hen", "n3:process-synthesis",
+        "n3:simulation-steady", "n3:simulation-dynamic",
+        "n3:aspen", "n3:hysys", "n3:gproms", "n3:dwsim", "n3:prosim",
+        "n3:cfd", "n3:openfoam", "n3:comsol",
+        "n3:digital-twin", "n3:real-time-optimization",
+        "n3:control-pid", "n3:control-mpc", "n3:control-cascade",
+        "n3:identification", "n3:transfer-function",
+        "n3:hazop", "n3:sil", "n3:atex", "n3:lopa",
+        "n3:sizing", "n3:scale-up", "n3:capex", "n3:opex"
+      ]
+    },
+    "Industrial_Systems": {
+      "description": "IT/OT, automatismes, edge, cybersécurité industrielle",
+      "auto_tags": [
+        "iot:scada", "iot:plc", "iot:dcs", "iot:hmi",
+        "iot:edge-computing", "iot:gateway", "iot:iiot",
+        "iot:cybersecurity", "iot:iec62443",
+        "iot:fieldbus", "iot:profinet", "iot:ethernet-ip",
+        "indus:industry-4.0", "indus:smart-factory", "indus:digitalization",
+        "indus:mes", "indus:erp-integration", "indus:isa95"
+      ]
+    },
+    "Data_Engineering": {
+      "description": "Pipelines, stockage, infrastructure data industrielle",
+      "auto_tags": [
+        "de:etl", "de:elt", "de:pipeline", "de:orchestration",
+        "de:streaming", "de:batch", "de:cdc",
+        "de:lakehouse", "de:warehouse", "de:datalake",
+        "de:timeseries-db", "de:historian", "de:influxdb", "de:timescale",
+        "de:mqtt", "de:opcua", "de:modbus", "de:kafka", "de:sparkplug",
+        "de:parquet", "de:delta", "de:iceberg",
+        "de:dbt", "de:airflow", "de:dagster"
+      ]
+    },
+    "Data_Analytics": {
+      "description": "BI, visualisation, exploration, reporting",
+      "auto_tags": [
+        "da:dashboard", "da:reporting", "da:kpi", "da:metrics",
+        "da:visualization", "da:bi", "da:self-service",
+        "da:exploration", "da:drill-down",
+        "da:powerbi", "da:tableau", "da:grafana", "da:superset",
+        "da:sql-analytics", "da:olap"
+      ]
+    },
+    "Data_Science": {
+      "description": "ML, stats, modélisation hybride, optimisation",
+      "auto_tags": [
+        "ds:regression", "ds:classification", "ds:clustering",
+        "ds:timeseries", "ds:forecasting", "ds:anomaly-detection",
+        "ds:hybrid-modeling", "ds:physics-informed", "ds:piml", "ds:pinn",
+        "ds:soft-sensor", "ds:virtual-sensor",
+        "ds:predictive-maintenance", "ds:rul",
+        "ds:optimization", "ds:doe", "ds:bayesian",
+        "ds:calibration", "ds:uncertainty", "ds:sensitivity",
+        "ds:feature-engineering", "ds:mlops",
+        "ds:llm", "ds:rag", "ds:agents"
+      ]
+    },
+    "Sustainability": {
+      "description": "Décarbonation, efficacité énergétique, ACV, réglementation",
+      "auto_tags": [
+        "sust:energy-efficiency", "sust:heat-recovery", "sust:electrification",
+        "sust:carbon-capture", "sust:ccus", "sust:hydrogen",
+        "sust:lca", "sust:carbon-footprint", "sust:scope-1-2-3",
+        "sust:ghg-emissions", "sust:n2o", "sust:methane",
+        "sust:circular-economy", "sust:waste-valorization",
+        "sust:eu-taxonomy", "sust:csrd", "sust:ets"
+      ]
+    },
+    "Strategy_Business": {
+      "description": "R&D, veille techno, entrepreneuriat, freelance",
+      "auto_tags": [
+        "strat:technology-watch", "strat:roadmap", "strat:innovation",
+        "strat:patent", "strat:benchmark", "strat:competitive-intel",
+        "biz:freelance", "biz:consulting", "biz:auto-entrepreneur",
+        "biz:pricing", "biz:proposal", "biz:contract",
+        "biz:startup", "biz:funding", "biz:business-model",
+        "biz:personal-branding", "biz:networking", "biz:linkedin"
+      ]
+    },
+    "_Inbox": {
+      "description": "Contenu non classifiable ou confiance < 0.6 — triage manuel",
+      "auto_tags": [
+        "inbox:review-needed", "inbox:ambiguous", "inbox:off-topic", "inbox:low-confidence"
+      ]
+    }
+  },
+  "sector_tags": [
+    "sector:wwtp", "sector:activated-sludge", "sector:n2o-wwtp", "sector:siaap",
+    "sector:biogas", "sector:anaerobic-digestion", "sector:adm1", "sector:methanization",
+    "sector:bioleaching", "sector:hydrometallurgy", "sector:sulfide-ores",
+    "sector:lithium", "sector:membrane-extraction", "sector:geolith",
+    "sector:pharma", "sector:food", "sector:petrochem", "sector:mining"
   ],
-  "auto_tags": {
-    "Industrial_Digital_Transformation": ["industry-4.0", "digitalization", "smart-factory", "change-management"],
-    "Process_Chemical_Engineering": ["unit-operations", "reaction-engineering", "separation", "intensification"],
-    "Process_Modeling_Simulation": ["aspen", "gproms", "digital-twin", "dynamic-simulation", "cfd"],
-    "Industrial_IT_OT": ["scada", "plc", "cybersecurity", "edge-computing", "architecture"],
-    "Scientific_Computing": ["numerical-methods", "optimization", "solvers", "high-performance-computing"],
-    "Industrial_Data_Engineering": ["etl", "data-historian", "time-series", "mqtt", "opc-ua", "data-quality"],
-    "Data_Science_ML": ["piml", "hybrid-modeling", "reinforcement-learning", "predictive-maintenance", "soft-sensors"],
-    "Sustainability_Decarbonization": ["energy-efficiency", "carbon-capture", "lca", "circular-economy"],
-    "R_and_D_Strategy": ["innovation", "roadmap", "technology-watch", "roi"]
+  "settings": {
+    "confidence_threshold": 0.6,
+    "fallback_category": "_Inbox"
   }
 }
