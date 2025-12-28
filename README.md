@@ -80,4 +80,4 @@ graph TB
 
 ## 👤 Author
 
-**Younes** - R&D Manager / Process Engineering Expert / Data Engineer
+**Younes AJEDDIG** Ph.D - R&D Manager / Process Modeling & Simulation Expert / Data Engineer & scientist / Scientific developer
