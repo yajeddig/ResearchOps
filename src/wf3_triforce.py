@@ -57,10 +57,10 @@ def main():
     # 5. Commit & Notify
     safe_commit(
         files=[filename],
-        message=f"WF3: Deep Research - {query[:50]}"
+        message=f"WF3: Deep Research - {topic[:50]}"
     )
-    
-    telegram_notify(f"✅ Deep Research Complete!\nTopic: {query}\nFile: {filename}", "SUCCESS")
+
+    telegram_notify(f"✅ Deep Research Complete!\nTopic: {topic}\nFile: {filename}", "SUCCESS")
 
 if __name__ == "__main__":
     main()
