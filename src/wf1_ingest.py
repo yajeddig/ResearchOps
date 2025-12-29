@@ -133,10 +133,28 @@ def build_classification_prompt(content: str, input_type: str) -> str:
     categories_list = get_categories_list()
     sector_tags_list = ", ".join(SECTOR_TAGS)
 
+    # Special instructions for image content extraction
+    if input_type == "image":
+        extraction_instructions = """
+IMPORTANT - IMAGE CONTENT EXTRACTION:
+1. First, extract ALL visible text from the image (OCR). Include:
+   - Headlines, titles, captions
+   - Body text, paragraphs
+   - Statistics, numbers, percentages
+   - Author names, sources, dates
+   - Any quotes or key statements
+2. Preserve the original language of the text
+3. Include the extracted text verbatim in the "extracted_content" field
+4. Base your summary on the ACTUAL extracted content, not a description of the image
+"""
+    else:
+        extraction_instructions = ""
+
     return f"""
-Classify this content for a process engineering / industrial data science knowledge base.
+Analyze and classify this content for a process engineering / industrial data science knowledge base.
 
 INPUT TYPE: {input_type}
+{extraction_instructions}
 
 CATEGORIES (pick exactly one):
 {categories_list}
@@ -146,14 +164,16 @@ SECTOR TAGS (pick 0-3 if applicable):
 
 Respond ONLY with valid JSON:
 {{
-  "title": "Precise technical title",
+  "title": "Precise technical title based on actual content",
   "category": "<category_name>",
   "confidence": <0.0-1.0>,
-  "summary": "Structured summary in 3-4 markdown bullets (Context, Innovation, Feasibility)",
-  "relevance": "Why is this useful (ROI, Industrial Application)",
-  "auto_tags": ["<tag1>", "<tag2>"],
+  "extracted_content": "<For images: ALL text extracted from the image verbatim. For other types: key quotes or passages>",
+  "summary": "Structured synthesis in 4-6 markdown bullets covering: Key message, Data/Statistics mentioned, Insights, Actionable takeaways",
+  "relevance": "Why is this useful (ROI, Industrial Application, Learning opportunity)",
+  "auto_tags": ["<tag1>", "<tag2>", "<tag3>"],
   "sector_tags": ["<sector1>"],
-  "type": "Paper" if document else "Article",
+  "type": "Screenshot" if image else "Article",
+  "source_type": "<LinkedIn Post | Article | Infographic | Chart | Other>",
   "reason": "<1 sentence justification for category choice>"
 }}
 
@@ -282,6 +302,14 @@ def main():
             fallback_reason = analysis.get('fallback_reason', 'manual triage needed')
             fallback_note = f"\n> ⚠️ **Inbox Note**: {fallback_reason}\n"
 
+        # Include extracted content section for images
+        extracted_section = ""
+        if analysis.get('extracted_content'):
+            extracted_section = f"""
+### 📄 Extracted Content
+{analysis.get('extracted_content', '')}
+"""
+
         md = f"""---
 title: "{analysis['title']}"
 date: {datetime.now().strftime("%Y-%m-%d")}
@@ -290,6 +318,7 @@ confidence: {analysis.get('confidence', 0.0):.2f}
 tags: {all_tags}
 source: "{source_ref}"
 type: {analysis.get('type', 'Article')}
+source_type: {analysis.get('source_type', 'Unknown')}
 hash: {hash_id}
 ---
 {fallback_note}
@@ -298,7 +327,7 @@ hash: {hash_id}
 
 ### 📝 Summary
 {analysis.get('summary', 'N/A')}
-
+{extracted_section}
 ### 🏷️ Classification Reason
 {analysis.get('reason', 'N/A')}
 """
