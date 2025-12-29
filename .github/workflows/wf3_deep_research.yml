@@ -2,13 +2,17 @@ name: WF3 - Deep Research
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
+
+concurrency:
+  group: wf3-${{ github.event.issue.number }}
+  cancel-in-progress: true
 
 jobs:
   research:
     # Only run for repository collaborators/owner to prevent API abuse
     if: |
-      contains(github.event.issue.labels.*.name, 'research') &&
+      github.event.label.name == 'research' &&
       (github.event.issue.author_association == 'OWNER' ||
        github.event.issue.author_association == 'COLLABORATOR' ||
        github.event.issue.author_association == 'MEMBER')
@@ -19,8 +23,11 @@ jobs:
       issues: write
     
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
