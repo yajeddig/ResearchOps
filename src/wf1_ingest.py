@@ -24,7 +24,7 @@ generation_config = {
     "max_output_tokens": 8192,
     "response_mime_type": "application/json",
 }
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-2.5-flash"
 
 # Load categories configuration
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "categories.json"
