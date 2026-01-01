@@ -15,6 +15,7 @@ perplexity = OpenAI(
     base_url="https://api.perplexity.ai"
 )
 claude = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-latest")
 
 def get_monthly_internal_content():
     """Retrieves content ingested last month"""
@@ -142,7 +143,7 @@ DATA:
 """
 
     response = claude.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model=CLAUDE_MODEL,
         max_tokens=6000,
         messages=[{"role": "user", "content": prompt}]
     )
