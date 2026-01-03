@@ -254,9 +254,18 @@ def main():
         file_id = ISSUE_BODY.split("DOC_ID:")[1].split()[0].strip()
         local_path = download_telegram_file(file_id)
         if local_path:
-            data_payload = local_path
-            input_type = "document"
-            source_ref = "Telegram Document"
+            ext = os.path.splitext(local_path)[1].lower()
+            # Text files: read content directly
+            if ext in ['.md', '.txt', '.csv', '.json']:
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    data_payload = f.read()
+                input_type = "text"
+                source_ref = f"Telegram Document ({ext})"
+            else:
+                # Binary files (PDF, etc.): use Gemini File API
+                data_payload = local_path
+                input_type = "document"
+                source_ref = "Telegram Document"
 
     # CASE C: WEB URL
     elif "http" in ISSUE_TITLE or "http" in ISSUE_BODY:
