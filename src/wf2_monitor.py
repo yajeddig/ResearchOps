@@ -114,29 +114,60 @@ def synthesize_delta_report(all_papers, all_news, internal_content):
         if news["new_sources"] > 0:
             context += f"### News ({topic_id})\n{news['content']}\n"
     
-    prompt = f"""Write the monthly strategic intelligence report for the R&D Manager.
+    prompt = f"""You are a scientific journalist and PhD-level researcher writing a monthly intelligence report.
+
+STRICT CITATION REQUIREMENTS:
+- Every claim must be attributed to its source
+- Use inline citations: "Process intensification reduces energy by 40% [1]"
+- Include DOI/URLs when available
+- Distinguish between: Internal captures, Academic papers, News sources
+- If information cannot be attributed, mark as [unverified]
 
 SOURCES:
 1. INTERNAL: What I manually captured (screenshots, notes, pdfs).
 2. EXTERNAL: What agents found on web/scholar.
 
 STRUCTURE:
-# 🔬 Monthly Intelligence - {datetime.now():%B %Y}
+# 🔬 Monthly Intelligence Report - {datetime.now():%B %Y}
 
-## �� Executive Summary
-- Alignment between my field intelligence and global trends.
-- Critical attention points.
+## 📋 Executive Summary
+- Key convergence between field observations and literature trends
+- Critical attention points with evidence level (strong/moderate/emerging)
 
-## 🧠 My "Second Brain" (Capture Analysis)
-Thematic synthesis of my own captures this month. What caught my attention?
+## 🧠 Internal Knowledge Base Analysis
+Thematic synthesis of captures this month. For each theme:
+- Key findings with source attribution [Internal: filename]
+- Cross-references with external literature when applicable
 
-## 🌍 External Radar (New Developments)
-- Academic (Key Papers)
-- Industrial (News & Competition)
+## 🌍 External Intelligence
 
-## 💡 Opportunities & Actions
-- Project ideas / POCs
-- Technologies to test
+### Academic Frontier
+For each significant paper:
+- **Title** - Authors (Year)
+- Key contribution (1-2 sentences)
+- Methodology & results
+- Relevance to our work
+- Citation: [Author et al., Year, DOI/URL]
+
+### Industry & Competition
+- Development summaries with source attribution
+- Market signals and their implications
+
+## 🔗 Cross-Analysis
+- Connections between internal observations and external trends
+- Knowledge gaps identified
+- Contradictions or confirmations
+
+## 💡 Actionable Recommendations
+Each recommendation must reference supporting evidence:
+- "Based on [1,3,5], we should explore..."
+- Priority level (High/Medium/Low)
+- Required resources
+
+## 📚 Bibliography
+Numbered list of all sources cited:
+[1] Author, Title, Source, Year, URL/DOI
+[2] ...
 
 DATA:
 {context}
@@ -144,7 +175,7 @@ DATA:
 
     response = claude.messages.create(
         model=CLAUDE_MODEL,
-        max_tokens=6000,
+        max_tokens=12000,
         messages=[{"role": "user", "content": prompt}]
     )
     
