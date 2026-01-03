@@ -21,7 +21,7 @@ ISSUE_NUMBER = os.getenv("ISSUE_NUMBER", "")
 client = genai.Client(api_key=GOOGLE_API_KEY)
 generation_config = {
     "temperature": 0.3,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 16384,
     "response_mime_type": "application/json",
 }
 MODEL_NAME = "gemini-2.5-flash"
@@ -167,13 +167,32 @@ Respond ONLY with valid JSON:
   "title": "Precise technical title based on actual content",
   "category": "<category_name>",
   "confidence": <0.0-1.0>,
-  "extracted_content": "<For images: ALL text extracted from the image verbatim. For other types: key quotes or passages>",
-  "summary": "Structured synthesis in 4-6 markdown bullets covering: Key message, Data/Statistics mentioned, Insights, Actionable takeaways",
+  
+  "content_body": "DETAILED transcription of the content. Include:
+    - Full explanation of concepts, methods, architecture
+    - Code blocks with syntax highlighting (```python, ```sql, etc.)
+    - Mathematical equations in LaTeX format ($E=mc^2$ or $$\\int_0^1 f(x)dx$$)
+    - Chemical formulas (H₂SO₄) and reaction equations
+    - ASCII diagrams or mermaid diagrams for processes/architectures
+    - Tables for structured data
+    - Step-by-step procedures if applicable
+    Preserve technical depth. Do NOT over-summarize.",
+  
+  "key_insights": ["insight1", "insight2", "insight3"],
+  
+  "references": [
+    {{"type": "source", "citation": "Author, Title, Year, URL"}},
+    {{"type": "cited", "citation": "Referenced work mentioned in content"}}
+  ],
+  
+  "equations": ["LaTeX equation if applicable"],
+  "code_snippets": [{{"language": "python", "code": "...", "description": "..."}}],
+  
   "relevance": "Why is this useful (ROI, Industrial Application, Learning opportunity)",
   "auto_tags": ["<tag1>", "<tag2>", "<tag3>"],
   "sector_tags": ["<sector1>"],
   "type": "Screenshot" if image else "Article",
-  "source_type": "<LinkedIn Post | Article | Infographic | Chart | Other>",
+  "source_type": "<LinkedIn Post | Article | Paper | Tutorial | Infographic | Chart | Other>",
   "reason": "<1 sentence justification for category choice>"
 }}
 
@@ -311,14 +330,6 @@ def main():
             fallback_reason = analysis.get('fallback_reason', 'manual triage needed')
             fallback_note = f"\n> ⚠️ **Inbox Note**: {fallback_reason}\n"
 
-        # Include extracted content section for images
-        extracted_section = ""
-        if analysis.get('extracted_content'):
-            extracted_section = f"""
-### 📄 Extracted Content
-{analysis.get('extracted_content', '')}
-"""
-
         md = f"""---
 title: "{analysis['title']}"
 date: {datetime.now().strftime("%Y-%m-%d")}
@@ -331,13 +342,19 @@ source_type: {analysis.get('source_type', 'Unknown')}
 hash: {hash_id}
 ---
 {fallback_note}
-### 🎯 Relevance
+## 🎯 Relevance
 {analysis.get('relevance', 'N/A')}
 
-### 📝 Summary
-{analysis.get('summary', 'N/A')}
-{extracted_section}
-### 🏷️ Classification Reason
+## 📖 Content
+{analysis.get('content_body', 'N/A')}
+
+## 💡 Key Insights
+{chr(10).join(['- ' + i for i in analysis.get('key_insights', [])])}
+
+## 📚 References
+{chr(10).join(['- ' + r['citation'] + (' *(source)*' if r['type']=='source' else ' *(cited)*') for r in analysis.get('references', [])])}
+
+## 🏷️ Classification
 {analysis.get('reason', 'N/A')}
 """
         # --- 4. SAVE ---
