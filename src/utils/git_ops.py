@@ -35,8 +35,8 @@ def safe_commit(files, message):
     # 3. Commit locally BEFORE pull
     run_cmd(["git", "commit", "-m", message])
 
-    # 4. Pull with rebase (now safe - working dir is clean)
-    run_cmd(["git", "pull", "--rebase"])
+    # 4. Pull with rebase (--autostash handles any uncommitted changes)
+    run_cmd(["git", "pull", "--rebase", "--autostash"])
 
     # 5. Push
     run_cmd(["git", "push"])
