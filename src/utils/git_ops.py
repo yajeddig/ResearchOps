@@ -17,28 +17,27 @@ def run_cmd(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
 def safe_commit(files, message):
     """
     Commits files with retry logic to handle race conditions.
-    Uses subprocess for better error visibility.
     """
     # Configure git
     run_cmd(["git", "config", "user.name", "ResearchOps Bot"])
     run_cmd(["git", "config", "user.email", "bot@researchops.local"])
 
-    # Pull latest changes to avoid conflicts
-    run_cmd(["git", "pull", "--rebase"])
-
-    # Add files
+    # 1. Stage files FIRST
     for f in files:
         run_cmd(["git", "add", f])
 
-    # Check if there are changes to commit
+    # 2. Check if there are changes to commit
     status = run_cmd(["git", "status", "--porcelain"], check=False)
     if not status.stdout.strip():
         print("ℹ️ Nothing to commit")
         return
 
-    # Commit
+    # 3. Commit locally BEFORE pull
     run_cmd(["git", "commit", "-m", message])
 
-    # Push
+    # 4. Pull with rebase (now safe - working dir is clean)
+    run_cmd(["git", "pull", "--rebase"])
+
+    # 5. Push
     run_cmd(["git", "push"])
     print("✅ Pushed successfully")
