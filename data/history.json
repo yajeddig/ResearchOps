@@ -173,5 +173,50 @@
     "url": "https://www.mdpi.com/2571-8797/8/1/5",
     "type": "paper",
     "added": "2026-02-01T08:11:32.780570"
+  },
+  "2bc810f7": {
+    "url": "https://www.sciencedirect.com/science/article/pii/S221471442600156X",
+    "type": "paper",
+    "added": "2026-03-01T06:11:23.572412"
+  },
+  "f2a19d77": {
+    "url": "https://www.mdpi.com/2071-1050/18/4/2070",
+    "type": "paper",
+    "added": "2026-03-01T06:11:23.572424"
+  },
+  "8106ab8d": {
+    "url": "https://www.sciencedirect.com/science/article/pii/S0043135426001946",
+    "type": "paper",
+    "added": "2026-03-01T06:11:23.572428"
+  },
+  "ab202b80": {
+    "url": "https://www.sciencedirect.com/science/article/pii/S0048969726002676",
+    "type": "paper",
+    "added": "2026-03-01T06:11:23.572441"
+  },
+  "0a4a6976": {
+    "url": "https://api.taylorfrancis.com/content/chapters/edit/download?identifierName=doi&identifierValue=10.1201/9781003536079-9&type=chapterpdf",
+    "type": "paper",
+    "added": "2026-03-01T06:11:25.663383"
+  },
+  "f138e040": {
+    "url": "https://api.taylorfrancis.com/content/chapters/edit/download?identifierName=doi&identifierValue=10.1201/9781003536079-11&type=chapterpdf",
+    "type": "paper",
+    "added": "2026-03-01T06:11:25.663394"
+  },
+  "1cc094b7": {
+    "url": "https://www.iris.unisa.it/handle/11386/4935158",
+    "type": "paper",
+    "added": "2026-03-01T06:11:25.663401"
+  },
+  "29500b3c": {
+    "url": "https://www.jeeng.net/A-robust-offline-digital-twin-for-regenerative-wastewater-treatment-Multi-pollutant,217885,0,2.html",
+    "type": "paper",
+    "added": "2026-03-01T06:11:25.663404"
+  },
+  "8ac87bf3": {
+    "url": "https://www.ecoeet.com/Transferable-multi-site-digital-twin-for-wastewater-treatment-Real-time-prediction,218520,0,2.html",
+    "type": "paper",
+    "added": "2026-03-01T06:11:25.663409"
   }
 }
