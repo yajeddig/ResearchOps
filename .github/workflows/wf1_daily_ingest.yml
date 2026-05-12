@@ -1,21 +1,24 @@
 name: WF1 - Daily Ingest
-
 on:
   issues:
-    types: [labeled]
-
+    types: [opened, labeled]    # ◄── ajout de "opened"
 concurrency:
   group: wf1-${{ github.event.issue.number }}
   cancel-in-progress: true
-
 jobs:
   ingest:
-    # Only run for repository collaborators/owner to prevent API abuse
     if: |
-      github.event.label.name == 'veille' &&
-      (github.event.issue.author_association == 'OWNER' ||
-       github.event.issue.author_association == 'COLLABORATOR' ||
-       github.event.issue.author_association == 'MEMBER')
+      (
+        (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'veille'))
+        ||
+        (github.event.action == 'labeled' && github.event.label.name == 'veille')
+      )
+      &&
+      (
+        github.event.issue.author_association == 'OWNER' ||
+        github.event.issue.author_association == 'COLLABORATOR' ||
+        github.event.issue.author_association == 'MEMBER'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
