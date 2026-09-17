@@ -459,5 +459,18 @@
     "type": "web_page",
     "file": "content/Data_Science/20260917_c6e0f9b7_spin__spectral_preconditioning_via_in_span_learnin.md",
     "added": "2026-09-17T13:43:34.930453"
+  },
+  "3fd1fe3f": {
+    "url": "https://github.com/EDF-Lab/tam",
+    "type": "web_page",
+    "file": "content/Data_Science/20260917_bd368f63_tam__time_series_additive_model___a_unified_framew.md",
+    "added": "2026-09-17T14:00:58.754081"
+  },
+  "bd368f63da4b": {
+    "content": true,
+    "url": "https://github.com/EDF-Lab/tam",
+    "type": "web_page",
+    "file": "content/Data_Science/20260917_bd368f63_tam__time_series_additive_model___a_unified_framew.md",
+    "added": "2026-09-17T14:00:58.754081"
   }
 }
