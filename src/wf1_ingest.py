@@ -301,15 +301,20 @@ def resolve_input() -> tuple[object, str, str, bytes | None]:
     Route the issue to an input type.
     Returns (payload, input_type, source_ref, raw_bytes_for_hash).
     """
-    if "IMG_ID:" in ISSUE_BODY:
-        file_id = ISSUE_BODY.split("IMG_ID:")[1].split()[0].strip()
+    # Make historically put the file id in the title for photos and only in a
+    # bold "File ID" line for documents: look in both title and body.
+    issue_text = f"{ISSUE_TITLE}\n{ISSUE_BODY}"
+
+    if "IMG_ID:" in issue_text:
+        file_id = issue_text.split("IMG_ID:")[1].split()[0].strip()
         local_path = download_telegram_file(file_id)
         if not local_path:
             return None, "image", "Telegram Image", None
         return local_path, "image", "Telegram Image", Path(local_path).read_bytes()
 
-    if "DOC_ID:" in ISSUE_BODY:
-        file_id = ISSUE_BODY.split("DOC_ID:")[1].split()[0].strip()
+    if "DOC_ID:" in issue_text or "**File ID** :" in issue_text:
+        marker = "DOC_ID:" if "DOC_ID:" in issue_text else "**File ID** :"
+        file_id = issue_text.split(marker)[1].split()[0].strip().strip("`")
         local_path = download_telegram_file(file_id)
         if not local_path:
             return None, "document", "Telegram Document", None

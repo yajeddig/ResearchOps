@@ -35,12 +35,14 @@ graph LR
 
 | Route | Filtre | Titre de l'issue | Corps | Labels |
 |---|---|---|---|---|
-| Photo | `message.photo` existe | `IMG_ID: {{get(last(1.message.photo); "file_id")}}` + `CAPTION:` | texte | `veille` |
-| Document | `message.document` existe | `📄 [DOC] {{file_name}}` | `DOC_ID: {{file_id}}`, `MIME:` | `veille` |
+| Photo | `message.photo` existe | `🖼️ [IMG] {{caption ou date}}` | `IMG_ID: {{get(last(1.message.photo); "file_id")}}` + `CAPTION:` | `veille` |
+| Document | `message.document` existe | `📄 [DOC] {{file_name}}` | `DOC_ID: {{file_id}}`, `MIME:`, taille, légende | `veille` |
 | **Question** | `message.text` commence par `?` | `Ask: {{trim(substring(1.message.text; 1))}}` | vide | `ask` |
 | Texte | `message.text` existe, pas de photo, ne commence pas par `?` | 200 premiers caractères | texte | `veille` |
 
 Point d'entrée API : `POST https://api.github.com/repos/yajeddig/ResearchOps/issues`, body JSON `{title, body, labels}`, header `Accept: application/vnd.github+json`.
+
+`IMG_ID:` et `DOC_ID:` doivent être dans le **corps** de l'issue : c'est là que `wf1_ingest.py` les lit. L'ancien scénario les mettait dans le titre (photo) ou sous la forme `**File ID**` (document), ce qui envoyait images et PDF à Gemini comme de simples notes texte.
 
 ## Pourquoi HTTP plutôt que le module GitHub natif
 
