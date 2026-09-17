@@ -1,12 +1,10 @@
+# Runtime (WF1 / WF2 / WF4)
 google-genai
 anthropic
-openai
 requests
 tenacity
-google-search-results
 PyYAML
 Pillow
-tavily-python
 
 # Testing
 pytest>=7.0.0

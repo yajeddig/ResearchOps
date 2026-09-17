@@ -211,3 +211,7 @@ __marimo__/
 logs/
 data/quota_tracker.json
 
+
+# Generated site
+site/
+site_src/

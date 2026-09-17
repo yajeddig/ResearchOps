@@ -1,83 +1,94 @@
-# ResearchOps v1.1 (Expert Edition)
+# ResearchOps v1.2
 
-**Serverless Multi-Modal Intelligence Pipeline for R&D & Process Engineering**
+**Second cerveau R&D, sans serveur : Telegram → GitHub Actions → fiches Markdown classées, rapport mensuel, questions-réponses.**
 
-ResearchOps is an automated intelligence system designed for R&D Managers and Engineers. It acts as a "Second Brain", ingesting technical content from various sources (Web, PDF, Images) and synthesizing it into actionable insights using advanced LLMs.
+ResearchOps ingère ce que vous lui envoyez (URL, texte, capture d'écran, PDF), le transforme en fiche technique classée par catégorie métier, synthétise vos captures chaque mois avec les publications récentes, et répond à vos questions à partir de votre propre base.
 
-## 🚀 Features
+## Fonctionnalités
 
-*   **Omni-Channel Ingest (WF1):** Send URLs, Text, Images (Screenshots), or PDFs via Telegram. The system automatically analyzes, categorizes, and summarizes them into Markdown.
-*   **Strategic Monitor (WF2):** Monthly hybrid intelligence report combining your field captures (Internal) with fresh web/academic search results (External).
-*   **Deep Research (WF3):** Autonomous multi-agent research system ("Tri-Force") that combines Perplexity (Market/News), Gemini+Tavily (Tech/Engineering), and Claude Opus (Strategic Synthesis) to produce master-level reports on complex topics.
-*   **Zero-Infra:** Runs entirely on GitHub Actions. No servers to manage.
-*   **Expert Analysis:** Prompts tuned for Industrial ROI, Feasibility, and Innovation.
+| Workflow | Déclencheur | Ce qu'il fait |
+|---|---|---|
+| **WF1 · Ingest** | Message au bot Telegram (via Make) ou issue `veille` | Garde-fou qualité (404, anti-bot, contenu vide), dédup par hash de contenu, analyse Gemini, fiche Markdown dans `content/<Catégorie>/`, notification Telegram |
+| **WF2 · Monitor** | Le 1er du mois, ou manuel | Synthèse Claude des captures du mois + nouvelles publications Semantic Scholar sur vos thèmes, rapport cité `[I n]`/`[P n]` dans `reports/` |
+| **WF4 · Ask** | Message Telegram commençant par `?` ou issue `ask` | Sélectionne les fiches pertinentes, répond en français avec citations, poste la réponse sur Telegram et dans l'issue |
+| **Site** | Push sur `main` | Publie `content/` et `reports/` en site MkDocs Material (recherche plein texte, tags, LaTeX, Mermaid) |
 
-## 🛠 Architecture
+WF3 « Tri-Force » (recherche multi-agents) a été retiré : jamais utilisé, et dominé par les produits Deep Research (Perplexity, Gemini, Claude). Envoyez leur rapport au bot pour l'archiver via WF1. Le code est conservé dans `legacy/`.
+
+## Architecture
 
 ```mermaid
-graph TB
-    subgraph "Input"
-        TG[Telegram] -->|Make.com| GH[GitHub Issue]
+graph LR
+    subgraph Capture
+        TG[Telegram] --> MK[Make: ResearchOps Bridge]
+        MK -->|label veille| I1[Issue]
+        MK -->|label ask, message '?'| I2[Issue]
     end
-
-    subgraph "Workflows"
-        GH -->|Label: veille| WF1[WF1: Ingest]
-        GH -->|Label: research| WF3[WF3: Deep Research]
-        CRON[Schedule] -->|Monthly| WF2[WF2: Monitor]
+    subgraph "GitHub Actions"
+        I1 --> WF1[WF1 Ingest<br/>Gemini 2.5 Flash]
+        I2 --> WF4[WF4 Ask<br/>Claude]
+        CRON[1er du mois] --> WF2[WF2 Monitor<br/>Claude + Semantic Scholar]
     end
-
-    subgraph "Intelligence"
-        WF1 --> GEM[Gemini Flash]
-        WF2 --> CLAUDE[Claude Sonnet]
-        WF3 --> TRI[Tri-Force Agents]
-    end
-
-    GEM -->|Markdown| REPO[(Content Repo)]
-    CLAUDE -->|Report| REPO
-    TRI -->|Master Report| REPO
+    WF1 --> C[(content/*.md)]
+    C --> WF2 --> R[(reports/)]
+    C --> WF4 -->|réponse| TG
+    C --> SITE[MkDocs site]
+    R --> SITE
+    WF1 -->|statut| TG
+    WF2 -->|lien rapport| TG
 ```
 
-## 📂 Project Structure
+## Structure
 
-*   `src/`: Python source code for workflows.
-    *   `wf1_ingest.py`: Daily ingestion logic.
-    *   `wf2_monitor.py`: Monthly strategic monitoring.
-    *   `wf3_triforce.py`: Deep research orchestration.
-    *   `agents/`: AI Agents for WF3 (Perplexity, Gemini, Claude).
-    *   `utils/`: Helper modules.
-*   `config/`: Configuration files.
-*   `content/`: Stored intelligence (Markdown files).
-*   `reports/`: Generated monthly reports.
-*   `research/`: Deep research master reports.
-*   `docs/`: Detailed documentation.
+```
+src/
+  wf1_ingest.py        ingestion + garde-fou + fiche
+  wf2_monitor.py       rapport mensuel
+  wf4_ask.py           questions-réponses sur la base
+  utils/
+    content_guard.py   validation avant/après LLM
+    dedup.py           historique URL + hash de contenu
+    frontmatter.py     lecture/écriture YAML des fiches
+    git_ops.py         commit + push avec retry
+    notify.py          Telegram, commentaires d'issue, outputs Actions
+    logger.py          logs JSON en CI
+config/
+  categories.json      taxonomie + seuils (confidence 0.6, reject 0.3)
+  monitoring.json      thèmes de veille académique
+content/               fiches (sortie WF1)
+reports/               rapports mensuels (sortie WF2)
+scripts/build_site.py  assemblage du site
+legacy/                code retiré (WF3, stub Triforce), à supprimer
+docs/                  documentation détaillée
+```
 
-## 🚦 Setup & Usage
+## Mise en place
 
-### 1. Initial Setup
-1.  **Secrets:** Configure API Keys (Google, Anthropic, Perplexity, Tavily, Telegram) in GitHub Secrets.
-2.  **Make.com:** Set up the Telegram to GitHub bridge (see [docs/make_setup.md](docs/make_setup.md)).
+1. **Secrets GitHub** : `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Optionnel : `SEMANTIC_SCHOLAR_API_KEY`.
+2. **Make** : scénario Telegram → GitHub, voir [docs/make_setup.md](docs/make_setup.md). Le token GitHub doit être stocké dans une clé Make (keychain), jamais dans un module.
+3. **Site** : Settings → Pages → Source « Deploy from a branch », branche `gh-pages`. Le workflow `docs_site.yml` publie à chaque push sur `main`.
+4. **Local** : `cp .env.example .env`, `pip install -r requirements.txt`, `python -m pytest`.
 
-### 2. How to Run the Workflows
+## Utilisation
 
-| Workflow | Trigger Type | How to Launch |
-| :--- | :--- | :--- |
-| **WF1: Ingest** | **Automatic** | Send a message/file to your **Telegram Bot**. Make.com creates an issue with label \`veille\`. |
-| **WF2: Monitor** | **Scheduled / Manual** | Runs automatically on the **1st of the month**. Can be triggered manually via **GitHub Actions** tab (\`Run workflow\`). |
-| **WF3: Research** | **Manual (Issue)** | Create a **GitHub Issue** with label \`research\`. <br>• **Title:** Research Topic (e.g., "Solid State Batteries")<br>• **Body:** (Optional) Specific questions, context, or constraints. |
+| Action | Comment |
+|---|---|
+| Capturer | Envoyer au bot : une URL, un texte, une photo, un PDF |
+| Interroger | Envoyer au bot un message commençant par `?` : `? qu'ai-je capturé sur les PINN ?` |
+| Rapport mensuel | Automatique le 1er ; manuel via Actions → « WF2 - Monthly Monitor » → Run workflow |
+| Consulter | Site publié, ou ouvrir le dépôt comme vault Obsidian |
 
-### 3. Detailed Triggers
-*   **WF1 (Daily Watch):** Triggered by any Issue labeled \`veille\`.
-*   **WF2 (Monthly Report):** Triggered by CRON \`0 6 1 * *\` or \`workflow_dispatch\`.
-*   **WF3 (Deep Research):** Triggered by any Issue labeled \`research\`.
-    *   **Pro Tip:** Use the Issue Body to guide the agents (e.g., "Focus on European market", "Ignore patents before 2020").
+Les issues rejetées par le garde-fou sont fermées avec la raison (`🚫`), les doublons avec `♻️`.
 
-## 📚 Documentation
+## Documentation
 
-*   [Make.com Setup Guide](docs/make_setup.md)
-*   [Workflow 1: Ingestion Details](docs/wf1_ingest.md)
-*   [Workflow 2: Monitoring Details](docs/wf2_monitor.md)
-*   [Workflow 3: Deep Research Details](docs/wf3_deep_research.md)
+- [Make.com : pont Telegram → GitHub](docs/make_setup.md)
+- [WF1 : ingestion](docs/wf1_ingest.md)
+- [WF2 : rapport mensuel](docs/wf2_monitor.md)
+- [WF4 : questions-réponses](docs/wf4_ask.md)
+- [Site de consultation](docs/knowledge_base_site.md)
+- [Spécification v1.2](context/specification.md)
 
-## 👤 Author
+## Auteur
 
-**Younes AJEDDIG** Ph.D - R&D Manager / Process Modeling & Simulation Expert / Data Engineer & scientist / Scientific developer
+**Younes AJEDDIG** Ph.D — R&D Manager / Process Modeling & Simulation / Data Engineer & Scientist

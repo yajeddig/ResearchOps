@@ -1,26 +1,45 @@
-# Workflow 2: Strategic Monitor
+# WF2 : Rapport de veille mensuel
 
-**Goal:** Generate a monthly intelligence report combining internal captures and external signals.
+**But** : un rapport citable qui croise vos captures du mois avec les publications récentes sur vos thèmes.
 
-## Trigger
-*   **Schedule:** 1st of every month at 06:00 UTC.
-*   **Manual:** Can be triggered via "Run Workflow" in GitHub Actions.
+## Déclencheur
 
-## Process (`src/wf2_monitor.py`)
+Cron `0 6 1 * *` (1er du mois, 06:00 UTC) ou `workflow_dispatch`.
 
-1.  **Internal Knowledge Retrieval:**
-    *   Scans the `content/` directory for all Markdown files created in the previous month.
-    *   Aggregates this "Field Intelligence" to form the "Second Brain" context.
+## Sources
 
-2.  **External Signal Search:**
-    *   **Academic:** Queries SerpAPI (Google Scholar) for new papers (current year) matching topics in `config/monitoring.json`.
-    *   **Industrial:** Queries Perplexity for major news/developments in the last 3 months.
-    *   **Deduplication:** Checks `data/history.json` to ensure only *new* external content is reported.
+| Section | Source | Référence |
+|---|---|---|
+| A · Interne | Fiches `content/**` dont la date est dans le mois précédent | `[I n]` |
+| B · Externe | Semantic Scholar `paper/search`, filtre `publicationDateOrYear` sur le mois, requêtes = `keywords_academic` de `config/monitoring.json`, `paper_limit` par thème | `[P n]` |
 
-3.  **Hybrid Synthesis (Claude 3.5 Sonnet):**
-    *   Injects both Internal and External contexts into Claude.
-    *   **Prompt:** Asks for a strategic report highlighting alignment/gaps between field observations and global trends.
+SerpAPI (Google Scholar) et Perplexity ont été retirés : payants, faible rappel, et les news Perplexity n'étaient pas numérotées donc jamais citées. Semantic Scholar est gratuit ; une clé `SEMANTIC_SCHOLAR_API_KEY` (optionnelle) relève la limite de débit.
 
-4.  **Reporting:**
-    *   Generates a Markdown report in `reports/{Year}/{Month}_Monitor.md`.
-    *   Commits the report and updates the history file.
+Pour compléter le rappel académique, créez des alertes Google Scholar sur les mêmes mots-clés et envoyez au bot les articles qui vous intéressent : ils deviennent des fiches `[I n]` du mois suivant.
+
+## Génération
+
+- Modèle : `claude-opus-5` (override par `CLAUDE_MODEL`), réflexion adaptative, repli automatique en cas de refus.
+- Le prompt fournit une **bibliographie numérotée fermée** ; le modèle ne peut citer que ce qui lui a été donné et doit la recopier en fin de rapport.
+- Si le mois n'a ni capture ni publication, aucun rapport n'est généré (notification Telegram seulement).
+
+## Sortie
+
+`reports/<année>/<AAAA-MM>_Monitor.md` où `AAAA-MM` est le **mois de génération** (convention historique conservée) ; l'en-tête indique explicitement la période couverte. Seules les publications effectivement rapportées sont ajoutées à `data/history.json`.
+
+## Configuration des thèmes
+
+```json
+{
+  "topics": [
+    {
+      "id": "n2o-emissions",
+      "name": "N₂O Emissions in WWTP",
+      "keywords_academic": ["nitrous oxide wastewater treatment", "N2O emissions modeling WWTP"],
+      "paper_limit": 3
+    }
+  ]
+}
+```
+
+`keywords_news` n'est plus utilisé.

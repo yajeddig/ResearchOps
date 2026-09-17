@@ -1,52 +1,55 @@
-# Make.com Setup Guide
+# Make.com : pont Telegram → GitHub
 
-This guide explains how to configure the Make.com scenario to bridge Telegram and GitHub.
+Le scénario **ResearchOps Bridge** écoute le bot Telegram et crée des issues GitHub. GitHub Actions fait le reste.
 
-## Prerequisites
-1.  **Telegram Bot:** Create one via @BotFather and get the Token.
-2.  **GitHub Account:** Ensure you have access to the `ResearchOps` repo.
-3.  **Make.com Account:** Free plan is sufficient.
+## Prérequis
 
-## Scenario Overview
-The scenario listens for new Telegram messages and creates corresponding GitHub Issues.
+- Bot Telegram (BotFather) et sa connexion Make `ResearchOps_bot`.
+- **Token GitHub fine-grained** limité au dépôt `ResearchOps`, permission *Issues : Read and write* uniquement, expiration 1 an.
+- Plan Make Free : 2 scénarios actifs, 1 000 opérations/mois. Le pont consomme 2 opérations par message.
 
-### Modules
+## Sécurité du token
 
-1.  **Telegram Bot - Watch Updates (Webhook)**
-    *   Create a webhook and connect your Bot Token.
-    *   This is the trigger.
+Le token ne doit **jamais** apparaître dans un module HTTP (header `Authorization` en clair) : il est alors lisible par toute intégration ayant accès au scénario et non révocable depuis Make.
 
-2.  **Flow Control - Router**
-    *   Splits the flow into 3 paths: Text, Image, Document.
+Stockez-le dans une **clé Make** (*Keys → Add key → API Key Auth*) :
 
-3.  **Path 1: Text (URLs, Notes)**
-    *   **Filter:** `Message: Text` Exists.
-    *   **GitHub - Create an Issue:**
-        *   Title: `Ingest: Text - {{substring(1.message.text; 0; 50)}}...`
-        *   Body: `{{1.message.text}}`
-        *   Labels: `veille`
+| Champ | Valeur |
+|---|---|
+| Key | `Bearer github_pat_…` |
+| API key placement | Header |
+| API key parameter name | `Authorization` |
 
-4.  **Path 2: Image (Screenshots, Photos)**
-    *   **Filter:** `Message: Photo` Exists.
-    *   **GitHub - Create an Issue:**
-        *   Title: `Ingest: Image - {{formatDate(now; "YYYY-MM-DD HH:mm")}}`
-        *   Body:
-            ```
-            IMG_ID: {{last(map(1.message.photo; "file_id"))}}
-            CAPTION: {{1.message.caption}}
-            ```
-        *   Labels: `veille`
+Puis, dans chaque module HTTP « Make a request » : *Authentication type = API key*, *Credentials = la clé*. Supprimez le header `Authorization` du module.
 
-5.  **Path 3: Document (PDFs)**
-    *   **Filter:** `Message: Document` Exists.
-    *   **GitHub - Create an Issue:**
-        *   Title: `Ingest: {{1.message.document.file_name}}`
-        *   Body:
-            ```
-            DOC_ID: {{1.message.document.file_id}}
-            MIME: {{1.message.document.mime_type}}
-            ```
-        *   Labels: `veille`
+## Modules du scénario
 
-## Important Note on File Handling
-We pass the **File ID** (`IMG_ID` / `DOC_ID`) to GitHub, not the file itself. The Python script `src/wf1_ingest.py` uses this ID to securely download the file directly from Telegram's servers, bypassing Make.com's file size limits.
+```mermaid
+graph LR
+    A[Telegram · Watch Updates] --> R{Router}
+    R -->|photo| P[HTTP · POST /issues<br/>IMG_ID + label veille]
+    R -->|document| D[HTTP · POST /issues<br/>DOC_ID + label veille]
+    R -->|texte commençant par ?| Q[HTTP · POST /issues<br/>question + label ask]
+    R -->|autre texte| T[HTTP · POST /issues<br/>texte + label veille]
+```
+
+| Route | Filtre | Titre de l'issue | Corps | Labels |
+|---|---|---|---|---|
+| Photo | `message.photo` existe | `IMG_ID: {{get(last(1.message.photo); "file_id")}}` + `CAPTION:` | texte | `veille` |
+| Document | `message.document` existe | `📄 [DOC] {{file_name}}` | `DOC_ID: {{file_id}}`, `MIME:` | `veille` |
+| **Question** | `message.text` commence par `?` | `Ask: {{trim(substring(1.message.text; 1))}}` | vide | `ask` |
+| Texte | `message.text` existe, pas de photo, ne commence pas par `?` | 200 premiers caractères | texte | `veille` |
+
+Point d'entrée API : `POST https://api.github.com/repos/yajeddig/ResearchOps/issues`, body JSON `{title, body, labels}`, header `Accept: application/vnd.github+json`.
+
+## Pourquoi HTTP plutôt que le module GitHub natif
+
+Les modules GitHub de Make ne fonctionnaient pas lors de la mise en place initiale. L'appel HTTP est plus explicite et se met à jour sans dépendre de l'application Make. Le seul point à respecter est le stockage du token en clé.
+
+## Fichiers volumineux
+
+Make ne transfère pas les fichiers : il passe le `file_id` Telegram. `src/wf1_ingest.py` télécharge le fichier directement depuis l'API Telegram, sans limite de taille côté Make.
+
+## Notifications retour
+
+Les retours vers Telegram (statut d'ingestion, lien du rapport mensuel, réponses aux questions) sont envoyés par les workflows GitHub Actions directement via l'API Telegram (`utils/notify.py`). Aucun scénario Make supplémentaire n'est nécessaire.

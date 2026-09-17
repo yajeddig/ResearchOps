@@ -1,0 +1,3 @@
+# Knowledge base site (scripts/build_site.py + mkdocs)
+mkdocs-material>=9.5
+PyYAML
