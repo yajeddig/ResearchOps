@@ -446,5 +446,18 @@
     "type": "web_page",
     "file": "content/Data_Engineering/20260917_52972fec_orca_telemetry_core__analytics_orchestration_frame.md",
     "added": "2026-09-17T13:36:44.610456"
+  },
+  "e02df05b": {
+    "url": "https://github.com/APHedayat/SPIN",
+    "type": "web_page",
+    "file": "content/Data_Science/20260917_c6e0f9b7_spin__spectral_preconditioning_via_in_span_learnin.md",
+    "added": "2026-09-17T13:43:34.930453"
+  },
+  "c6e0f9b7f146": {
+    "content": true,
+    "url": "https://github.com/APHedayat/SPIN",
+    "type": "web_page",
+    "file": "content/Data_Science/20260917_c6e0f9b7_spin__spectral_preconditioning_via_in_span_learnin.md",
+    "added": "2026-09-17T13:43:34.930453"
   }
 }
