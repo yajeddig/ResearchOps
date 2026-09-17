@@ -1,0 +1,58 @@
+site_name: ResearchOps — Knowledge Base
+site_description: Fiches de veille R&D, rapports mensuels et recherches
+site_url: https://yajeddig.github.io/ResearchOps/
+repo_url: https://github.com/yajeddig/ResearchOps
+edit_uri: ""
+
+# scripts/build_site.py assembles this directory from content/ and reports/
+docs_dir: site_src
+site_dir: site
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: Mode sombre
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: Mode clair
+
+plugins:
+  - search:
+      lang: [fr, en]
+  - tags
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - admonition
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+  - pymdownx.details
+  - pymdownx.tasklist
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

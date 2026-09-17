@@ -1,20 +1,17 @@
-name: WF1 - Daily Ingest
+name: WF4 - Ask the Knowledge Base
 
-# `labeled` fires both when Make creates the issue with the label and when a
-# label is added later. Listening to `opened` as well produced a duplicate run
-# for every capture (one of the two was always cancelled).
 on:
   issues:
     types: [labeled]
 
 concurrency:
-  group: wf1-${{ github.event.issue.number }}
+  group: wf4-${{ github.event.issue.number }}
   cancel-in-progress: true
 
 jobs:
-  ingest:
+  ask:
     if: |
-      github.event.label.name == 'veille' &&
+      github.event.label.name == 'ask' &&
       (
         github.event.issue.author_association == 'OWNER' ||
         github.event.issue.author_association == 'COLLABORATOR' ||
@@ -23,14 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: write
+      contents: read
       issues: write
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -40,30 +34,28 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Process Input
-        id: ingest
+      - name: Answer
+        id: ask
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
-        run: python src/wf1_ingest.py
+        run: python src/wf4_ask.py
 
       - name: Close Issue
-        if: always() && steps.ingest.outcome != 'cancelled'
+        if: always() && steps.ask.outcome != 'cancelled'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}
-          STATUS: ${{ steps.ingest.outputs.status }}
-          MESSAGE: ${{ steps.ingest.outputs.message }}
+          STATUS: ${{ steps.ask.outputs.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          case "$STATUS" in
-            saved)     gh issue close "$ISSUE" --comment "✅ $MESSAGE" ;;
-            duplicate) gh issue close "$ISSUE" --reason "not planned" --comment "♻️ $MESSAGE" ;;
-            rejected)  gh issue close "$ISSUE" --reason "not planned" --comment "🚫 $MESSAGE" ;;
-            *)         gh issue comment "$ISSUE" --body "❌ WF1 a échoué (${STATUS:-unknown}). Logs : $RUN_URL" ;;
-          esac
+          if [ "$STATUS" = "answered" ]; then
+            gh issue close "$ISSUE" --reason "completed"
+          else
+            gh issue comment "$ISSUE" --body "❌ WF4 a échoué (${STATUS:-unknown}). Logs : $RUN_URL"
+          fi

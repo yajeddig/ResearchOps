@@ -1,15 +1,35 @@
-import os
+"""
+WF1 - Omni-channel ingest.
+
+Turns a GitHub issue (created by the Make/Telegram bridge or by hand) into a
+classified Markdown knowledge card under content/<Category>/.
+
+Pipeline:
+  route input -> quality gate -> dedup -> Gemini analysis -> post-LLM gate
+  -> write card -> commit -> notify (Telegram + workflow outputs)
+"""
 import json
-import requests
+import os
 import re
 import tempfile
-from pathlib import Path
 from datetime import datetime
-from google import genai
-from PIL import Image
-from utils.dedup import is_duplicate, add_to_history
+from pathlib import Path
+
+import requests
+
+from utils import frontmatter
+from utils.content_guard import (
+    is_junk_analysis,
+    normalize_url,
+    validate_note,
+    validate_scraped,
+)
+from utils.dedup import add_to_history, content_hash, is_duplicate
 from utils.git_ops import safe_commit
-from utils.notify import telegram_notify
+from utils.logger import get_logger
+from utils.notify import set_output, telegram_notify
+
+log = get_logger("WF1")
 
 # --- CONFIGURATION ---
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -18,15 +38,13 @@ ISSUE_TITLE = os.getenv("ISSUE_TITLE", "")
 ISSUE_BODY = os.getenv("ISSUE_BODY", "")
 ISSUE_NUMBER = os.getenv("ISSUE_NUMBER", "")
 
-client = genai.Client(api_key=GOOGLE_API_KEY)
-generation_config = {
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GENERATION_CONFIG = {
     "temperature": 0.3,
     "max_output_tokens": 16384,
     "response_mime_type": "application/json",
 }
-MODEL_NAME = "gemini-2.5-flash"
 
-# Load categories configuration
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "categories.json"
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     CATEGORIES_CONFIG = json.load(f)
@@ -35,28 +53,37 @@ CATEGORIES = list(CATEGORIES_CONFIG["categories"].keys())
 SECTOR_TAGS = CATEGORIES_CONFIG["sector_tags"]
 SETTINGS = CATEGORIES_CONFIG["settings"]
 
+_client = None
+
+
+def get_client():
+    """Lazy Gemini client so the module can be imported without credentials."""
+    global _client
+    if _client is None:
+        from google import genai
+        _client = genai.Client(api_key=GOOGLE_API_KEY)
+    return _client
+
 
 def slugify(text: str) -> str:
-    """Convert text to URL-safe slug."""
-    return re.sub(r'[^a-zA-Z0-9]', '_', text.lower())
+    """Convert text to a filename-safe slug."""
+    return re.sub(r"[^a-zA-Z0-9]", "_", text.lower())
 
 
 def get_categories_list() -> str:
-    """Format categories with descriptions for prompt."""
-    lines = []
-    for name, data in CATEGORIES_CONFIG["categories"].items():
-        if name != "_Inbox":  # Don't show _Inbox in prompt
-            lines.append(f"- {name}: {data['description']}")
-    return "\n".join(lines)
+    """Format categories with descriptions for the prompt (without _Inbox)."""
+    return "\n".join(
+        f"- {name}: {data['description']}"
+        for name, data in CATEGORIES_CONFIG["categories"].items()
+        if name != "_Inbox"
+    )
 
 
 def route_content(gemini_response: dict, config: dict) -> dict:
     """
-    Apply fallback logic based on confidence threshold.
-
-    Routes to _Inbox if:
-    - confidence < threshold (default 0.6)
-    - category not in valid categories
+    Apply the confidence fallback:
+    - confidence < threshold  -> _Inbox (manual triage)
+    - unknown category        -> _Inbox
     """
     threshold = config["settings"]["confidence_threshold"]
     fallback = config["settings"]["fallback_category"]
@@ -65,7 +92,6 @@ def route_content(gemini_response: dict, config: dict) -> dict:
     category = gemini_response.get("category", fallback)
     confidence = gemini_response.get("confidence", 0.0)
 
-    # Fallback conditions
     if confidence < threshold:
         category = fallback
         gemini_response["auto_tags"] = ["inbox:low-confidence"]
@@ -80,52 +106,42 @@ def route_content(gemini_response: dict, config: dict) -> dict:
     return gemini_response
 
 
-def get_save_path(category: str, title: str, content_hash: str) -> Path:
-    """Generate save path: content/{category}/{date}_{hash}_{title}.md"""
+def get_save_path(category: str, title: str, content_hash_id: str) -> Path:
+    """content/{category}/{date}_{hash}_{title}.md"""
     date_str = datetime.now().strftime("%Y%m%d")
     safe_title = slugify(title)[:50]
-    filename = f"{date_str}_{content_hash[:8]}_{safe_title}.md"
+    filename = f"{date_str}_{content_hash_id[:8]}_{safe_title}.md"
     return Path("content") / category / filename
 
 
-def download_telegram_file(file_id):
-    """Downloads a file (Image or Doc) from Telegram"""
-    print(f"📥 Downloading ID: {file_id}")
-
-    # 1. Get Path
-    url_info = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getFile?file_id={file_id}"
+def download_telegram_file(file_id: str) -> str | None:
+    """Download a Telegram file (image or document) to a temp path."""
+    log.info(f"Downloading Telegram file {file_id[:12]}…")
     try:
-        r = requests.get(url_info, timeout=10)
+        r = requests.get(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getFile", params={"file_id": file_id}, timeout=10)
         r.raise_for_status()
-    except Exception as e:
-        print(f"❌ Telegram Info Error: {e}")
+        file_path = r.json()["result"]["file_path"]
+        content = requests.get(f"https://api.telegram.org/file/bot{TELEGRAM_TOKEN}/{file_path}", timeout=60)
+        content.raise_for_status()
+    except Exception as exc:
+        log.error(f"Telegram download error: {exc}")
         return None
-
-    file_path = r.json()['result']['file_path']
     ext = os.path.splitext(file_path)[1]
-
-    # 2. Download Content
-    url_content = f"https://api.telegram.org/file/bot{TELEGRAM_TOKEN}/{file_path}"
-    try:
-        content_data = requests.get(url_content, timeout=30).content
-    except Exception as e:
-        print(f"❌ Telegram Download Error: {e}")
-        return None
-
-    # 3. Save Temp
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
-    tmp.write(content_data)
+    tmp.write(content.content)
     tmp.close()
     return tmp.name
 
 
-def clean_jina_content(url):
-    """Scrape URL content via Jina Reader."""
-    print(f"🌐 Scraping Jina: {url}")
+def scrape_url(url: str) -> tuple[str | None, int | None]:
+    """Fetch readable page text through Jina Reader. Returns (text, status_code)."""
+    log.info(f"Scraping {url}")
     try:
-        return requests.get(f"https://r.jina.ai/{url}", timeout=20).text
-    except Exception:
-        return None
+        r = requests.get(f"https://r.jina.ai/{url}", timeout=30, headers={"Accept": "text/plain"})
+        return r.text, r.status_code
+    except Exception as exc:
+        log.warning(f"Scrape failed: {exc}")
+        return None, None
 
 
 def build_classification_prompt(content: str, input_type: str) -> str:
@@ -133,22 +149,17 @@ def build_classification_prompt(content: str, input_type: str) -> str:
     categories_list = get_categories_list()
     sector_tags_list = ", ".join(SECTOR_TAGS)
 
-    # Special instructions for image content extraction
+    extraction_instructions = ""
     if input_type == "image":
         extraction_instructions = """
 IMPORTANT - IMAGE CONTENT EXTRACTION:
-1. First, extract ALL visible text from the image (OCR). Include:
-   - Headlines, titles, captions
-   - Body text, paragraphs
-   - Statistics, numbers, percentages
-   - Author names, sources, dates
-   - Any quotes or key statements
-2. Preserve the original language of the text
-3. Include the extracted text verbatim in the "extracted_content" field
-4. Base your summary on the ACTUAL extracted content, not a description of the image
+1. First, extract ALL visible text from the image (OCR): headlines, body text,
+   numbers, author names, sources, dates, quotes.
+2. Preserve the original language of the text.
+3. Base your summary on the ACTUAL extracted content, not on a description of the image.
+4. If the image contains no readable technical content, set confidence to 0.1 and
+   title to "Unreadable image".
 """
-    else:
-        extraction_instructions = ""
 
     return f"""
 Analyze and classify this content for a process engineering / industrial data science knowledge base.
@@ -167,7 +178,7 @@ Respond ONLY with valid JSON:
   "title": "Precise technical title based on actual content",
   "category": "<category_name>",
   "confidence": <0.0-1.0>,
-  
+
   "content_body": "DETAILED transcription of the content. Include:
     - Full explanation of concepts, methods, architecture
     - Code blocks with syntax highlighting (```python, ```sql, etc.)
@@ -177,17 +188,17 @@ Respond ONLY with valid JSON:
     - Tables for structured data
     - Step-by-step procedures if applicable
     Preserve technical depth. Do NOT over-summarize.",
-  
+
   "key_insights": ["insight1", "insight2", "insight3"],
-  
+
   "references": [
     {{"type": "source", "citation": "Author, Title, Year, URL"}},
     {{"type": "cited", "citation": "Referenced work mentioned in content"}}
   ],
-  
+
   "equations": ["LaTeX equation if applicable"],
   "code_snippets": [{{"language": "python", "code": "...", "description": "..."}}],
-  
+
   "relevance": "Why is this useful (ROI, Industrial Application, Learning opportunity)",
   "auto_tags": ["<tag1>", "<tag2>", "<tag3>"],
   "sector_tags": ["<sector1>"],
@@ -196,6 +207,10 @@ Respond ONLY with valid JSON:
   "reason": "<1 sentence justification for category choice>"
 }}
 
+If the content is an error page, a login wall, a bot check or otherwise carries no
+technical content, respond with confidence 0.1 and an explicit title such as
+"Blocked page: <reason>". Do not invent content.
+
 If content doesn't fit any category well, use "_Inbox" with low confidence.
 
 CONTENT:
@@ -203,145 +218,58 @@ CONTENT:
 """
 
 
-def analyze_content(content_or_path, input_type="text"):
-    """Analyze content using Gemini and return structured classification."""
-    print(f"🧠 Gemini Analysis ({input_type})...")
-
+def analyze_content(content_or_path, input_type: str = "text") -> dict | None:
+    """Analyze content with Gemini and return the structured classification."""
+    log.info(f"Gemini analysis ({input_type}, {MODEL_NAME})")
+    client = get_client()
     try:
         if input_type == "image":
-            # Vision Processing (JPG/PNG)
+            from PIL import Image
             img = Image.open(content_or_path)
             prompt = build_classification_prompt("[Image content - analyze visually]", input_type)
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=[prompt, img],
-                config=generation_config
-            )
-
+            response = client.models.generate_content(model=MODEL_NAME, contents=[prompt, img], config=GENERATION_CONFIG)
         elif input_type == "document":
-            # Document Processing (PDF uploaded to Gemini)
             uploaded_file = client.files.upload(file=content_or_path)
             prompt = build_classification_prompt("[Document content - analyze text]", input_type)
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=[prompt, uploaded_file],
-                config=generation_config
-            )
-
+            response = client.models.generate_content(model=MODEL_NAME, contents=[prompt, uploaded_file], config=GENERATION_CONFIG)
         else:
-            # Text / Web Processing
             prompt = build_classification_prompt(content_or_path, input_type)
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=prompt,
-                config=generation_config
-            )
+            response = client.models.generate_content(model=MODEL_NAME, contents=prompt, config=GENERATION_CONFIG)
 
-        # Parse response
         result = json.loads(response.text)
-
-        # Apply routing logic with fallback
-        result = route_content(result, CATEGORIES_CONFIG)
-
-        return result
-
-    except Exception as e:
-        print(f"❌ Gemini Error: {e}")
+        return route_content(result, CATEGORIES_CONFIG)
+    except Exception as exc:
+        log.exception(f"Gemini error: {exc}")
         return None
 
 
-def main():
-    print(f"🚀 Processing Issue #{ISSUE_NUMBER}: {ISSUE_TITLE}")
+def build_card(analysis: dict, source_ref: str, hash_id: str) -> str:
+    """Render the Markdown knowledge card (YAML frontmatter + sections)."""
+    all_tags = list(analysis.get("auto_tags", [])) + list(analysis.get("sector_tags", []))
+    meta = {
+        "title": str(analysis["title"]),
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "category": analysis["category"],
+        "confidence": round(float(analysis.get("confidence", 0.0) or 0.0), 2),
+        "tags": all_tags,
+        "source": source_ref,
+        "type": analysis.get("type", "Article"),
+        "source_type": analysis.get("source_type", "Unknown"),
+        "hash": hash_id,
+    }
 
-    data_payload = None
-    input_type = "text"
-    source_ref = ISSUE_TITLE
+    fallback_note = ""
+    if analysis["category"] == "_Inbox":
+        fallback_note = f"\n> ⚠️ **Inbox Note**: {analysis.get('fallback_reason', 'manual triage needed')}\n"
 
-    # --- 1. ROUTING ---
+    insights = "\n".join(f"- {i}" for i in analysis.get("key_insights", []))
+    references = "\n".join(
+        f"- {r.get('citation', '')} " + ("*(source)*" if r.get("type") == "source" else "*(cited)*")
+        for r in analysis.get("references", [])
+        if isinstance(r, dict)
+    )
 
-    # CASE A: IMAGE (IMG_ID)
-    if "IMG_ID:" in ISSUE_BODY:
-        file_id = ISSUE_BODY.split("IMG_ID:")[1].split()[0].strip()
-        local_path = download_telegram_file(file_id)
-        if local_path:
-            data_payload = local_path
-            input_type = "image"
-            source_ref = "Telegram Image"
-
-    # CASE B: DOCUMENT (DOC_ID)
-    elif "DOC_ID:" in ISSUE_BODY:
-        file_id = ISSUE_BODY.split("DOC_ID:")[1].split()[0].strip()
-        local_path = download_telegram_file(file_id)
-        if local_path:
-            ext = os.path.splitext(local_path)[1].lower()
-            # Text files: read content directly
-            if ext in ['.md', '.txt', '.csv', '.json']:
-                with open(local_path, 'r', encoding='utf-8') as f:
-                    data_payload = f.read()
-                input_type = "text"
-                source_ref = f"Telegram Document ({ext})"
-            else:
-                # Binary files (PDF, etc.): use Gemini File API
-                data_payload = local_path
-                input_type = "document"
-                source_ref = "Telegram Document"
-
-    # CASE C: WEB URL
-    elif "http" in ISSUE_TITLE or "http" in ISSUE_BODY:
-        text_to_search = ISSUE_TITLE + " " + ISSUE_BODY
-        match = re.search(r'https?://\S+', text_to_search)
-        if match:
-            url = match.group(0)
-            data_payload = clean_jina_content(url)
-            input_type = "web_page"
-            source_ref = url
-        else:
-            data_payload = f"{ISSUE_TITLE}\n{ISSUE_BODY}"
-            input_type = "raw_note"
-
-    # CASE D: TEXT NOTE
-    else:
-        data_payload = f"{ISSUE_TITLE}\n{ISSUE_BODY}"
-        input_type = "raw_note"
-
-    if not data_payload:
-        print("❌ Empty or invalid input")
-        return
-
-    # Deduplication (only for URLs)
-    if input_type == "web_page" and is_duplicate(source_ref):
-        print(f"⚠️ Duplicate detected: {source_ref}")
-        telegram_notify(f"Duplicate skipped: {ISSUE_TITLE}", "WARNING")
-        return
-
-    # --- 2. ANALYSIS ---
-    analysis = analyze_content(data_payload, input_type)
-
-    if analysis:
-        # --- 3. MARKDOWN GENERATION ---
-        hash_id = datetime.now().strftime('%H%M%S')
-
-        # Build tags list
-        all_tags = analysis.get('auto_tags', []) + analysis.get('sector_tags', [])
-
-        # Check if routed to inbox
-        fallback_note = ""
-        if analysis['category'] == "_Inbox":
-            fallback_reason = analysis.get('fallback_reason', 'manual triage needed')
-            fallback_note = f"\n> ⚠️ **Inbox Note**: {fallback_reason}\n"
-
-        md = f"""---
-title: "{analysis['title']}"
-date: {datetime.now().strftime("%Y-%m-%d")}
-category: {analysis['category']}
-confidence: {analysis.get('confidence', 0.0):.2f}
-tags: {all_tags}
-source: "{source_ref}"
-type: {analysis.get('type', 'Article')}
-source_type: {analysis.get('source_type', 'Unknown')}
-hash: {hash_id}
----
-{fallback_note}
+    body = f"""{fallback_note}
 ## 🎯 Relevance
 {analysis.get('relevance', 'N/A')}
 
@@ -349,48 +277,134 @@ hash: {hash_id}
 {analysis.get('content_body', 'N/A')}
 
 ## 💡 Key Insights
-{chr(10).join(['- ' + i for i in analysis.get('key_insights', [])])}
+{insights}
 
 ## 📚 References
-{chr(10).join(['- ' + r['citation'] + (' *(source)*' if r['type']=='source' else ' *(cited)*') for r in analysis.get('references', [])])}
+{references}
 
 ## 🏷️ Classification
 {analysis.get('reason', 'N/A')}
 """
-        # --- 4. SAVE ---
-        filepath = get_save_path(analysis['category'], analysis['title'], hash_id)
-        os.makedirs(filepath.parent, exist_ok=True)
+    return frontmatter.dump(meta, body)
 
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(md)
 
-        print(f"✅ Saved: {filepath}")
+def finish(status: str, message: str, level: str = "INFO") -> None:
+    """Single exit point: workflow outputs + Telegram."""
+    set_output("status", status)
+    set_output("message", message)
+    telegram_notify(message, level)
+    log.info(f"[{status}] {message}")
 
-        # Log confidence and category
-        confidence = analysis.get('confidence', 0.0)
-        print(f"📊 Category: {analysis['category']} (confidence: {confidence:.2f})")
 
-        # Safe commit
-        safe_commit(
-            files=[str(filepath)],
-            message=f"WF1: {analysis.get('type', 'Article')} - {analysis['title'][:50]}"
-        )
+def resolve_input() -> tuple[object, str, str, bytes | None]:
+    """
+    Route the issue to an input type.
+    Returns (payload, input_type, source_ref, raw_bytes_for_hash).
+    """
+    # Make historically put the file id in the title for photos and only in a
+    # bold "File ID" line for documents: look in both title and body.
+    issue_text = f"{ISSUE_TITLE}\n{ISSUE_BODY}"
 
-        # Update history (if URL)
-        if input_type == "web_page":
-            add_to_history(source_ref, hash_id)
+    if "IMG_ID:" in issue_text:
+        file_id = issue_text.split("IMG_ID:")[1].split()[0].strip()
+        local_path = download_telegram_file(file_id)
+        if not local_path:
+            return None, "image", "Telegram Image", None
+        return local_path, "image", "Telegram Image", Path(local_path).read_bytes()
 
-        # Notify
-        inbox_note = " [→ _Inbox]" if analysis['category'] == "_Inbox" else ""
-        telegram_notify(
-            f"✅ Processed: {analysis['title']}\nCategory: {analysis['category']}{inbox_note}\nConfidence: {confidence:.0%}",
-            "SUCCESS" if analysis['category'] != "_Inbox" else "WARNING"
-        )
+    if "DOC_ID:" in issue_text or "**File ID** :" in issue_text:
+        marker = "DOC_ID:" if "DOC_ID:" in issue_text else "**File ID** :"
+        file_id = issue_text.split(marker)[1].split()[0].strip().strip("`")
+        local_path = download_telegram_file(file_id)
+        if not local_path:
+            return None, "document", "Telegram Document", None
+        raw = Path(local_path).read_bytes()
+        ext = os.path.splitext(local_path)[1].lower()
+        if ext in [".md", ".txt", ".csv", ".json"]:
+            return raw.decode("utf-8", errors="ignore"), "text", f"Telegram Document ({ext})", raw
+        return local_path, "document", "Telegram Document", raw
 
-        # Cleanup temp files
-        if input_type in ["image", "document"] and isinstance(data_payload, str):
-            if os.path.exists(data_payload):
-                os.remove(data_payload)
+    text_to_search = f"{ISSUE_TITLE} {ISSUE_BODY}"
+    match = re.search(r"https?://\S+", text_to_search)
+    if match:
+        url = normalize_url(match.group(0))
+        return url, "web_page", url, None
+
+    note = f"{ISSUE_TITLE}\n{ISSUE_BODY}".strip()
+    return note, "raw_note", ISSUE_TITLE, note.encode("utf-8")
+
+
+def main() -> None:
+    log.info(f"Processing issue #{ISSUE_NUMBER}: {ISSUE_TITLE}")
+
+    payload, input_type, source_ref, raw = resolve_input()
+    if payload is None:
+        finish("rejected", f"Rejeté : fichier Telegram introuvable ({ISSUE_TITLE})", "WARNING")
+        return
+
+    # --- QUALITY GATE + DEDUP (before any LLM spend) ---
+    if input_type == "web_page":
+        url = payload
+        if is_duplicate(url=url):
+            finish("duplicate", f"Doublon ignoré : {url}", "WARNING")
+            return
+        text, status = scrape_url(url)
+        ok, reason = validate_scraped(text, status)
+        if not ok:
+            finish("rejected", f"Rejeté ({reason}) : {url}", "WARNING")
+            return
+        payload, raw = text, text.encode("utf-8")
+    elif input_type == "raw_note":
+        ok, reason = validate_note(payload)
+        if not ok:
+            finish("rejected", f"Rejeté ({reason}) : note vide", "WARNING")
+            return
+
+    if raw is not None and is_duplicate(content=raw):
+        finish("duplicate", f"Doublon ignoré (contenu déjà ingéré) : {ISSUE_TITLE[:80]}", "WARNING")
+        return
+
+    hash_id = content_hash(raw) if raw is not None else datetime.now().strftime("%H%M%S")
+
+    # --- ANALYSIS ---
+    analysis = analyze_content(payload, input_type)
+    if not analysis:
+        finish("failed", f"Échec de l'analyse Gemini : {ISSUE_TITLE[:80]}", "ERROR")
+        return
+
+    junk, reason = is_junk_analysis(analysis, SETTINGS.get("reject_threshold", 0.3))
+    if junk:
+        finish("rejected", f"Rejeté après analyse ({reason}) : {analysis.get('title', ISSUE_TITLE)[:80]}", "WARNING")
+        return
+
+    # --- WRITE + COMMIT ---
+    filepath = get_save_path(analysis["category"], analysis["title"], hash_id)
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    filepath.write_text(build_card(analysis, source_ref, hash_id), encoding="utf-8")
+    log.info(f"Saved {filepath}")
+
+    add_to_history(
+        url=source_ref if input_type == "web_page" else None,
+        content=raw,
+        file=str(filepath),
+        kind=input_type,
+    )
+
+    safe_commit(
+        files=[str(filepath), "data/history.json"],
+        message=f"WF1: {analysis.get('type', 'Article')} - {analysis['title'][:50]}",
+    )
+
+    confidence = float(analysis.get("confidence", 0.0) or 0.0)
+    inbox_note = " [→ _Inbox]" if analysis["category"] == "_Inbox" else ""
+    finish(
+        "saved",
+        f"Fiche créée : {analysis['title']}\nCatégorie : {analysis['category']}{inbox_note}\nConfiance : {confidence:.0%}\nFichier : {filepath}",
+        "SUCCESS" if analysis["category"] != "_Inbox" else "WARNING",
+    )
+
+    if input_type in ["image", "document"] and isinstance(payload, str) and os.path.exists(payload):
+        os.remove(payload)
 
 
 if __name__ == "__main__":

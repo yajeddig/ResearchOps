@@ -71,62 +71,84 @@ class TestTelegramNotify:
 
 
 class TestSafeCommit:
-    """Tests for git operations utility"""
+    """Tests for git operations utility (subprocess.run based)"""
 
-    @patch('os.popen')
-    @patch('os.system')
-    def test_safe_commit_success(self, mock_system, mock_popen):
-        """Test successful commit flow"""
-        mock_system.return_value = 0
+    def _run_factory(self, fail_on=None, status_output=" M test.md", fail_times=0):
+        """Build a subprocess.run stub. `fail_on` is a substring of the command."""
+        state = {"failures": 0}
 
-        from utils.git_ops import safe_commit
-        safe_commit(files=["test.md"], message="Test commit")
+        def fake_run(cmd, capture_output=True, text=True):
+            joined = " ".join(cmd)
+            result = Mock()
+            result.returncode = 0
+            result.stdout = status_output if "status" in joined else ""
+            result.stderr = ""
+            if fail_on and fail_on in joined and state["failures"] < fail_times:
+                state["failures"] += 1
+                result.returncode = 1
+            return result
 
-        calls = [str(c) for c in mock_system.call_args_list]
-        assert any("git config" in c for c in calls)
-        assert any("git pull" in c for c in calls)
-        assert any("git add" in c for c in calls)
-        assert any("git commit" in c for c in calls)
-        assert any("git push" in c for c in calls)
+        return fake_run, state
 
-    @patch('os.popen')
-    @patch('os.system')
-    def test_safe_commit_nothing_to_commit(self, mock_system, mock_popen):
-        """Test handling of 'nothing to commit' scenario"""
-        def system_side_effect(cmd):
-            if "commit" in cmd:
-                return 1
-            return 0
-
-        mock_system.side_effect = system_side_effect
-        mock_popen.return_value.read.return_value = ""
+    @patch('utils.git_ops.time.sleep')
+    @patch('utils.git_ops.subprocess.run')
+    def test_safe_commit_success(self, mock_run, _sleep):
+        """Config, add, status, commit, pull --rebase, push are all issued"""
+        mock_run.side_effect, _ = self._run_factory()
 
         from utils.git_ops import safe_commit
-        safe_commit(files=["test.md"], message="Test commit")
+        assert safe_commit(files=["test.md"], message="Test commit") is True
 
-    @patch('os.system')
-    def test_safe_commit_pull_failure_raises(self, mock_system):
-        """Test that pull failure raises exception"""
-        def system_side_effect(cmd):
-            if "pull" in cmd:
-                return 1
-            return 0
+        calls = [" ".join(c.args[0]) for c in mock_run.call_args_list]
+        for expected in ["git config", "git add test.md", "git status", "git commit", "git pull --rebase", "git push"]:
+            assert any(expected in c for c in calls), expected
 
-        mock_system.side_effect = system_side_effect
+    @patch('utils.git_ops.time.sleep')
+    @patch('utils.git_ops.subprocess.run')
+    def test_safe_commit_nothing_to_commit(self, mock_run, _sleep):
+        """Clean tree: no commit, no push"""
+        mock_run.side_effect, _ = self._run_factory(status_output="")
 
         from utils.git_ops import safe_commit
-        with pytest.raises(Exception, match="Git pull failed"):
-            safe_commit.__wrapped__(files=["test.md"], message="Test commit")
+        assert safe_commit(files=["test.md"], message="Test commit") is False
 
-    @patch('os.system')
-    def test_safe_commit_multiple_files(self, mock_system):
-        """Test committing multiple files"""
-        mock_system.return_value = 0
+        calls = [" ".join(c.args[0]) for c in mock_run.call_args_list]
+        assert not any("git commit" in c for c in calls)
+        assert not any("git push" in c for c in calls)
+
+    @patch('utils.git_ops.time.sleep')
+    @patch('utils.git_ops.subprocess.run')
+    def test_safe_commit_push_retried_then_succeeds(self, mock_run, _sleep):
+        """A transient push failure is retried without re-committing"""
+        mock_run.side_effect, state = self._run_factory(fail_on="git push", fail_times=1)
+
+        from utils.git_ops import safe_commit
+        assert safe_commit(files=["test.md"], message="Test commit") is True
+
+        calls = [" ".join(c.args[0]) for c in mock_run.call_args_list]
+        assert sum("git commit" in c for c in calls) == 1
+        assert sum("git push" in c for c in calls) == 2
+
+    @patch('utils.git_ops.time.sleep')
+    @patch('utils.git_ops.subprocess.run')
+    def test_safe_commit_push_failure_raises(self, mock_run, _sleep):
+        """Persistent push failure surfaces as an error instead of a silent no-op"""
+        mock_run.side_effect, _ = self._run_factory(fail_on="git push", fail_times=99)
+
+        from utils.git_ops import safe_commit
+        with pytest.raises(RuntimeError, match="Git push failed"):
+            safe_commit(files=["test.md"], message="Test commit")
+
+    @patch('utils.git_ops.time.sleep')
+    @patch('utils.git_ops.subprocess.run')
+    def test_safe_commit_multiple_files(self, mock_run, _sleep):
+        """Each file is staged individually"""
+        mock_run.side_effect, _ = self._run_factory()
 
         from utils.git_ops import safe_commit
         safe_commit(files=["file1.md", "file2.md", "file3.md"], message="Multi-file commit")
 
-        add_calls = [c for c in mock_system.call_args_list if "git add" in str(c)]
+        add_calls = [c for c in mock_run.call_args_list if "add" in c.args[0]]
         assert len(add_calls) == 3
 
 
