@@ -1,0 +1,5745 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fiches de veille R&D, rapports mensuels et recherches">
+      
+      
+      
+        <link rel="canonical" href="https://yajeddig.github.io/ResearchOps/content/Data_Science/20260103_112304_mod_lisation_hybride_adm1_ude_pour_digestion_ana_r/">
+      
+      
+        <link rel="prev" href="../20260103_112257_d_veloppement_d_un_jumeau_num_rique_hybride__adm1_/">
+      
+      
+        <link rel="next" href="../20260103_112308_advanced_modeling_and_control_of_anaerobic_digesti/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024 - ResearchOps — Knowledge Base</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#relevance" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-header__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ResearchOps — Knowledge Base
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-nav__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ResearchOps — Knowledge Base
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResearchOps — Knowledge Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20251230_180116_openflodata__real_time_simulation___streaming_of_v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenFloData: Real-Time Simulation & Streaming of Volve Oil & Gas Production Data for Data Engineering & Surveillance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093050_postgrest__automatic_rest_api_generation_for_postg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgREST: Automatic REST API Generation for PostgreSQL Databases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093144_github___bytebytegohq_system_design_101__explain_c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub - ByteByteGoHq/system-design-101: Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260115_072117_pointblank__data_validation_and_quality_monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pointblank: Data Validation and Quality Monitoring Toolkit for Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260204_073433_pg_duckdb__duckdb_extension_for_high_performance_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pg_duckdb: DuckDB Extension for High-Performance Analytics in PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260214_091228_duckdb_shell__in_browser_sql_client_for_analytical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DuckDB Shell: In-Browser SQL Client for Analytical Data Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Science
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_175647_bofire__experimental_design_and_multi_objective_ba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bofire: Experimental Design and Multi-Objective Bayesian Optimization Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_181646_code__a_global_approach_to_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CODE: A Global Approach to Ordinary Differential Equation (ODE) Dynamics Learning with Polynomial Chaos Expansion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_181745_sindybrid__automated_hybrid_model_generation_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SINDybrid: Automated Hybrid Model Generation for Dynamic Systems using MILP and Sparse Identification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_192456_artificial_intelligence_in_chemical_engineering__a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artificial Intelligence in Chemical Engineering: A White Paper on AI/ML Applications, Challenges, and Future Directions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251230_152511_optimistik__industrial_ai_analytics_software_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimistik: Industrial AI Analytics Software for Digital Transformation and Sustainable Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260101_211512_convergence_rate_proof_for_gradient_flow_of_convex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convergence Rate Proof for Gradient Flow of Convex Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260102_135419_llm_council__multi_agent_llm_orchestration_for_enh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Council: Multi-Agent LLM Orchestration for Enhanced Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_093401_darts__a_python_library_for_user_friendly_time_ser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Darts: A Python Library for User-Friendly Time Series Forecasting and Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112257_d_veloppement_d_un_jumeau_num_rique_hybride__adm1_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Développement d'un Jumeau Numérique Hybride (ADM1 + UDE) pour la Méthanisation Industrielle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelisation-hybride-adm1ude-pour-digestion-anaerobie-industrielle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etat-de-lart-2018-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        État de l'Art 2018-2024
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-resume-executif-strategies-optimales-par-axe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Résumé exécutif : stratégies optimales par axe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Résumé exécutif : stratégies optimales par axe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modelisation-enzymatique-dans-adm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modélisation enzymatique dans ADM1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametres-cinetiques-des-substrats-atypiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paramètres cinétiques des substrats atypiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architectures-hybrides-neural-odeude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectures hybrides Neural ODE/UDE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-up-bmp-vers-cstr-industriel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-up BMP vers CSTR industriel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tableaux-de-parametres-numeriques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Tableaux de paramètres numériques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Tableaux de paramètres numériques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fractionnement-adm1-et-cinetiques-pour-substrats-prioritaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fractionnement ADM1 et cinétiques pour substrats prioritaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantes-k_hyd-adm1-par-fraction-valeurs-de-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constantes k_hyd ADM1 par fraction (valeurs de référence)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ratios-de-correction-scale-up-bmp-cstr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ratios de correction scale-up BMP → CSTR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-equations-mathematiques-pour-couplage-enzymeadm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Équations mathématiques pour couplage Enzyme/ADM1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Équations mathématiques pour couplage Enzyme/ADM1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-modele-de-contois-pour-hydrolyse-enzymatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Modèle de Contois pour hydrolyse enzymatique
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-cinetique-de-surface-esposito-pour-pretraitements-mecaniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Cinétique de surface (Esposito) pour prétraitements mécaniques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-inhibition-par-produits-vfa-et-ammoniac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Inhibition par produits (VFA et ammoniac)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-michaelis-menten-modifie-avec-desactivation-enzymatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Michaelis-Menten modifié avec désactivation enzymatique
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-formulation-ude-pour-terme-cinetique-inconnu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Formulation UDE pour terme cinétique inconnu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-correction-hydraulique-tanks-in-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Correction hydraulique tanks-in-series
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-recommandations-techniques-pour-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recommandations techniques pour implémentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Recommandations techniques pour implémentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-architecture-hybride-adm1ude-optimale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Architecture hybride ADM1/UDE optimale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-protocole-de-calibration-industrielle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Protocole de calibration industrielle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lacunes-critiques-et-perspectives-de-recherche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Lacunes critiques et perspectives de recherche
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-bibliographie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bibliographie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Bibliographie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-references-citees-dans-le-texte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Références citées dans le texte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-references-consultees-non-citees-directement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Références consultées (non citées directement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112308_advanced_modeling_and_control_of_anaerobic_digesti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Control of Anaerobic Digestion for Biogas Production: A Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112312_advanced_modeling_and_data_science_techniques_for_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Data Science Techniques for Anaerobic Digestion Process Control and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260108_200801_ui_tars_desktop__open_source_multimodal_ai_agent_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI-TARS-desktop: Open-Source Multimodal AI Agent Stack by ByteDance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260108_210152_hybridation_de_mod_les_physiques_et_machine_learni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybridation de Modèles Physiques et Machine Learning pour Équations Différentielles (EDO/EDP): Taxonomie, Comparaison et Applications en Traitement des Eaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260109_201727_specializing_large_language_models_for_process_mod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specializing Large Language Models for Process Modeling via Reinforcement Learning with Verifiable and Universal Rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260110_092444_rag_anything__all_in_one_multimodal_retrieval_augm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG-Anything: All-in-One Multimodal Retrieval-Augmented Generation (RAG) Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260110_092746_demystifying_r___understanding_its_true_meaning_an/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying R²: Understanding its True Meaning and Limitations in Data Science Model Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260118_082823_reliable_feature_importance_for_random_forests__ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260120_210628_ai_prompt_builder_for_structured_interaction_with_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Prompt Builder for Structured Interaction with Large Language Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260122_152149_agentic_physics_informed_digital_twin_for_trustwor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Physics-Informed Digital Twin for Trustworthy Cyber-Physical System Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260122_193732_fluidgym__plug_and_play_benchmarking_of_reinforcem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260123_204308_pinneapple__open_source_physics_ai_toolkit_for_phy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PINNeAPPle: Open-source Physics AI Toolkit for Physics-Informed Neural Networks and Scientific ML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260123_215808_deepthermomix__classical_thermodynamics_flavored_w/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepThermoMix: Classical Thermodynamics Flavored with Modern Deep Learning for Multicomponent Activity Coefficient Prediction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260130_060010_the__physics_based_model__myth__why_industrial_rea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The 'Physics-Based Model' Myth: Why Industrial Reality Defies Textbook Assumptions in AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260131_162921_github_platform_features_for_ai_and_software_devel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for AI and Software Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260203_073601_explainable_artificial_intelligence_in_process_eng/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eXplainable Artificial Intelligence in Process Engineering: Promises, Facts, and Current Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260227_181227_ai_driven_digital_twins_for_predictive_control_in_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-driven Digital Twins for Predictive Control in Data Center Cooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260227_181228_autonomous_ai_tuning_of_pid_control_loops_for_ener/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous AI Tuning of PID Control Loops for Energy-Efficient Cooling Infrastructure via Digital Twins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260327_190541_analysis_of_physics_constrained_neural_ode_for_mic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Physics-Constrained Neural ODE for Microbial Community Dynamics (Neural Species Mediator)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260327_190630_physics_constrained_neural_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physics-constrained neural ordinary differential equation models to discover and predict microbial community dynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260425_071200_recursive_language_models__a_general_inference_par/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursive Language Models: A General Inference Paradigm for Long Prompts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260527_132324_it_takes_two_neurons_to_ride_a_bicycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    It Takes Two Neurons To Ride a Bicycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260606_073206_ce_que_scipy_ne_vous_dit_pas_sur_l_ajustement_de_g/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ce que scipy ne vous dit pas sur l’ajustement de GEV non stationnaire à grande échelle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Industrial_Systems/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Industrial Systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Industrial Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20251229_112943_enterprise_architecture_s_strategic_role_in_digita/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Architecture's Strategic Role in Digital Transformation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260102_213542_python_gui_development_with_guizero__building_inte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python GUI Development with guizero: Building Interactive Applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111222_note_de_cadrage_strat_gique___modernisation_de_l_i/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Note de Cadrage Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111224_rapport_strat_gique___modernisation_de_l_infrastru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rapport Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT et Transformation des Opérations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260104_081536_automatisch__open_source_workflow_automation_platf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisch: Open-Source Workflow Automation Platform (Zapier Alternative)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260113_115307_copapy__tracing_based_copy___patch_compiler_for_py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copapy: Tracing Based Copy & Patch Compiler for Python for Deterministic Real-time Embedded Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260121_172455_the_future_of_industrial_process_control__virtual_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Future of Industrial Process Control: Virtual PLCs and Software-Defined Automation with Emerson DeltaV IQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260214_091222_autonomy_edge_quick_start_guide__cloud_based_indus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260514_211513_making_sure_you_re_not_a_bot____anubis_anti_scrapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making sure you're not a bot! - Anubis Anti-Scraping System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260607_101437_open_process_library__mtp_compatible__cross_vendor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open Process Library: MTP-compatible, Cross-Vendor Industrial Process Automation Library for PLC/DCS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Process_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Process Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20251229_181238_demystifying_industry_4_0__navigating_automation_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying Industry 4.0: Navigating Automation and Augmentation in Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260102_163639_simcraft__an_open_source_discrete_event_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimCraft: An Open-Source Discrete Event Simulation Framework for Industrial Modeling and AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260108_200401_baram__open_source_cfd_software_with_gui_for_openf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BARAM: Open-Source CFD Software with GUI for OpenFOAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260112_225400_reasoning_agent_driven_process_simulation__optimiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reasoning-agent-driven process simulation, optimization, carbon accounting and decarbonization of distillation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260113_211312_modeling_of_industrial_multiphase_reactors__advanc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modeling of Industrial Multiphase Reactors: Advances in AI, HPC, and Quantum Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260119_223617_modelpredictivecontrol_jl__open_source_model_predi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ModelPredictiveControl.jl: Open-Source Model Predictive Control Package for Julia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083245_ai_driven_predictive_control_for_natural_gas_conde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Natural Gas Condensate Stabilization: A Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083655_ai_driven_predictive_control_for_condensate_stabil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Condensate Stabilization – IntelliDynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260126_074550_white_paper__how_does_pat_apply_to_the_bioreactor_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Paper: How Does PAT Apply to the Bioreactor?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162831_pathsim__a_python_framework_for_block_diagram_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathSim: A Python Framework for Block Diagram-based Dynamical System Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162921_pathview__web_based_visual_editor_for_dynamic_syst/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Strategy_Business/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategy Business
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategy Business
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20251229_112211_data_strategy_pack__building_impactful_data_teams_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Strategy Pack: Building Impactful Data Teams and Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260103_111227_strat_gies_de_modernisation_ot_it_industrielle___c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stratégies de Modernisation OT/IT Industrielle : Convergence, Coûts du Vendor Lock-in, ROI de l'IA et Défis des Compétences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260219_183041_digital_transformation_framework___people__process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Transformation Framework - People, Process, Technology, & Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260314_203204_analysis_of_goldman_sachs__halo_effect_thesis__ind/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Goldman Sachs' HALO Effect Thesis: Industrial Asset Valuation vs. Operational Reality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../_Inbox/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+     Inbox
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+     Inbox
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251229_111800_generic_test_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Test Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251230_173046_github_platform_features_for_software_development_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for Software Development and Collaboration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_082850_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_083229_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_105532_security_verification_page___perplexity_ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Perplexity AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135228_employee_payslip_for_siaap_engineer__december_2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Employee Payslip for SIAAP Engineer (December 2025)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135415_sciencedirect_access_denied___captcha_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScienceDirect Access Denied / Captcha Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260110_221817_access_denied__captcha_forbidden_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Denied: CAPTCHA/Forbidden Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260121_201259_captcha_challenge___bot_detection_page__elsevier_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CAPTCHA Challenge / Bot Detection Page (Elsevier ScienceDirect)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260124_084721_security_compromise_error__ddos_attack_suspected_o/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Compromise Error: DDoS Attack Suspected on DOI Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_204725_flat_payload_test_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flat Payload Test Message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_210559_image_content_unavailable_for_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image content unavailable for analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260329_204124_security_verification_page___content_unavailable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Content Unavailable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_071331_unanalyzed_image_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unanalyzed Image Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_084724_access_issue__security_verification_on_pnas_org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Issue: Security Verification on pnas.org
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_075122_security_verification___content_inaccessible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification - Content Inaccessible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_082550_generic_content_placeholder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Content Placeholder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_140059_reference_to_unanalyzed_pdf_document__s02638762260/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document (S0263876226002455)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260517_083330_empty_content_input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Empty Content Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260527_122215_reference_to_unanalyzed_pdf_document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260604_191342_linkedin_page_not_found_error__404_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error (404)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123455_web_navigation_error__connection_reset_to_orca_tel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Navigation Error: Connection Reset to Orca Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123457_linkedin_404_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn 404 Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123501_linkedin_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reports
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reports
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-01_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Monthly Intelligence - January 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-02_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Janvier 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-03_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Février 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-04_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mars 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-05_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Avril 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-06_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mai 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-07_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Juin 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-08_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — July 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-09_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Août 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelisation-hybride-adm1ude-pour-digestion-anaerobie-industrielle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etat-de-lart-2018-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        État de l'Art 2018-2024
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-resume-executif-strategies-optimales-par-axe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Résumé exécutif : stratégies optimales par axe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Résumé exécutif : stratégies optimales par axe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modelisation-enzymatique-dans-adm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modélisation enzymatique dans ADM1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametres-cinetiques-des-substrats-atypiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paramètres cinétiques des substrats atypiques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architectures-hybrides-neural-odeude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectures hybrides Neural ODE/UDE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-up-bmp-vers-cstr-industriel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-up BMP vers CSTR industriel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tableaux-de-parametres-numeriques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Tableaux de paramètres numériques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Tableaux de paramètres numériques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fractionnement-adm1-et-cinetiques-pour-substrats-prioritaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fractionnement ADM1 et cinétiques pour substrats prioritaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantes-k_hyd-adm1-par-fraction-valeurs-de-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constantes k_hyd ADM1 par fraction (valeurs de référence)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ratios-de-correction-scale-up-bmp-cstr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ratios de correction scale-up BMP → CSTR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-equations-mathematiques-pour-couplage-enzymeadm1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Équations mathématiques pour couplage Enzyme/ADM1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Équations mathématiques pour couplage Enzyme/ADM1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-modele-de-contois-pour-hydrolyse-enzymatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Modèle de Contois pour hydrolyse enzymatique
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-cinetique-de-surface-esposito-pour-pretraitements-mecaniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Cinétique de surface (Esposito) pour prétraitements mécaniques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-inhibition-par-produits-vfa-et-ammoniac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Inhibition par produits (VFA et ammoniac)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-michaelis-menten-modifie-avec-desactivation-enzymatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Michaelis-Menten modifié avec désactivation enzymatique
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-formulation-ude-pour-terme-cinetique-inconnu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Formulation UDE pour terme cinétique inconnu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-correction-hydraulique-tanks-in-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Correction hydraulique tanks-in-series
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-recommandations-techniques-pour-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recommandations techniques pour implémentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Recommandations techniques pour implémentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-architecture-hybride-adm1ude-optimale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Architecture hybride ADM1/UDE optimale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-protocole-de-calibration-industrielle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Protocole de calibration industrielle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lacunes-critiques-et-perspectives-de-recherche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Lacunes critiques et perspectives de recherche
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-bibliographie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bibliographie
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Bibliographie">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-references-citees-dans-le-texte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Références citées dans le texte
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-references-consultees-non-citees-directement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Références consultées (non citées directement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">ADM1</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Anaerobic Digestion</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">BMP test</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Biogas</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Black Soldier Fly</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">CSTR</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Digital Twin</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Enzyme kinetics</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Frass</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Hybrid Modeling</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Industrial Data Science</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Inhibition modeling</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Julia SciML</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Kinetic Modeling</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Methanization</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Neural ODE</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Process simulation</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Scale-up</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">UDE</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Universal Differential Equations</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">sector:anaerobic-digestion</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">sector:biogas</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">sector:methanization</span>
+      
+    
+  </nav>
+
+
+
+<h2 id="relevance">🎯 Relevance<a class="headerlink" href="#relevance" title="Permanent link">&para;</a></h2>
+<p>This content is highly useful for optimizing industrial anaerobic digestion processes, improving biogas production efficiency, and managing complex or novel substrates like insect frass. It provides a roadmap for developing robust digital twins, enhancing predictive capabilities, mitigating operational risks (e.g., inhibition), and ultimately increasing the ROI of methanization plants through better process control and stability.</p>
+<h2 id="content">📖 Content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h2>
+<h1 id="modelisation-hybride-adm1ude-pour-digestion-anaerobie-industrielle">Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle<a class="headerlink" href="#modelisation-hybride-adm1ude-pour-digestion-anaerobie-industrielle" title="Permanent link">&para;</a></h1>
+<h2 id="etat-de-lart-2018-2024">État de l'Art 2018-2024<a class="headerlink" href="#etat-de-lart-2018-2024" title="Permanent link">&para;</a></h2>
+<hr />
+<p>L'intégration d'enzymes exogènes et de réseaux de neurones dans le modèle ADM1 constitue une frontière de recherche active, mais <strong>les applications spécifiques au frass d'insectes et aux Universal Differential Equations pour la digestion anaérobie restent largement inexplorées</strong>. Cette synthèse révèle trois constats majeurs : (1) le modèle de Contois s'impose comme alternative validée à la cinétique de premier ordre pour substrats complexes [1], (2) les paramètres k_hyd issus de tests BMP sous-estiment systématiquement les valeurs CSTR d'un facteur <strong>10 à 30</strong> [2], et (3) l'écosystème Julia SciML offre la stabilité numérique indispensable pour les systèmes raides ADM1 hybrides [3][4]. Pour le frass BSF, la littérature fournit désormais des données BMP exploitables [5], mais aucun fractionnement ADM1 validé n'existe — la chitine devant être classifiée comme inerte (X_I) en conditions mésophiles [6].</p>
+<hr />
+<h2 id="1-resume-executif-strategies-optimales-par-axe">1. Résumé exécutif : stratégies optimales par axe<a class="headerlink" href="#1-resume-executif-strategies-optimales-par-axe" title="Permanent link">&para;</a></h2>
+<h3 id="modelisation-enzymatique-dans-adm1">Modélisation enzymatique dans ADM1<a class="headerlink" href="#modelisation-enzymatique-dans-adm1" title="Permanent link">&para;</a></h3>
+<p>La cinétique d'hydrolyse de premier ordre standard (dX/dt = -k_hyd·X) montre ses limites pour les substrats prétraités enzymatiquement [7]. <strong>Le modèle de Contois</strong> émerge comme l'alternative la plus validée, capturant la relation sigmoïde biomasse-substrat observée expérimentalement [1][8]. Pour les particules solides, la <strong>cinétique de surface d'Esposito</strong> (k_hyd = k_dis<em> × A_sp) relie directement la constante d'hydrolyse à la surface spécifique disponible, pertinent pour les prétraitements mécaniques [9]. Les cocktails enzymatiques sur lignocellulose augmentent k_hyd de </em><em>2 à 5 fois</em><em>, avec des valeurs atteignant </em><em>0.4-1.5 j⁻¹</em>* contre 0.1-0.3 j⁻¹ sans prétraitement [10][11].</p>
+<h3 id="parametres-cinetiques-des-substrats-atypiques">Paramètres cinétiques des substrats atypiques<a class="headerlink" href="#parametres-cinetiques-des-substrats-atypiques" title="Permanent link">&para;</a></h3>
+<p>Le frass de Black Soldier Fly présente un potentiel méthanogène de <strong>201-287 mL CH₄/gVS</strong> selon le substrat d'alimentation larvaire, avec des constantes k_hyd de premier ordre entre <strong>0.13 et 0.38 j⁻¹</strong> [5]. La problématique majeure réside dans la teneur protéique élevée (20-30% TS) générant un risque d'inhibition ammoniacale [5][12]. <strong>La chitine doit être classifiée X_I</strong> (inerte) car sa dégradation est négligeable en conditions anaérobies mésophiles [6][13]. Pour la pulpe de betterave, les polysaccharides dominent (f_ch ≈ 0.75-0.85), avec des BMP atteignant <strong>898 mL biogaz/gVS</strong> après prétraitement combiné [10].</p>
+<h3 id="architectures-hybrides-neural-odeude">Architectures hybrides Neural ODE/UDE<a class="headerlink" href="#architectures-hybrides-neural-odeude" title="Permanent link">&para;</a></h3>
+<p>Les Universal Differential Equations [3] représentent l'approche la plus prometteuse pour ADM1 hybride, permettant de remplacer des termes cinétiques inconnus par des réseaux de neurones tout en conservant la structure mécanistique. <strong>Julia SciML surpasse Python</strong> pour les systèmes raides : stabilité des gradients avec le solveur KenCarp4, méthode adjointe discrète avec checkpointing [4][14]. L'entraînement requiert impérativement une optimisation multi-start (&gt;1000 départs) et une régularisation L2 (λ ∈ [0.1, 10]) [4].</p>
+<h3 id="scale-up-bmp-vers-cstr-industriel">Scale-up BMP vers CSTR industriel<a class="headerlink" href="#scale-up-bmp-vers-cstr-industriel" title="Permanent link">&para;</a></h3>
+<p>Le transfert direct des paramètres BMP vers un modèle CSTR constitue une erreur méthodologique majeure. <strong>Les k_hyd batch sont typiquement 10 à 30 fois inférieurs aux valeurs CSTR</strong> [2]. Le protocole de scale-up exige des tests RTD (traceurs lithium ou rhodamine) pour quantifier les volumes morts (3-50% selon la géométrie) et calibrer un modèle tanks-in-series équivalent [15][16]. Seule la fraction dégradable f(d) se transfère directement du batch au continu [17].</p>
+<hr />
+<h2 id="2-tableaux-de-parametres-numeriques">2. Tableaux de paramètres numériques<a class="headerlink" href="#2-tableaux-de-parametres-numeriques" title="Permanent link">&para;</a></h2>
+<h3 id="fractionnement-adm1-et-cinetiques-pour-substrats-prioritaires">Fractionnement ADM1 et cinétiques pour substrats prioritaires<a class="headerlink" href="#fractionnement-adm1-et-cinetiques-pour-substrats-prioritaires" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Substrat</th>
+<th>f_ch</th>
+<th>f_pr</th>
+<th>f_li</th>
+<th>f_I</th>
+<th>k_hyd (j⁻¹)</th>
+<th>BMP (mL CH₄/gVS)</th>
+<th>C/N</th>
+<th>Réf.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BSF Frass (céréales)</strong></td>
+<td>0.42</td>
+<td>0.23</td>
+<td>0.03</td>
+<td>0.20</td>
+<td>0.25 ± 0.02</td>
+<td>277 ± 1</td>
+<td>8-15</td>
+<td>[5]</td>
+</tr>
+<tr>
+<td><strong>BSF Frass (ensilage maïs)</strong></td>
+<td>0.35</td>
+<td>0.23</td>
+<td>0.03</td>
+<td>0.10</td>
+<td>0.22 ± 0.00</td>
+<td>262 ± 17</td>
+<td>10-20</td>
+<td>[5]</td>
+</tr>
+<tr>
+<td><strong>BSF Frass (drêches)</strong></td>
+<td>0.31</td>
+<td>0.22</td>
+<td>0.04</td>
+<td>0.49</td>
+<td>0.13 ± 0.01</td>
+<td>259 ± 27</td>
+<td>15-27</td>
+<td>[5]</td>
+</tr>
+<tr>
+<td><strong>Pulpe betterave (non traitée)</strong></td>
+<td>0.80</td>
+<td>0.09</td>
+<td>0.02</td>
+<td>0.09</td>
+<td>0.15-0.25</td>
+<td>400-450</td>
+<td>35-50</td>
+<td>[10]</td>
+</tr>
+<tr>
+<td><strong>Pulpe betterave (enzymatique)</strong></td>
+<td>0.80</td>
+<td>0.09</td>
+<td>0.02</td>
+<td>0.09</td>
+<td>0.40-0.80</td>
+<td>500-550</td>
+<td>35-50</td>
+<td>[10]</td>
+</tr>
+<tr>
+<td><strong>Poussières céréales</strong>*</td>
+<td>0.75</td>
+<td>0.12</td>
+<td>0.03</td>
+<td>0.10</td>
+<td>0.30-0.50</td>
+<td>300-400</td>
+<td>20-40</td>
+<td>Est.</td>
+</tr>
+<tr>
+<td>Ensilage maïs</td>
+<td>0.72</td>
+<td>0.09</td>
+<td>0.02</td>
+<td>0.15</td>
+<td>0.20-0.35</td>
+<td>300-370</td>
+<td>30-50</td>
+<td>[18]</td>
+</tr>
+<tr>
+<td>Fumier bovin</td>
+<td>0.60</td>
+<td>0.16</td>
+<td>0.04</td>
+<td>0.22</td>
+<td>0.10-0.20</td>
+<td>110-275</td>
+<td>15-25</td>
+<td>[19]</td>
+</tr>
+</tbody>
+</table>
+<p>*Estimation basée sur composition analogue aux céréales — données ADM1 spécifiques non disponibles.</p>
+<h3 id="constantes-k_hyd-adm1-par-fraction-valeurs-de-reference">Constantes k_hyd ADM1 par fraction (valeurs de référence)<a class="headerlink" href="#constantes-k_hyd-adm1-par-fraction-valeurs-de-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Fraction</th>
+<th>k_hyd défaut ADM1 (j⁻¹)</th>
+<th>Plage calibrée</th>
+<th>Conditions</th>
+<th>Réf.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Carbohydrates (k_hyd_ch)</td>
+<td>10</td>
+<td>0.5-10</td>
+<td>Amidon rapide, cellulose lente</td>
+<td>[20]</td>
+</tr>
+<tr>
+<td>Protéines (k_hyd_pr)</td>
+<td>10</td>
+<td>0.25-10</td>
+<td>Variable selon accessibilité</td>
+<td>[20]</td>
+</tr>
+<tr>
+<td>Lipides (k_hyd_li)</td>
+<td>10</td>
+<td>0.1-10</td>
+<td>Souvent limitant (LCFA)</td>
+<td>[20]</td>
+</tr>
+<tr>
+<td>Désintégration (k_dis)</td>
+<td>0.5</td>
+<td>0.1-1.0</td>
+<td>Substrats particulaires</td>
+<td>[20]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ratios-de-correction-scale-up-bmp-cstr">Ratios de correction scale-up BMP → CSTR<a class="headerlink" href="#ratios-de-correction-scale-up-bmp-cstr" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Substrat</th>
+<th>k_hyd Batch (j⁻¹)</th>
+<th>k_hyd CSTR (j⁻¹)</th>
+<th>Facteur</th>
+<th>Réf.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boues municipales</td>
+<td>0.15-0.25</td>
+<td>&gt;5.0</td>
+<td><strong>×20-30</strong></td>
+<td>[2]</td>
+</tr>
+<tr>
+<td>Résidus agricoles</td>
+<td>Variable</td>
+<td>Variable</td>
+<td>×10-20</td>
+<td>[21]</td>
+</tr>
+<tr>
+<td>Déchets alimentaires</td>
+<td>0.13-0.20</td>
+<td>1.5-3.0</td>
+<td>×10-15</td>
+<td>[17]</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-equations-mathematiques-pour-couplage-enzymeadm1">3. Équations mathématiques pour couplage Enzyme/ADM1<a class="headerlink" href="#3-equations-mathematiques-pour-couplage-enzymeadm1" title="Permanent link">&para;</a></h2>
+<h3 id="31-modele-de-contois-pour-hydrolyse-enzymatique">3.1 Modèle de Contois pour hydrolyse enzymatique<a class="headerlink" href="#31-modele-de-contois-pour-hydrolyse-enzymatique" title="Permanent link">&para;</a></h3>
+<p>Cette formulation capture la dépendance biomasse-substrat et la saturation observée à haute concentration [1][8] :</p>
+<div class="arithmatex">\[\rho_{hyd} = \frac{\mu_{max,hyd} \cdot X_{substrat}}{K_X \cdot X_{biomasse} + X_{substrat}} \cdot X_{biomasse}\]</div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Symbole</th>
+<th>Valeur typique</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Taux maximal hydrolyse</td>
+<td>μ_max,hyd</td>
+<td>0.1-0.5</td>
+<td>j⁻¹</td>
+</tr>
+<tr>
+<td>Constante demi-saturation Contois</td>
+<td>K_X</td>
+<td>0.1-1.0</td>
+<td>g COD/g COD</td>
+</tr>
+</tbody>
+</table>
+<p>Validé par Ramirez et al. [1] pour boues prétraitées et Greses et al. [8] pour microalgues avec fonctions d'inhibition VFA.</p>
+<h3 id="32-cinetique-de-surface-esposito-pour-pretraitements-mecaniques">3.2 Cinétique de surface (Esposito) pour prétraitements mécaniques<a class="headerlink" href="#32-cinetique-de-surface-esposito-pour-pretraitements-mecaniques" title="Permanent link">&para;</a></h3>
+<p>Pour substrats particulaires où la taille affecte l'accessibilité enzymatique [9] :</p>
+<div class="arithmatex">\[\frac{dX_c}{dt} = -k_{dis}^* \cdot A_{sp} \cdot X_c\]</div>
+<p>Surface spécifique pour particules sphériques :</p>
+<div class="arithmatex">\[A_{sp} = \frac{6}{\rho \cdot d_p}\]</div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Symbole</th>
+<th>Unité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constante de surface</td>
+<td>k_dis*</td>
+<td>m/d</td>
+</tr>
+<tr>
+<td>Diamètre particule</td>
+<td>d_p</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Densité</td>
+<td>ρ</td>
+<td>kg/m³</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Relation directe</strong> : k_hyd = k_dis* × A_sp</p>
+<h3 id="33-inhibition-par-produits-vfa-et-ammoniac">3.3 Inhibition par produits (VFA et ammoniac)<a class="headerlink" href="#33-inhibition-par-produits-vfa-et-ammoniac" title="Permanent link">&para;</a></h3>
+<p>Fonctions d'inhibition à intégrer pour substrats riches en azote (frass) [12][20] :</p>
+<div class="arithmatex">\[I_{VFA} = \frac{1}{1 + S_{VFA}/K_{I,VFA}}\]</div>
+<div class="arithmatex">\[I_{NH3} = \frac{K_{I,N}}{K_{I,N} + [NH_3]}\]</div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Symbole</th>
+<th>Valeur</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inhibition acétate</td>
+<td>K_I,VFA</td>
+<td>≈ 9600 mg/L</td>
+<td>[20]</td>
+</tr>
+<tr>
+<td>Inhibition ammoniac</td>
+<td>K_I,N</td>
+<td>1.5-3.0 g N-NH₄/L</td>
+<td>[12]</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>Critique pour frass</strong> : teneur protéique élevée → risque inhibition NH₃</p>
+<h3 id="34-michaelis-menten-modifie-avec-desactivation-enzymatique">3.4 Michaelis-Menten modifié avec désactivation enzymatique<a class="headerlink" href="#34-michaelis-menten-modifie-avec-desactivation-enzymatique" title="Permanent link">&para;</a></h3>
+<p>Pour modéliser la perte d'activité enzymatique au cours du temps [11] :</p>
+<div class="arithmatex">\[\frac{dS}{dt} = \frac{V_{max} \cdot E_0 \cdot S}{K_m + S} \cdot e^{-k_d \cdot t}\]</div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E_0</td>
+<td>Concentration enzyme initiale</td>
+</tr>
+<tr>
+<td>k_d</td>
+<td>Constante de désactivation (j⁻¹)</td>
+</tr>
+<tr>
+<td>V_max</td>
+<td>Vitesse maximale de réaction</td>
+</tr>
+<tr>
+<td>K_m</td>
+<td>Constante de Michaelis</td>
+</tr>
+</tbody>
+</table>
+<h3 id="35-formulation-ude-pour-terme-cinetique-inconnu">3.5 Formulation UDE pour terme cinétique inconnu<a class="headerlink" href="#35-formulation-ude-pour-terme-cinetique-inconnu" title="Permanent link">&para;</a></h3>
+<p>Remplacement d'un terme cinétique par réseau de neurones dans ADM1 [3][4] :</p>
+<div class="arithmatex">\[\frac{dS_{ac}}{dt} = \sum_j \nu_{ac,j} \cdot \rho_j - \rho_{ac}(S_{ac}, X_{ac}, I_{NN})\]</div>
+<p>où :</p>
+<div class="arithmatex">\[I_{NN} = NN(S_{ac}, S_{H2}, pH, [NH_3]; \theta)\]</div>
+<p>Le réseau de neurones apprend la fonction d'inhibition combinée à partir des données.</p>
+<p><strong>Architecture recommandée</strong> [4][14] :
+- MLP 2-3 couches cachées
+- 10-50 neurones par couche
+- Activation : tanh (garantit différentiabilité)
+- Régularisation L2 : λ ∈ [0.1, 10]</p>
+<h3 id="36-correction-hydraulique-tanks-in-series">3.6 Correction hydraulique tanks-in-series<a class="headerlink" href="#36-correction-hydraulique-tanks-in-series" title="Permanent link">&para;</a></h3>
+<p>Pour scale-up avec prise en compte des non-idéalités [15][16] :</p>
+<div class="arithmatex">\[HRT_{eff} = HRT_{nom} \times (1 - f_d)\]</div>
+<div class="arithmatex">\[k_{hyd,app} = k_{hyd,idéal} \times \frac{V_{actif}}{V_{total}} \times \eta_{mélange}\]</div>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Description</th>
+<th>Plage typique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f_d</td>
+<td>Fraction volume mort</td>
+<td>3-50%</td>
+</tr>
+<tr>
+<td>N</td>
+<td>Nombre équivalent CSTR (RTD)</td>
+<td>1-10</td>
+</tr>
+<tr>
+<td>η_mélange</td>
+<td>Efficacité de mélange</td>
+<td>0.5-0.95</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-recommandations-techniques-pour-implementation">4. Recommandations techniques pour implémentation<a class="headerlink" href="#4-recommandations-techniques-pour-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="41-architecture-hybride-adm1ude-optimale">4.1 Architecture hybride ADM1/UDE optimale<a class="headerlink" href="#41-architecture-hybride-adm1ude-optimale" title="Permanent link">&para;</a></h3>
+<p>L'implémentation recommandée utilise Julia SciML avec le solveur KenCarp4 pour la stabilité sur systèmes raides [3][4]. La structure conserve les équations mécanistiques ADM1 pour les processus bien caractérisés (acidogénèse, méthanogénèse) tout en substituant les termes cinétiques incertains par des réseaux de neurones — typiquement l'hydrolyse de substrats complexes ou les fonctions d'inhibition combinées.</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│                    ADM1 HYBRIDE / UDE                       │
+├─────────────────────────────────────────────────────────────┤
+│  MÉCANISTIQUE (conservé)    │    NEURAL (substitué)        │
+│  ─────────────────────────  │    ────────────────────      │
+│  • Acidogénèse              │    • k_hyd substrats         │
+│  • Acétogénèse              │      complexes               │
+│  • Méthanogénèse            │    • Fonctions inhibition    │
+│  • Bilans de masse          │      combinées               │
+│  • Équilibres acide-base    │    • Cinétiques enzymatiques │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Protocole d'entraînement</strong> [4] :</p>
+<ol>
+<li><strong>Multi-start</strong> : minimum 1000 initialisations aléatoires (paysage non-convexe)</li>
+<li><strong>Séquence optimisation</strong> : Adam (lr=0.001, 1000 epochs) → BFGS (convergence fine)</li>
+<li><strong>Régularisation L2</strong> : λ ∈ [0.1, 10] pour équilibre mécanistique/neural</li>
+<li><strong>Solveur</strong> : KenCarp4 (systèmes raides) + méthode adjointe discrète</li>
+</ol>
+<h3 id="42-protocole-de-calibration-industrielle">4.2 Protocole de calibration industrielle<a class="headerlink" href="#42-protocole-de-calibration-industrielle" title="Permanent link">&para;</a></h3>
+<p>Séquence de scale-up validée [2][17][21] :</p>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│  ÉTAPE 1: BMP Labo (VDI 4630)                                │
+│  ─────────────────────────────                               │
+│  • Déterminer f(d) fraction dégradable                       │
+│  • Obtenir k_hyd,batch initial                               │
+│  • Durée : 30-60 jours                                       │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  ÉTAPE 2: CSTR Pilote (5-10 L)                               │
+│  ─────────────────────────────                               │
+│  • Ajuster k_hyd : facteur ×10-30                            │
+│  • Valider cinétiques sous alimentation continue             │
+│  • Durée : 3-6 HRT                                           │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  ÉTAPE 3: Tests RTD Industriel                               │
+│  ─────────────────────────────                               │
+│  • Traceur : LiCl 2-5 mg/kg TS                               │
+│  • Quantifier volumes morts (3-50%)                          │
+│  • Calibrer modèle tanks-in-series                           │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  ÉTAPE 4: Calibration ADM1                                   │
+│  ─────────────────────────────                               │
+│  • Priorité : k_dis, k_hyd fractions dominantes              │
+│  • Données réelles : CH4, VFA, pH, NH4                       │
+│  • Méthode : estimation paramétrique bayésienne              │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  ÉTAPE 5: Validation Opérationnelle                          │
+│  ─────────────────────────────────                           │
+│  • Minimum 3 HRT en conditions normales                      │
+│  • Tests perturbation (surcharge, changement ration)         │
+│  • Critère : RMSE &lt; 10% sur production CH4                   │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="5-lacunes-critiques-et-perspectives-de-recherche">5. Lacunes critiques et perspectives de recherche<a class="headerlink" href="#5-lacunes-critiques-et-perspectives-de-recherche" title="Permanent link">&para;</a></h2>
+<p>La synthèse de la littérature 2018-2024 révèle des <strong>gaps majeurs</strong> pour l'application industrielle visée :</p>
+<table>
+<thead>
+<tr>
+<th>Gap identifié</th>
+<th>Impact</th>
+<th>Priorité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aucun fractionnement ADM1 validé pour frass insectes</td>
+<td>Estimations incertaines</td>
+<td><strong>Haute</strong></td>
+</tr>
+<tr>
+<td>Effet inhibiteur chitine non quantifié (chitosan : 80 mg/g [22])</td>
+<td>Risque sous-estimation X_I</td>
+<td>Moyenne</td>
+</tr>
+<tr>
+<td>Aucune application UDE publiée ciblant ADM1</td>
+<td>Transfert non validé</td>
+<td><strong>Haute</strong></td>
+</tr>
+<tr>
+<td>Poussières céréales absentes de la littérature</td>
+<td>Pas de données</td>
+<td>Moyenne</td>
+</tr>
+<tr>
+<td>Facteurs k_hyd(batch)/k_hyd(CSTR) très variables (×10-30)</td>
+<td>Incertitude scale-up</td>
+<td><strong>Haute</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommandations pour les travaux futurs</strong> :
+1.  Caractérisation ADM1 expérimentale du frass BSF (fractionnement + cinétiques)
+2.  Validation UDE sur système AD simplifié avant application ADM1 complet
+3.  Établissement de corrélations substrat-spécifiques pour facteurs scale-up</p>
+<hr />
+<h2 id="6-bibliographie">6. Bibliographie<a class="headerlink" href="#6-bibliographie" title="Permanent link">&para;</a></h2>
+<h3 id="a-references-citees-dans-le-texte">A. Références citées dans le texte<a class="headerlink" href="#a-references-citees-dans-le-texte" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Auteur(s)</th>
+<th>Année</th>
+<th>Titre</th>
+<th>Journal</th>
+<th>DOI/URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[1]</td>
+<td>Ramirez I. et al.</td>
+<td>2009</td>
+<td>Modified ADM1 disintegration/hydrolysis structures for modeling batch thermophilic anaerobic digestion of thermally pretreated waste activated sludge</td>
+<td><em>Water Research</em> 43(14):3479-92</td>
+<td><a href="https://pubmed.ncbi.nlm.nih.gov/19539974/">PubMed</a></td>
+</tr>
+<tr>
+<td>[2]</td>
+<td>Batstone D.J. et al.</td>
+<td>2009</td>
+<td>Estimation of hydrolysis parameters in full-scale anaerobic digesters</td>
+<td><em>Biotechnol. Bioeng.</em> 102(5):1513-20</td>
+<td><a href="https://pubmed.ncbi.nlm.nih.gov/18988267/">PubMed</a></td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>Rackauckas C. et al.</td>
+<td>2020</td>
+<td>Universal Differential Equations for Scientific Machine Learning</td>
+<td><em>arXiv</em> 2001.04385</td>
+<td><a href="https://arxiv.org/abs/2001.04385">arXiv</a></td>
+</tr>
+<tr>
+<td>[4]</td>
+<td>Philipps F.L. et al.</td>
+<td>2025</td>
+<td>Current state and open problems in universal differential equations for systems biology</td>
+<td><em>npj Systems Biology and Applications</em> 11:24</td>
+<td><a href="https://www.nature.com/articles/s41540-025-00550-w">Nature</a></td>
+</tr>
+<tr>
+<td>[5]</td>
+<td>Wedwitschka H. et al.</td>
+<td>2023</td>
+<td>Biogas Production from Residues of Industrial Insect Protein Production from Black Soldier Fly Larvae <em>Hermetia illucens</em> (L.): An Evaluation of Different Insect Frass Samples</td>
+<td><em>Processes</em> 11(2):362</td>
+<td><a href="https://www.mdpi.com/2227-9717/11/2/362">MDPI</a></td>
+</tr>
+<tr>
+<td>[6]</td>
+<td>Beier S. &amp; Ungerer S.</td>
+<td>2013</td>
+<td>Bacterial chitin degradation—mechanisms and ecophysiological strategies</td>
+<td><em>Frontiers in Microbiology</em> 4:149</td>
+<td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3682446/">PMC</a></td>
+</tr>
+<tr>
+<td>[7]</td>
+<td>Vavilin V.A. et al.</td>
+<td>2008</td>
+<td>Hydrolysis kinetics in anaerobic degradation of particulate organic material: An overview</td>
+<td><em>Waste Management</em> 28(6):939-51</td>
+<td><a href="https://pubmed.ncbi.nlm.nih.gov/17544638/">PubMed</a></td>
+</tr>
+<tr>
+<td>[8]</td>
+<td>Greses S. et al.</td>
+<td>2024</td>
+<td>Modelling anaerobic digestion of microalgae: Application of ADM1 with Contois kinetics and inhibition functions</td>
+<td><em>Bioresource Technology</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>[9]</td>
+<td>Esposito G. et al.</td>
+<td>2011</td>
+<td>Bio-methane potential tests to measure the biogas production from the digestion and co-digestion of complex organic substrates</td>
+<td><em>The Open Environmental Engineering Journal</em> 4:1-8</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[10]</td>
+<td>Zieminski K. et al.</td>
+<td>2017</td>
+<td>Effect of Different Sugar Beet Pulp Pretreatments on Biogas Production Efficiency</td>
+<td><em>Applied Biochemistry and Biotechnology</em> 181:1211-1227</td>
+<td><a href="https://link.springer.com/article/10.1007/s12010-016-2279-1">Springer</a></td>
+</tr>
+<tr>
+<td>[11]</td>
+<td>Parawira W. et al.</td>
+<td>2005</td>
+<td>Profile of hydrolases and biogas production during two-stage mesophilic anaerobic digestion of solid potato waste</td>
+<td><em>Process Biochemistry</em> 40(9):2945-2952</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[12]</td>
+<td>Chen Y. et al.</td>
+<td>2008</td>
+<td>Inhibition of anaerobic digestion process: A review</td>
+<td><em>Bioresource Technology</em> 99(10):4044-4064</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[13]</td>
+<td>Gooday G.W.</td>
+<td>1990</td>
+<td>The ecology of chitin degradation</td>
+<td><em>Advances in Microbial Ecology</em> 11:387-430</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[14]</td>
+<td>Kim S. et al.</td>
+<td>2021</td>
+<td>Stiff Neural Ordinary Differential Equations</td>
+<td><em>Chaos</em> 31:093122</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[15]</td>
+<td>Levenspiel O.</td>
+<td>1999</td>
+<td><em>Chemical Reaction Engineering</em> (3rd ed.)</td>
+<td>Wiley</td>
+<td>ISBN: 978-0471254249</td>
+</tr>
+<tr>
+<td>[16]</td>
+<td>Wastewater Management</td>
+<td>2024</td>
+<td>Mixing Efficiency Testing in Anaerobic Digesters</td>
+<td>—</td>
+<td><a href="https://www.wastewatermanagement.co.uk/mixing-efficiency-testing.htm">Web</a></td>
+</tr>
+<tr>
+<td>[17]</td>
+<td>Koch K. et al.</td>
+<td>2020</td>
+<td>Power and Limitations of Biochemical Methane Potential (BMP) Tests</td>
+<td><em>Frontiers in Energy Research</em> 8:63</td>
+<td><a href="https://www.frontiersin.org/articles/10.3389/fenrg.2020.00063/full">Frontiers</a></td>
+</tr>
+<tr>
+<td>[18]</td>
+<td>Lübken M. et al.</td>
+<td>2007</td>
+<td>Modelling the energy balance of an anaerobic digester fed with cattle manure and renewable energy crops</td>
+<td><em>Water Research</em> 41(18):4085-4096</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[19]</td>
+<td>Biernacki P. et al.</td>
+<td>2013</td>
+<td>Application of Anaerobic Digestion Model No. 1 for describing anaerobic digestion of grass, maize, green weed silage, and industrial glycerine</td>
+<td><em>Bioresource Technology</em> 127:188-194</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[20]</td>
+<td>Batstone D.J. et al.</td>
+<td>2002</td>
+<td>Anaerobic Digestion Model No. 1 (ADM1)</td>
+<td><em>IWA Scientific and Technical Report No. 13</em></td>
+<td>ISBN: 1900222787</td>
+</tr>
+<tr>
+<td>[21]</td>
+<td>Weinrich S. &amp; Nelles M.</td>
+<td>2021</td>
+<td>Systematic simplification of the Anaerobic Digestion Model No. 1 (ADM1)</td>
+<td><em>Bioresource Technology</em> 327:124779</td>
+<td>—</td>
+</tr>
+<tr>
+<td>[22]</td>
+<td>Li Y. et al.</td>
+<td>2024</td>
+<td>Dynamic responses of the inter-microbial synergism and thermodynamic conditions attribute to the inhibition-and-relief effects of chitosan towards anaerobic digestion</td>
+<td><em>Water Research</em> 267:122483</td>
+<td><a href="https://www.sciencedirect.com/science/article/abs/pii/S0043135424014684">ScienceDirect</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="b-references-consultees-non-citees-directement">B. Références consultées (non citées directement)<a class="headerlink" href="#b-references-consultees-non-citees-directement" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Auteur(s)</th>
+<th>Année</th>
+<th>Titre</th>
+<th>Journal/Source</th>
+<th>Pertinence pour le projet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yang J. et al.</td>
+<td>2023</td>
+<td>Modifications to Anaerobic Digestion Model No.1 (ADM1): A comprehensive review</td>
+<td><em>Water Research</em> 245:120596</td>
+<td>Revue exhaustive des modifications ADM1 depuis 2002</td>
+</tr>
+<tr>
+<td>Chen R.T.Q. et al.</td>
+<td>2018</td>
+<td>Neural Ordinary Differential Equations</td>
+<td><em>NeurIPS</em></td>
+<td>Fondements théoriques Neural ODEs</td>
+</tr>
+<tr>
+<td>Kidawara F. et al.</td>
+<td>2025</td>
+<td>Graph-based deep learning for predictions on changes in microbiomes and biogas production in anaerobic digestion systems</td>
+<td><em>Water Research</em></td>
+<td>Approche ML + microbiome pour AD</td>
+</tr>
+<tr>
+<td>Insect School</td>
+<td>2023</td>
+<td>Bio-Methane Potential of Insect Frass</td>
+<td><a href="https://www.insectschool.com/processing/bio-methane-potential-of-insect-frass/">Web</a></td>
+<td>Synthèse vulgarisée BMP frass</td>
+</tr>
+<tr>
+<td>BPC Instruments</td>
+<td>2024</td>
+<td>Biogas measurement systems</td>
+<td><a href="https://bpcinstruments.com/biogas/">Web</a></td>
+<td>Méthodologie BMP instrumentale</td>
+</tr>
+<tr>
+<td>Angelidaki I. et al.</td>
+<td>2009</td>
+<td>Defining the biomethane potential (BMP) of solid organic wastes and energy crops</td>
+<td><em>Water Science &amp; Technology</em> 59(5):927-934</td>
+<td>Protocole BMP standardisé</td>
+</tr>
+<tr>
+<td>Holliger C. et al.</td>
+<td>2016</td>
+<td>Towards a standardization of biomethane potential tests</td>
+<td><em>Water Science &amp; Technology</em> 74(11):2515-2522</td>
+<td>Normalisation inter-laboratoires BMP</td>
+</tr>
+<tr>
+<td>Donoso-Bravo A. et al.</td>
+<td>2011</td>
+<td>Model selection, identification and validation in anaerobic digestion: A review</td>
+<td><em>Water Research</em> 45(17):5347-5364</td>
+<td>Méthodologie calibration ADM1</td>
+</tr>
+<tr>
+<td>Pastor-Poquet V. et al.</td>
+<td>2019</td>
+<td>High-solids anaerobic digestion model for homogenized reactors</td>
+<td><em>Water Research</em> 142:501-511</td>
+<td>ADM1 adapté haute teneur MS</td>
+</tr>
+<tr>
+<td>ScienceDirect Topics</td>
+<td>2024</td>
+<td>Hydrolysis Kinetics - Overview</td>
+<td><a href="https://www.sciencedirect.com/topics/immunology-and-microbiology/hydrolysis-kinetics">Web</a></td>
+<td>Synthèse cinétiques hydrolyse AD</td>
+</tr>
+<tr>
+<td>Mu Y. et al.</td>
+<td>2020</td>
+<td>The performance evaluation and kinetics response of advanced anaerobic digestion for sewage sludge under different SRT</td>
+<td><em>Bioresource Technology</em> 312:123483</td>
+<td>Cinétiques vs temps de séjour</td>
+</tr>
+<tr>
+<td>Ma J. et al.</td>
+<td>2017</td>
+<td>Data-driven vs. model-driven approaches for predicting biogas production</td>
+<td><em>Renewable Energy</em> 107:324-331</td>
+<td>Comparaison approches ML vs mécanistiques</td>
+</tr>
+<tr>
+<td>Derbal K. et al.</td>
+<td>2009</td>
+<td>Application of the IWA ADM1 model to simulate anaerobic co-digestion of organic waste with waste activated sludge in mesophilic condition</td>
+<td><em>Bioresource Technology</em> 100(4):1539-1543</td>
+<td>Calibration ADM1 co-digestion</td>
+</tr>
+<tr>
+<td>Fezzani B. &amp; Ben Cheikh R.</td>
+<td>2010</td>
+<td>Two-phase anaerobic co-digestion of olive mill wastes in semi-continuous digesters at mesophilic temperature</td>
+<td><em>Bioresource Technology</em> 101(6):1628-1634</td>
+<td>Cinétiques deux-phases</td>
+</tr>
+<tr>
+<td>Fedorovich V. et al.</td>
+<td>2003</td>
+<td>Extension of Anaerobic Digestion Model No. 1 with processes of sulfate reduction</td>
+<td><em>Applied Biochemistry and Biotechnology</em> 109(1-3):33-45</td>
+<td>Extension ADM1 sulfato-réduction</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Document généré le 21/12/2024 — État de l'art 2018-2024</em>
+<em>Projet : Jumeau Numérique Méthanisation Industrielle — Chemin Du Roi</em></p>
+<h2 id="key-insights">💡 Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Hybrid ADM1/UDE modeling, integrating neural networks for unknown kinetics (e.g., hydrolysis, inhibition), is a promising research frontier for industrial anaerobic digestion.</li>
+<li>The Contois model is a validated alternative to first-order kinetics for complex, enzymatically pretreated substrates, and Esposito's surface kinetics are relevant for mechanical pretreatments.</li>
+<li>Direct transfer of k_hyd parameters from BMP tests to CSTR models is erroneous, requiring a 10-30x correction factor and RTD tests for accurate industrial scale-up.</li>
+<li>Julia SciML, with solvers like KenCarp4 and discrete adjoint methods, offers superior numerical stability for stiff hybrid ADM1 systems compared to Python.</li>
+<li>Significant data gaps exist for specific substrates like Black Soldier Fly (BSF) frass, particularly regarding validated ADM1 fractionation and published UDE applications for ADM1.</li>
+</ul>
+<h2 id="references">📚 References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Ramirez I. et al., Modified ADM1 disintegration/hydrolysis structures for modeling batch thermophilic anaerobic digestion of thermally pretreated waste activated sludge, Water Research 43(14):3479-92, 2009, <a href="https://pubmed.ncbi.nlm.nih.gov/19539974/">PubMed</a> <em>(source)</em></li>
+<li>Batstone D.J. et al., Estimation of hydrolysis parameters in full-scale anaerobic digesters, Biotechnol. Bioeng. 102(5):1513-20, 2009, <a href="https://pubmed.ncbi.nlm.nih.gov/18988267/">PubMed</a> <em>(source)</em></li>
+<li>Rackauckas C. et al., Universal Differential Equations for Scientific Machine Learning, arXiv 2001.04385, 2020, <a href="https://arxiv.org/abs/2001.04385">arXiv</a> <em>(source)</em></li>
+<li>Philipps F.L. et al., Current state and open problems in universal differential equations for systems biology, npj Systems Biology and Applications 11:24, 2025, <a href="https://www.nature.com/articles/s41540-025-00550-w">Nature</a> <em>(source)</em></li>
+<li>Wedwitschka H. et al., Biogas Production from Residues of Industrial Insect Protein Production from Black Soldier Fly Larvae Hermetia illucens (L.): An Evaluation of Different Insect Frass Samples, Processes 11(2):362, 2023, <a href="https://www.mdpi.com/2227-9717/11/2/362">MDPI</a> <em>(source)</em></li>
+<li>Beier S. &amp; Ungerer S., Bacterial chitin degradation—mechanisms and ecophysiological strategies, Frontiers in Microbiology 4:149, 2013, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3682446/">PMC</a> <em>(source)</em></li>
+<li>Vavilin V.A. et al., Hydrolysis kinetics in anaerobic degradation of particulate organic material: An overview, Waste Management 28(6):939-51, 2008, <a href="https://pubmed.ncbi.nlm.nih.gov/17544638/">PubMed</a> <em>(source)</em></li>
+<li>Greses S. et al., Modelling anaerobic digestion of microalgae: Application of ADM1 with Contois kinetics and inhibition functions, Bioresource Technology, 2024, — <em>(source)</em></li>
+<li>Esposito G. et al., Bio-methane potential tests to measure the biogas production from the digestion and co-digestion of complex organic substrates, The Open Environmental Engineering Journal 4:1-8, 2011, — <em>(source)</em></li>
+<li>Zieminski K. et al., Effect of Different Sugar Beet Pulp Pretreatments on Biogas Production Efficiency, Applied Biochemistry and Biotechnology 181:1211-1227, 2017, <a href="https://link.springer.com/article/10.1007/s12010-016-2279-1">Springer</a> <em>(source)</em></li>
+<li>Parawira W. et al., Profile of hydrolases and biogas production during two-stage mesophilic anaerobic digestion of solid potato waste, Process Biochemistry 40(9):2945-2952, 2005, — <em>(source)</em></li>
+<li>Chen Y. et al., Inhibition of anaerobic digestion process: A review, Bioresource Technology 99(10):4044-4064, 2008, — <em>(source)</em></li>
+<li>Gooday G.W., The ecology of chitin degradation, Advances in Microbial Ecology 11:387-430, 1990, — <em>(source)</em></li>
+<li>Kim S. et al., Stiff Neural Ordinary Differential Equations, Chaos 31:093122, 2021, — <em>(source)</em></li>
+<li>Levenspiel O., Chemical Reaction Engineering (3rd ed.), Wiley, 1999, ISBN: 978-0471254249 <em>(source)</em></li>
+<li>Wastewater Management, Mixing Efficiency Testing in Anaerobic Digesters, 2024, <a href="https://www.wastewatermanagement.co.uk/mixing-efficiency-testing.htm">Web</a> <em>(source)</em></li>
+<li>Koch K. et al., Power and Limitations of Biochemical Methane Potential (BMP) Tests, Frontiers in Energy Research 8:63, 2020, <a href="https://www.frontiersin.org/articles/10.3389/fenrg.2020.00063/full">Frontiers</a> <em>(source)</em></li>
+<li>Lübken M. et al., Modelling the energy balance of an anaerobic digester fed with cattle manure and renewable energy crops, Water Research 41(18):4085-4096, 2007, — <em>(source)</em></li>
+<li>Biernacki P. et al., Application of Anaerobic Digestion Model No. 1 for describing anaerobic digestion of grass, maize, green weed silage, and industrial glycerine, Bioresource Technology 127:188-194, 2013, — <em>(source)</em></li>
+<li>Batstone D.J. et al., Anaerobic Digestion Model No. 1 (ADM1), IWA Scientific and Technical Report No. 13, 2002, ISBN: 1900222787 <em>(source)</em></li>
+<li>Weinrich S. &amp; Nelles M., Systematic simplification of the Anaerobic Digestion Model No. 1 (ADM1), Bioresource Technology 327:124779, 2021, — <em>(source)</em></li>
+<li>Li Y. et al., Dynamic responses of the inter-microbial synergism and thermodynamic conditions attribute to the inhibition-and-relief effects of chitosan towards anaerobic digestion, Water Research 267:122483, 2024, <a href="https://www.sciencedirect.com/science/article/abs/pii/S0043135424014684">ScienceDirect</a> <em>(source)</em></li>
+<li>Yang J. et al., Modifications to Anaerobic Digestion Model No.1 (ADM1): A comprehensive review, Water Research 245:120596, 2023 <em>(cited)</em></li>
+<li>Chen R.T.Q. et al., Neural Ordinary Differential Equations, NeurIPS, 2018 <em>(cited)</em></li>
+<li>Kidawara F. et al., Graph-based deep learning for predictions on changes in microbiomes and biogas production in anaerobic digestion systems, Water Research, 2025 <em>(cited)</em></li>
+<li>Insect School, Bio-Methane Potential of Insect Frass, 2023, <a href="https://www.insectschool.com/processing/bio-methane-potential-of-insect-frass/">Web</a> <em>(cited)</em></li>
+<li>BPC Instruments, Biogas measurement systems, 2024, <a href="https://bpcinstruments.com/biogas/">Web</a> <em>(cited)</em></li>
+<li>Angelidaki I. et al., Defining the biomethane potential (BMP) of solid organic wastes and energy crops, Water Science &amp; Technology 59(5):927-934, 2009 <em>(cited)</em></li>
+<li>Holliger C. et al., Towards a standardization of biomethane potential tests, Water Science &amp; Technology 74(11):2515-2522, 2016 <em>(cited)</em></li>
+<li>Donoso-Bravo A. et al., Model selection, identification and validation in anaerobic digestion: A review, Water Research 45(17):5347-5364, 2011 <em>(cited)</em></li>
+<li>Pastor-Poquet V. et al., High-solids anaerobic digestion model for homogenized reactors, Water Research 142:501-511, 2019 <em>(cited)</em></li>
+<li>ScienceDirect Topics, Hydrolysis Kinetics - Overview, 2024, <a href="https://www.sciencedirect.com/topics/immunology-and-microbiology/hydrolysis-kinetics">Web</a> <em>(cited)</em></li>
+<li>Mu Y. et al., The performance evaluation and kinetics response of advanced anaerobic digestion for sewage sludge under different SRT, Bioresource Technology 312:123483, 2020 <em>(cited)</em></li>
+<li>Ma J. et al., Data-driven vs. model-driven approaches for predicting biogas production, Renewable Energy 107:324-331, 2017 <em>(cited)</em></li>
+<li>Derbal K. et al., Application of the IWA ADM1 model to simulate anaerobic co-digestion of organic waste with waste activated sludge in mesophilic condition, Bioresource Technology 100(4):1539-1543, 2009 <em>(cited)</em></li>
+<li>Fezzani B. &amp; Ben Cheikh R., Two-phase anaerobic co-digestion of olive mill wastes in semi-continuous digesters at mesophilic temperature, Bioresource Technology 101(6):1628-1634, 2010 <em>(cited)</em></li>
+<li>Fedorovich V. et al., Extension of Anaerobic Digestion Model No. 1 with processes of sulfate reduction, Applied Biochemistry and Biotechnology 109(1-3):33-45, 2003 <em>(cited)</em></li>
+</ul>
+<h2 id="classification">🏷️ Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<p>The content focuses on advanced modeling techniques, including hybrid mechanistic-neural models (UDEs), machine learning for kinetics, and optimization for industrial anaerobic digestion processes, aligning with the Data Science category.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

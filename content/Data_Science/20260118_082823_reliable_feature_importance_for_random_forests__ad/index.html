@@ -1,0 +1,4877 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fiches de veille R&D, rapports mensuels et recherches">
+      
+      
+      
+        <link rel="canonical" href="https://yajeddig.github.io/ResearchOps/content/Data_Science/20260118_082823_reliable_feature_importance_for_random_forests__ad/">
+      
+      
+        <link rel="prev" href="../20260110_092746_demystifying_r___understanding_its_true_meaning_an/">
+      
+      
+        <link rel="next" href="../20260120_210628_ai_prompt_builder_for_structured_interaction_with_/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods - ResearchOps — Knowledge Base</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#relevance" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-header__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ResearchOps — Knowledge Base
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-nav__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ResearchOps — Knowledge Base
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResearchOps — Knowledge Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20251230_180116_openflodata__real_time_simulation___streaming_of_v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenFloData: Real-Time Simulation & Streaming of Volve Oil & Gas Production Data for Data Engineering & Surveillance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093050_postgrest__automatic_rest_api_generation_for_postg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgREST: Automatic REST API Generation for PostgreSQL Databases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093144_github___bytebytegohq_system_design_101__explain_c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub - ByteByteGoHq/system-design-101: Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260115_072117_pointblank__data_validation_and_quality_monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pointblank: Data Validation and Quality Monitoring Toolkit for Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260204_073433_pg_duckdb__duckdb_extension_for_high_performance_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pg_duckdb: DuckDB Extension for High-Performance Analytics in PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260214_091228_duckdb_shell__in_browser_sql_client_for_analytical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DuckDB Shell: In-Browser SQL Client for Analytical Data Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Science
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_175647_bofire__experimental_design_and_multi_objective_ba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bofire: Experimental Design and Multi-Objective Bayesian Optimization Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_181646_code__a_global_approach_to_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CODE: A Global Approach to Ordinary Differential Equation (ODE) Dynamics Learning with Polynomial Chaos Expansion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_181745_sindybrid__automated_hybrid_model_generation_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SINDybrid: Automated Hybrid Model Generation for Dynamic Systems using MILP and Sparse Identification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_192456_artificial_intelligence_in_chemical_engineering__a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artificial Intelligence in Chemical Engineering: A White Paper on AI/ML Applications, Challenges, and Future Directions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251230_152511_optimistik__industrial_ai_analytics_software_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimistik: Industrial AI Analytics Software for Digital Transformation and Sustainable Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260101_211512_convergence_rate_proof_for_gradient_flow_of_convex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convergence Rate Proof for Gradient Flow of Convex Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260102_135419_llm_council__multi_agent_llm_orchestration_for_enh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Council: Multi-Agent LLM Orchestration for Enhanced Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_093401_darts__a_python_library_for_user_friendly_time_ser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Darts: A Python Library for User-Friendly Time Series Forecasting and Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112257_d_veloppement_d_un_jumeau_num_rique_hybride__adm1_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Développement d'un Jumeau Numérique Hybride (ADM1 + UDE) pour la Méthanisation Industrielle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112304_mod_lisation_hybride_adm1_ude_pour_digestion_ana_r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112308_advanced_modeling_and_control_of_anaerobic_digesti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Control of Anaerobic Digestion for Biogas Production: A Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_112312_advanced_modeling_and_data_science_techniques_for_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Data Science Techniques for Anaerobic Digestion Process Control and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260108_200801_ui_tars_desktop__open_source_multimodal_ai_agent_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI-TARS-desktop: Open-Source Multimodal AI Agent Stack by ByteDance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260108_210152_hybridation_de_mod_les_physiques_et_machine_learni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybridation de Modèles Physiques et Machine Learning pour Équations Différentielles (EDO/EDP): Taxonomie, Comparaison et Applications en Traitement des Eaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260109_201727_specializing_large_language_models_for_process_mod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specializing Large Language Models for Process Modeling via Reinforcement Learning with Verifiable and Universal Rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260110_092444_rag_anything__all_in_one_multimodal_retrieval_augm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG-Anything: All-in-One Multimodal Retrieval-Augmented Generation (RAG) Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260110_092746_demystifying_r___understanding_its_true_meaning_an/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying R²: Understanding its True Meaning and Limitations in Data Science Model Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beware-default-random-forest-importances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beware Default Random Forest Importances
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beware-default-random-forest-importances_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beware Default Random Forest Importances
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Beware Default Random Forest Importances">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#introduction-to-feature-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction to Feature Importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trouble-in-paradise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trouble in paradise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-feature-importance-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default feature importance mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drop-column-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drop-column importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-r-to-scikit-learn-importances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing R to scikit-learn importances
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing R to scikit-learn importances">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-mean-decrease-in-impurity-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R mean-decrease-in-impurity importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-drop-column-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R drop-column importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experimental-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experimental results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-neutral-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model-neutral permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260120_210628_ai_prompt_builder_for_structured_interaction_with_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Prompt Builder for Structured Interaction with Large Language Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260122_152149_agentic_physics_informed_digital_twin_for_trustwor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Physics-Informed Digital Twin for Trustworthy Cyber-Physical System Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260122_193732_fluidgym__plug_and_play_benchmarking_of_reinforcem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260123_204308_pinneapple__open_source_physics_ai_toolkit_for_phy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PINNeAPPle: Open-source Physics AI Toolkit for Physics-Informed Neural Networks and Scientific ML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260123_215808_deepthermomix__classical_thermodynamics_flavored_w/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepThermoMix: Classical Thermodynamics Flavored with Modern Deep Learning for Multicomponent Activity Coefficient Prediction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260130_060010_the__physics_based_model__myth__why_industrial_rea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The 'Physics-Based Model' Myth: Why Industrial Reality Defies Textbook Assumptions in AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260131_162921_github_platform_features_for_ai_and_software_devel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for AI and Software Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260203_073601_explainable_artificial_intelligence_in_process_eng/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eXplainable Artificial Intelligence in Process Engineering: Promises, Facts, and Current Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260227_181227_ai_driven_digital_twins_for_predictive_control_in_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-driven Digital Twins for Predictive Control in Data Center Cooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260227_181228_autonomous_ai_tuning_of_pid_control_loops_for_ener/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous AI Tuning of PID Control Loops for Energy-Efficient Cooling Infrastructure via Digital Twins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260327_190541_analysis_of_physics_constrained_neural_ode_for_mic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Physics-Constrained Neural ODE for Microbial Community Dynamics (Neural Species Mediator)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260327_190630_physics_constrained_neural_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physics-constrained neural ordinary differential equation models to discover and predict microbial community dynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260425_071200_recursive_language_models__a_general_inference_par/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursive Language Models: A General Inference Paradigm for Long Prompts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260527_132324_it_takes_two_neurons_to_ride_a_bicycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    It Takes Two Neurons To Ride a Bicycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260606_073206_ce_que_scipy_ne_vous_dit_pas_sur_l_ajustement_de_g/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ce que scipy ne vous dit pas sur l’ajustement de GEV non stationnaire à grande échelle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Industrial_Systems/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Industrial Systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Industrial Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20251229_112943_enterprise_architecture_s_strategic_role_in_digita/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Architecture's Strategic Role in Digital Transformation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260102_213542_python_gui_development_with_guizero__building_inte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python GUI Development with guizero: Building Interactive Applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111222_note_de_cadrage_strat_gique___modernisation_de_l_i/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Note de Cadrage Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111224_rapport_strat_gique___modernisation_de_l_infrastru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rapport Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT et Transformation des Opérations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260104_081536_automatisch__open_source_workflow_automation_platf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisch: Open-Source Workflow Automation Platform (Zapier Alternative)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260113_115307_copapy__tracing_based_copy___patch_compiler_for_py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copapy: Tracing Based Copy & Patch Compiler for Python for Deterministic Real-time Embedded Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260121_172455_the_future_of_industrial_process_control__virtual_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Future of Industrial Process Control: Virtual PLCs and Software-Defined Automation with Emerson DeltaV IQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260214_091222_autonomy_edge_quick_start_guide__cloud_based_indus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260514_211513_making_sure_you_re_not_a_bot____anubis_anti_scrapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making sure you're not a bot! - Anubis Anti-Scraping System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260607_101437_open_process_library__mtp_compatible__cross_vendor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open Process Library: MTP-compatible, Cross-Vendor Industrial Process Automation Library for PLC/DCS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Process_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Process Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20251229_181238_demystifying_industry_4_0__navigating_automation_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying Industry 4.0: Navigating Automation and Augmentation in Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260102_163639_simcraft__an_open_source_discrete_event_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimCraft: An Open-Source Discrete Event Simulation Framework for Industrial Modeling and AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260108_200401_baram__open_source_cfd_software_with_gui_for_openf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BARAM: Open-Source CFD Software with GUI for OpenFOAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260112_225400_reasoning_agent_driven_process_simulation__optimiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reasoning-agent-driven process simulation, optimization, carbon accounting and decarbonization of distillation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260113_211312_modeling_of_industrial_multiphase_reactors__advanc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modeling of Industrial Multiphase Reactors: Advances in AI, HPC, and Quantum Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260119_223617_modelpredictivecontrol_jl__open_source_model_predi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ModelPredictiveControl.jl: Open-Source Model Predictive Control Package for Julia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083245_ai_driven_predictive_control_for_natural_gas_conde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Natural Gas Condensate Stabilization: A Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083655_ai_driven_predictive_control_for_condensate_stabil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Condensate Stabilization – IntelliDynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260126_074550_white_paper__how_does_pat_apply_to_the_bioreactor_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Paper: How Does PAT Apply to the Bioreactor?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162831_pathsim__a_python_framework_for_block_diagram_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathSim: A Python Framework for Block Diagram-based Dynamical System Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162921_pathview__web_based_visual_editor_for_dynamic_syst/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Strategy_Business/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategy Business
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategy Business
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20251229_112211_data_strategy_pack__building_impactful_data_teams_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Strategy Pack: Building Impactful Data Teams and Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260103_111227_strat_gies_de_modernisation_ot_it_industrielle___c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stratégies de Modernisation OT/IT Industrielle : Convergence, Coûts du Vendor Lock-in, ROI de l'IA et Défis des Compétences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260219_183041_digital_transformation_framework___people__process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Transformation Framework - People, Process, Technology, & Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260314_203204_analysis_of_goldman_sachs__halo_effect_thesis__ind/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Goldman Sachs' HALO Effect Thesis: Industrial Asset Valuation vs. Operational Reality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../_Inbox/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+     Inbox
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+     Inbox
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251229_111800_generic_test_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Test Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251230_173046_github_platform_features_for_software_development_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for Software Development and Collaboration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_082850_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_083229_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_105532_security_verification_page___perplexity_ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Perplexity AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135228_employee_payslip_for_siaap_engineer__december_2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Employee Payslip for SIAAP Engineer (December 2025)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135415_sciencedirect_access_denied___captcha_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScienceDirect Access Denied / Captcha Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260110_221817_access_denied__captcha_forbidden_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Denied: CAPTCHA/Forbidden Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260121_201259_captcha_challenge___bot_detection_page__elsevier_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CAPTCHA Challenge / Bot Detection Page (Elsevier ScienceDirect)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260124_084721_security_compromise_error__ddos_attack_suspected_o/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Compromise Error: DDoS Attack Suspected on DOI Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_204725_flat_payload_test_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flat Payload Test Message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_210559_image_content_unavailable_for_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image content unavailable for analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260329_204124_security_verification_page___content_unavailable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Content Unavailable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_071331_unanalyzed_image_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unanalyzed Image Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_084724_access_issue__security_verification_on_pnas_org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Issue: Security Verification on pnas.org
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_075122_security_verification___content_inaccessible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification - Content Inaccessible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_082550_generic_content_placeholder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Content Placeholder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_140059_reference_to_unanalyzed_pdf_document__s02638762260/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document (S0263876226002455)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260517_083330_empty_content_input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Empty Content Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260527_122215_reference_to_unanalyzed_pdf_document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260604_191342_linkedin_page_not_found_error__404_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error (404)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123455_web_navigation_error__connection_reset_to_orca_tel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Navigation Error: Connection Reset to Orca Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123457_linkedin_404_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn 404 Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123501_linkedin_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reports
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reports
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-01_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Monthly Intelligence - January 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-02_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Janvier 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-03_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Février 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-04_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mars 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-05_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Avril 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-06_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mai 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-07_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Juin 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-08_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — July 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-09_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Août 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beware-default-random-forest-importances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beware Default Random Forest Importances
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beware-default-random-forest-importances_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beware Default Random Forest Importances
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Beware Default Random Forest Importances">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#introduction-to-feature-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction to Feature Importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trouble-in-paradise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trouble in paradise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-feature-importance-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default feature importance mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drop-column-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drop-column importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-r-to-scikit-learn-importances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing R to scikit-learn importances
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing R to scikit-learn importances">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-mean-decrease-in-impurity-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R mean-decrease-in-impurity importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-drop-column-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R drop-column importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experimental-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experimental results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-neutral-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model-neutral permutation importance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">Bias</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Collinearity</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Drop-column Importance</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Feature Importance</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Gini Importance</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Machine Learning</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Mean Decrease in Impurity</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Model Interpretation</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">OOB Score</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Permutation Importance</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">R</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Random Forest</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Scikit-learn</span>
+      
+    
+  </nav>
+
+
+
+<h2 id="relevance">🎯 Relevance<a class="headerlink" href="#relevance" title="Permanent link">&para;</a></h2>
+<p>In process engineering and industrial data science, accurate model interpretation is crucial for understanding process drivers, optimizing operations, and making informed decisions. Misleading feature importances can lead to incorrect conclusions about which process parameters are most influential, resulting in suboptimal control strategies, inefficient resource allocation, or failed troubleshooting efforts. This article provides critical knowledge for building reliable and interpretable machine learning models in industrial contexts, directly impacting ROI through better process understanding and optimization.</p>
+<h2 id="content">📖 Content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h2>
+<h1 id="beware-default-random-forest-importances">Beware Default Random Forest Importances<a class="headerlink" href="#beware-default-random-forest-importances" title="Permanent link">&para;</a></h1>
+<h1 id="beware-default-random-forest-importances_1">Beware Default Random Forest Importances<a class="headerlink" href="#beware-default-random-forest-importances_1" title="Permanent link">&para;</a></h1>
+<p><em>Brought to you by <a href="http://explained.ai/">explained.ai</a></em></p>
+<p><a href="https://www.linkedin.com/in/terence-parr/">Terence Parr</a>, <a href="https://www.linkedin.com/in/kerem-turgutlu-12906b65/">Kerem Turgutlu</a>, <a href="https://www.linkedin.com/in/cpcsiszar/">Christopher Csiszar</a>, and <a href="http://www.fast.ai/about/#jeremy">Jeremy Howard</a></p>
+<p>March 26, 2018.</p>
+<p>(Terence is a tech lead at Google and ex-Professor of computer/data science; both he and Jeremy teach in University of San Francisco's <a href="https://www.usfca.edu/arts-sciences/graduate-programs/data-science">MS in Data Science program</a>. You might know Terence as the creator of the <a href="http://www.antlr.org/">ANTLR parser generator</a>. For more material, see Jeremy's <a href="http://course.fast.ai/">fast.ai courses</a>. Kerem and Christopher are current MS Data Science students.)</p>
+<p><strong>Update June 8, 2020</strong>. Terence (with James D. Wilson and Jeff Hamrick) just released <a href="https://arxiv.org/abs/2006.04750">Nonparametric Feature Impact and Importance</a> that doesn't require a user's fitted model to compute impact. It's based upon a technique that computes <a href="https://arxiv.org/abs/1907.06698">Partial Dependence through Stratification</a>.</p>
+<p><strong>Update July 18, 2019</strong>. scikit-learn just merged an <a href="https://github.com/scikit-learn/scikit-learn/pull/13146">implementation of permutation importance</a>.</p>
+<p><strong>Update October 20, 2018</strong> to show better feature importance plot and a new feature dependence heatmap. Updated all plots and section <a href="https://explained.ai/rf-importance/#corr_collinear">Dealing with collinear features</a>. See new section <a href="https://explained.ai/rf-importance/#cancer">Breast cancer data set multi-collinearities</a>.</p>
+<p><strong>Updated April 19, 2018</strong> to include new rfpimp package features to handle collinear dataframe columns in <a href="https://explained.ai/rf-importance/#corr_collinear">Dealing with collinear features</a> section.</p>
+<p><strong>Updated April 4, 2018</strong> to include many more experiments in the <a href="https://explained.ai/rf-importance/#experimental">Experimental results</a> section.</p>
+<h3 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h3>
+<p>The scikit-learn Random Forest feature importance and R's default Random Forest feature importance strategies are biased. To get reliable results in Python, use permutation importance, provided here and in our <a href="https://github.com/parrt/random-forest-importances/tree/master/src">rfpimp</a> package (via pip). For R, use importance=T in the Random Forest constructor then type=1 in R's importance() function. In addition, your feature importance measures will only be reliable if your model is trained with suitable hyper-parameters.</p>
+<p>Contents</p>
+<ul>
+<li><a href="https://explained.ai/rf-importance/#intro">Introduction to feature importances</a></li>
+<li><a href="https://explained.ai/rf-importance/#2">Trouble in paradise</a></li>
+<li><a href="https://explained.ai/rf-importance/#3">Default feature importance mechanism</a></li>
+<li><a href="https://explained.ai/rf-importance/#4">Permutation importance</a></li>
+<li><a href="https://explained.ai/rf-importance/#5">Drop-column importance</a></li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#6">Comparing R to scikit-learn importances</a></p>
+<ul>
+<li><a href="https://explained.ai/rf-importance/#6.1">R mean-decrease-in-impurity importance</a></li>
+<li><a href="https://explained.ai/rf-importance/#6.2">R permutation importance</a></li>
+<li><a href="https://explained.ai/rf-importance/#6.3">R drop-column importance</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#experimental">Experimental results</a></p>
+<ul>
+<li><a href="https://explained.ai/rf-importance/#neutral">Model-neutral permutation importance</a></li>
+<li><a href="https://explained.ai/rf-importance/#perf">Performance considerations</a></li>
+<li><a href="https://explained.ai/rf-importance/#size">The effect of validation set size on importance</a></li>
+<li><a href="https://explained.ai/rf-importance/#collinear">The effect of collinear features on importance</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#corr_collinear">Dealing with collinear features</a></p>
+<ul>
+<li><a href="https://explained.ai/rf-importance/#cancer">Breast cancer data set multi-collinearities</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#7">Summary</a></p>
+</li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#8">Resources and sample code</a></p>
+<ul>
+<li><a href="https://explained.ai/rf-importance/#8.1">Python</a></li>
+<li><a href="https://explained.ai/rf-importance/#8.2">R</a></li>
+<li><a href="https://explained.ai/rf-importance/#8.3">Sample Kaggle apartment data</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://explained.ai/rf-importance/#9">Epilogue: Explanations and Further Possibilities</a></p>
+</li>
+</ul>
+<p><a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="introduction-to-feature-importance">Introduction to Feature Importance<a class="headerlink" href="#introduction-to-feature-importance" title="Permanent link">&para;</a></h3>
+<p>Training a model that accurately predicts outcomes is great, but most of the time you don't just need predictions, you want to be able to <em>interpret</em> your model. For example, if you build a model of house prices, knowing which features are most predictive of price tells us which features people are willing to pay for. Feature importance is the most useful interpretation tool, and data scientists regularly examine model parameters (such as the coefficients of linear models), to identify important features.</p>
+<p>Feature importance is available for more than just linear models. Most random Forest (RF) implementations also provide measures of feature importance. In fact, the RF importance technique we'll introduce here (<em>permutation importance</em>) is applicable to any model, though few machine learning practitioners seem to realize this. Permutation importance is a common, reasonably efficient, and very reliable technique. It directly measures variable importance by observing the effect on model accuracy of randomly shuffling each predictor variable. This technique is broadly-applicable because it doesn't rely on internal model parameters, such as linear regression coefficients (which are really just poor proxies for feature importance).</p>
+<p>We recommend using permutation importance for all models, including linear models, because we can largely avoid any issues with model parameter interpretation. Interpreting regression coefficients requires great care and expertise; landmines include not normalizing input data, properly interpreting coefficients when using Lasso or Ridge regularization, and avoiding highly-correlated variables (such as country and country_name). To learn more about the difficulties of interpreting regression coefficients, see <a href="https://projecteuclid.org/euclid.ss/1009213726">Statistical Modeling: The Two Cultures</a> (2001) by Leo Breiman (co-creator of Random Forests).</p>
+<p>One of Breiman's issues involves the accuracy of models. The more accurate our model, the more we can trust the importance measures and other interpretations. Measuring linear model goodness-of-fit is typically a matter of residual analysis. (A residual is the difference between predicted and expected outcomes). The problem is that residual analysis does not always tell us when the model is biased. Breiman quotes William Cleveland, “<em>one of the fathers of residual analysis,</em>” as saying residual analysis is an unreliable goodness-of-fit measure beyond four or five variables.</p>
+<p>If a feature importance technique well-known to Random Forest implementers gives direct and reliable results, why have we written an article entitled “Beware Default Random Forest Importances?” <a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="trouble-in-paradise">Trouble in paradise<a class="headerlink" href="#trouble-in-paradise" title="Permanent link">&para;</a></h3>
+<p>Have you ever noticed that the feature importances provided by <a href="http://scikit-learn.org/">scikit-learn</a>'s Random Forests™ seem a bit off, perhaps not jiving with your domain knowledge? We've got some bad news—you can't always trust them. It's time to revisit any business or marketing decisions you've made based upon the default feature importances (e.g., which customer attributes are most predictive of sales). This is not a bug in the implementation, but rather an inappropriate algorithm choice for many data sets, as we discuss below. First, let's take a look at how we stumbled across this problem. 
+To prepare educational material on regression and classification with Random Forests (RFs), we pulled data from Kaggle's <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect: Rental Listing Inquiries</a> competition and selected a few columns. Here are the first three rows of data in our data frame, df, loaded from data file <a href="https://github.com/parrt/random-forest-importances/blob/master/notebooks/data/rent.csv">rent.csv</a> (interest_level is the number of inquiries on the website):</p>
+<table>
+<thead>
+<tr>
+<th>bath</th>
+<th>bed</th>
+<th></th>
+<th>longi</th>
+<th>lati</th>
+<th>interest_</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rooms</td>
+<td>rooms</td>
+<td>price</td>
+<td>tude</td>
+<td>tude</td>
+<td>level</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>3</td>
+<td>3000</td>
+<td>-73.942</td>
+<td>40.714</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>2</td>
+<td>5465</td>
+<td>-73.966</td>
+<td>40.794</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>1</td>
+<td>2850</td>
+<td>-74.001</td>
+<td>40.738</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>We trained a regressor to predict New York City apartment rent prices using four apartment features in the usual scikit way:</p>
+<div class="highlight"><pre><span></span><code><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'bathrooms'</span><span class="p">,</span> <span class="s1">'bedrooms'</span><span class="p">,</span> <span class="s1">'longitude'</span><span class="p">,</span> <span class="s1">'latitude'</span><span class="p">,</span> <span class="s1">'price'</span><span class="p">]</span>
+<span class="n">dfr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">dfr</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'price'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dfr</span><span class="p">[</span><span class="s1">'price'</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">[</span><span class="s1">'random'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span>
+ <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p>In order to explain feature selection, we added a column of random numbers. (Any feature less important than a random column is junk and should be tossed out.)</p>
+<p>After training, we plotted the rf.feature_importances_ as shown in <strong>Figure 1(a)</strong>. Wow! New Yorkers really care about bathrooms. The number of bathrooms is the strongest predictor of rent price. That's weird but interesting.</p>
+<p><img alt="Image 1" src="https://explained.ai/rf-importance/images/regr_dflt_random_annotated.png" />
+<strong>Figure 1(a)</strong>. scikit-learn default importances for Random Forest <strong>regressor</strong> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</p>
+<p><img alt="Image 2" src="https://explained.ai/rf-importance/images/cls_dflt_random_annotated.png" />
+<strong>Figure 1(b)</strong>. scikit-learn default importances for Random Forest <strong>classifier</strong> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.</p>
+<p>As expected, <strong>Figure 1(a)</strong> shows the random column as the least important.</p>
+<p>Next, we built an RF classifier that predicts interest_level using the other five features and plotted the importances, again with a random column:</p>
+<div class="highlight"><pre><span></span><code><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'bathrooms'</span><span class="p">,</span> <span class="s1">'bedrooms'</span><span class="p">,</span> <span class="s1">'price'</span><span class="p">,</span> <span class="s1">'longitude'</span><span class="p">,</span> <span class="s1">'latitude'</span><span class="p">,</span> <span class="s1">'interest_level'</span><span class="p">]</span>
+<span class="n">dfc</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">dfc</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'interest_level'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dfc</span><span class="p">[</span><span class="s1">'interest_level'</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">[</span><span class="s1">'random'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span>
+ <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="c1"># better generality with 5</span>
+ <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">oob_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Figure 1(b)</strong> shows that the RF classifier thinks that the random column is more predictive of the interest level than the number of bedrooms and bathrooms. What the hell? Ok, something is definitely wrong. <a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="default-feature-importance-mechanism">Default feature importance mechanism<a class="headerlink" href="#default-feature-importance-mechanism" title="Permanent link">&para;</a></h3>
+<p>The most common mechanism to compute feature importances, and the one used in scikit-learn's <a href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier</a> and <a href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">RandomForestRegressor</a>, is the <em>mean decrease in impurity</em> (or <em>gini importance</em>) mechanism (check out the <a href="https://stackoverflow.com/questions/15810339/how-are-feature-importances-in-randomforestclassifier-determined">Stack Overflow conversation</a>). The mean decrease in impurity importance of a feature is computed by measuring how effective the feature is at reducing uncertainty (classifiers) or variance (regressors) when creating decision trees within RFs. The problem is that this mechanism, while fast, does not always give an accurate picture of importance. Breiman and Cutler, the inventors of RFs, <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm#varimp">indicate</a> that this method of “<em>adding up the gini decreases for each individual variable over all trees in the forest gives a <strong>fast</strong> variable importance that is <strong>often very consistent</strong> with the permutation importance measure.</em>” (Emphasis ours and we'll get to permutation importance shortly.)</p>
+<p>We've known for years that this common mechanism for computing feature importance is biased; i.e. it tends to inflate the importance of continuous or high-cardinality categorical variables For example, in 2007 Strobl <em>et al</em> pointed out in <a href="https://link.springer.com/article/10.1186%2F1471-2105-8-25">Bias in random forest variable importance measures: Illustrations, sources and a solution</a> that “<em>the variable importance measures of Breiman's original Random Forest method ... are not reliable in situations where potential predictor variables vary in their scale of measurement or their number of categories</em>.” That's unfortunate because not having to normalize or otherwise futz with predictor variables for Random Forests is very convenient. <a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="permutation-importance">Permutation importance<a class="headerlink" href="#permutation-importance" title="Permanent link">&para;</a></h3>
+<p>Breiman and Cutler also described <em>permutation importance</em>, which measures the importance of a feature as follows. Record a baseline accuracy (classifier) or R <span class="arithmatex">\(^2\)</span> score (regressor) by passing a validation set or the out-of-bag (OOB) samples through the Random Forest. Permute the column values of a single predictor feature and then pass all test samples back through the Random Forest and recompute the accuracy or R <span class="arithmatex">\(^2\)</span>. The importance of that feature is the difference between the baseline and the drop in overall accuracy or R <span class="arithmatex">\(^2\)</span> caused by permuting the column. The permutation mechanism is much more computationally expensive than the mean decrease in impurity mechanism, but the results are more reliable. The permutation importance strategy does not require retraining the model after permuting each column; we just have to re-run the perturbed test samples through the already-trained model.</p>
+<p>Any machine learning model can use the strategy of permuting columns to compute feature importances. This fact is under-appreciated in academia and industry. Most software packages calculate feature importance using model parameters if possible (e.g., the coefficients in linear regression as discussed above). A single importance function could cover all models. The advantage of Random Forests, of course, is that they provide OOB samples by construction so users don't have to extract their own validation set and pass it to the feature importance function.</p>
+<p>As well as being broadly applicable, the implementation of permutation importance is simple—here is a complete working function:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">permutation_importances</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
+ <span class="n">baseline</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+ <span class="n">imp</span> <span class="o">=</span> <span class="p">[]</span>
+ <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+ <span class="n">save</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+ <span class="n">X_train</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+ <span class="n">m</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+ <span class="n">X_train</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">save</span>
+ <span class="n">imp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baseline</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imp</span><span class="p">)</span>
+</code></pre></div>
+<p>Notice that the function does not normalize the importance values, such as dividing by the standard deviation. According to <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-307">Conditional variable importance for random forests</a>, “<em>the raw [permutation] importance… has better statistical properties</em>.” Those importance values will not sum up to one and it's important to remember that we don't care what the values are <em>per se</em>. What we care about is the relative predictive strengths of the features. (When using the importances() function in R, make sure to use scale=F to to prevent this normalization.)</p>
+<p>The key to this “baseline minus drop in performance metric” computation is to use a validation set or the OOB samples, not the training set (for the same reason we measure model generality with a validation set or OOB samples). Our permutation_importances() function expects the metric argument (a function) to use out-of-bag samples when computing accuracy or R <span class="arithmatex">\(^2\)</span> because there is no validation set argument. (We figured out how to grab the OOB samples from the scikit RF source code.) You can check out our functions that compute the <a href="https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L237">OOB classifier accuracy</a> and <a href="https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L263">OOB regression R <span class="arithmatex">\(^2\)</span> score</a> (without altering the RF model state). Here are two code snippets that call the permutation importance function for regressors and classifiers:</p>
+<div class="highlight"><pre><span></span><code><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c1"># rf must be pre-trained</span>
+<span class="n">imp</span> <span class="o">=</span> <span class="n">permutation_importances</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">oob_regression_r2_score</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">imp</span> <span class="o">=</span> <span class="n">permutation_importances</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">oob_classifier_accuracy</span><span class="p">)</span>
+</code></pre></div>
+<p>To test permutation importances, we plotted the regressor and classifier importances, as shown in <strong>Figure 2(a)</strong> and <strong>Figure 2(b)</strong>, using the same models from above. Both models included a random column, which correctly show up as the least important feature. The regressor in <strong>Figure 1(a)</strong> also had the random column last, but it showed the number of bathrooms as the strongest predictor of apartment rent price. The permutation importance in <strong>Figure 2(a)</strong> places bathrooms more reasonably as the least important feature, other than the random column.</p>
+<p><img alt="Image 3" src="https://explained.ai/rf-importance/images/regr_permute_random.svg" />
+<strong>Figure 2(a)</strong>. Importances derived by permuting each column and computing change in out-of-bag R <span class="arithmatex">\(^2\)</span> using scikit-learn<strong>regressor</strong>. Predicting apartment rental price from 4 features + a column of random numbers.</p>
+<p><img alt="Image 4" src="https://explained.ai/rf-importance/images/cls_permute_random.svg" />
+<strong>Figure 2(b)</strong>. Importances derived by permuting each column and computing change in out-of-bag accuracy using scikit-learn Random Forest <strong>classifier</strong>.</p>
+<p>The classifier default importances in <strong>Figure 1(b)</strong> are plausible, because price and location matter in real estate market. Unfortunately, the importance of the random column is in the middle of the pack, which makes no sense. <strong>Figure 2(b)</strong> places the permutation importance of the random column last, as it should be. One could also argue that the number of bedrooms is a key indicator of interest in an apartment, but the default mean-decrease-in-impurity gives the bedrooms feature little weight. The permutation importance in <strong>Figure 2(b)</strong>, however, gives a better picture of relative importance.</p>
+<p>Permutation importance is pretty efficient and generally works well, but Strobl <em>et al</em> show that “<em>permutation importance over-estimates the importance of correlated predictor variables.</em>” in <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-307">Conditional variable importance for random forests</a>. It's unclear just how big the bias towards correlated predictor variables is, but there's a way to check. <a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="drop-column-importance">Drop-column importance<a class="headerlink" href="#drop-column-importance" title="Permanent link">&para;</a></h3>
+<p>Permutation importance does not require the retraining of the underlying model in order to measure the effect of shuffling variables on overall model accuracy. Because training the model can be extremely expensive and even take days, this is a big performance win. The risk is a potential bias towards correlated predictive variables.</p>
+<p>If we ignore the computation cost of retraining the model, we can get the most accurate feature importance using a brute force <em>drop-column importance</em> mechanism. The idea is to get a baseline performance score as with permutation importance but then drop a column entirely, retrain the model, and recompute the performance score. The importance value of a feature is the difference between the baseline and the score from the model missing that feature. This strategy answers the question of how important a feature is to overall model performance even more directly than the permutation importance strategy.</p>
+<p>If we had infinite computing power, the drop-column mechanism would be the default for all RF implementations because it gives us a “ground truth” for feature importance. We can mitigate the cost by using a subset of the training data, but drop-column importance is still extremely expensive to compute because of repeated model training. Nonetheless, it's an excellent technique to know about and is a way to test our permutation importance implementation. The importance values could be different between the two strategies, but the order of feature importances should be roughly the same.</p>
+<p>The implementation of drop-column is a straightforward loop like the permutation implementation and works with any model. For Random Forests, we don't need a validation set, nor do we need to directly capture OOB samples for performance measurement. In this case, we are retraining the model and so we can directly use the OOB score computed by the model itself. Here is the complete <a href="https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L57">implementation</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dropcol_importances</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
+ <span class="n">rf_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+ <span class="n">rf_</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">999</span>
+ <span class="n">rf_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+ <span class="n">baseline</span> <span class="o">=</span> <span class="n">rf_</span><span class="o">.</span><span class="n">oob_score_</span>
+ <span class="n">imp</span> <span class="o">=</span> <span class="p">[]</span>
+ <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+ <span class="n">X</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+ <span class="n">rf_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+ <span class="n">rf_</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">999</span>
+ <span class="n">rf_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+ <span class="n">o</span> <span class="o">=</span> <span class="n">rf_</span><span class="o">.</span><span class="n">oob_score_</span>
+ <span class="n">imp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baseline</span> <span class="o">-</span> <span class="n">o</span><span class="p">)</span>
+ <span class="n">imp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imp</span><span class="p">)</span>
+ <span class="n">I</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+ <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">'Feature'</span><span class="p">:</span><span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s1">'Importance'</span><span class="p">:</span><span class="n">imp</span><span class="p">})</span>
+ <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'Feature'</span><span class="p">)</span>
+ <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Importance'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">I</span>
+</code></pre></div>
+<p>Notice that we force the random_state of each model to be the same. For the purposes of creating a general model, it's generally not a good idea to set the random state, except for debugging to get reproducible results. In this case, however, we are specifically looking at changes to the performance of a model after removing a feature. By controlling the random state, we are controlling a source of variability. Any change in performance should be due specifically to the drop of a feature.</p>
+<p><strong>Figure 3(a)</strong> and <strong>Figure 3(b)</strong> plot the feature importances for the same RF regressor and classifier from above, again with a column of random numbers. These results fit nicely with our understanding of real estate markets. Also notice that the random feature has negative importance in both cases, meaning that removing it improves model performance.</p>
+<p><img alt="Image 5" src="https://explained.ai/rf-importance/images/regr_dropcol_random.svg" />
+<strong>Figure 3(a)</strong>. Importances derived by dropping each column, retraining scikit-learn Random Forest <strong>regressor</strong>, and computing change in out-of-bag R <span class="arithmatex">\(^2\)</span>. Predicting apartment rental price from 4 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</p>
+<p><img alt="Image 6" src="https://explained.ai/rf-importance/images/cls_dropcol_random.svg" />
+<strong>Figure 3(b)</strong>. Importances derived by dropping each column, retraining scikit-learn Random Forest <strong>classifier</strong>, and computing change in out-of-bag accuracy. Predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. The importance of the random column is at the bottom as it should be.</p>
+<p>That settles it for Python, so let's take a look at R, another popular language used for machine learning. <a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="comparing-r-to-scikit-learn-importances">Comparing R to scikit-learn importances<a class="headerlink" href="#comparing-r-to-scikit-learn-importances" title="Permanent link">&para;</a></h3>
+<p>Unfortunately, R's default importance strategy is mean-decrease-in-impurity, just like scikit, and so results are again unreliable. The reason for this default is that permutation importance is slower to compute than mean-decrease-in-impurity. For example, here's a code snippet (mirroring our Python code) to create a Random Forest and get the feature importances that traps the unwary:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Warning! default is mean-decrease-in-impurity!</span>
+<span class="n">rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">randomForest</span><span class="p">(</span><span class="n">price</span><span class="o">~</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">],</span><span class="w"> </span><span class="n">mtry</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">ntree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">40</span><span class="p">)</span>
+<span class="n">imp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">importance</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+</code></pre></div>
+<p>To get reliable results, we have to turn on importance=T in the Random Forest constructor function, which then computes both mean-decrease-in-impurity and permutation importances. After that, we have to use type=1 (not type=2) in the importances() function call:</p>
+<div class="highlight"><pre><span></span><code><span class="n">rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">randomForest</span><span class="p">(</span><span class="n">price</span><span class="o">~</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">ntree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">40</span><span class="p">,</span><span class="w"> </span><span class="n">importance</span><span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+<span class="n">imp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">importance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="c1"># permutation importances</span>
+</code></pre></div>
+<p>Make sure that you don't use the MeanDecreaseGini column in the importance data frame; you want column MeanDecreaseAccuracy.</p>
+<p>It's worth comparing R and scikit in detail. It not only gives us another opportunity to verify the results of our homebrewed permutation implementation, but we can also demonstrate that R's default type=2 importances have the same issues as scikit's only importance implementation. <a href="https://explained.ai/rf-importance/"></a></p>
+<h4 id="r-mean-decrease-in-impurity-importance">R mean-decrease-in-impurity importance<a class="headerlink" href="#r-mean-decrease-in-impurity-importance" title="Permanent link">&para;</a></h4>
+<p>R's mean-decrease-in-impurity importance (type=2) gives the same implausible results as we saw with scikit. To demonstrate this, we trained an RF regressor and classifier in R using the same data set and generated the importance graphs in <strong>Figure 4</strong>, which mirror the scikit graphs in <strong>Figure 1</strong>.</p>
+<p><img alt="Image 7" src="https://explained.ai/rf-importance/images/regr_dflt_random_R_annotated.png" />
+<strong>Figure 4(a)</strong>. R's type=2 importances for Random Forest <strong>regressor</strong> predicting apartment rental price from 4 features + a column of random numbers. Random column is last, as we would expect but the importance of the number of bathrooms for predicting price is highly suspicious.</p>
+<p><img alt="Image 8" src="https://explained.ai/rf-importance/images/cls_dflt_random_R_annotated.png" />
+<strong>Figure 4(b)</strong>. R's type=2 importances for Random Forest <strong>classifier</strong> predicting apartment interest level (low, medium, high) using 5 features + a column of random numbers. Highly suspicious that random column is much more important than the number of bedrooms.
+<a href="https://explained.ai/rf-importance/"></a></p>
+<h4 id="r-permutation-importance">R permutation importance<a class="headerlink" href="#r-permutation-importance" title="Permanent link">&para;</a></h4>
+<p>As a means of checking our permutation implementation in Python, we plotted and compared our feature importances side-by-side with those of R, as shown in <strong>Figure 5</strong> for regression and <strong>Figure 6</strong> for classification. The importance values themselves are different, but the feature order and relative levels are very similar, which is what we care about.</p>
+<p><img alt="Image 9" src="https://explained.ai/rf-importance/images/regr_permute_random_R.svg" />
+<strong>Figure 5(a)</strong>. R's type=1 permutation importance for RF <strong>regressor</strong>.</p>
+<p><img alt="Image 10" src="https://explained.ai/rf-importance/images/regr_permute_random.svg" />
+<strong>Figure 5(b)</strong>. Python permutation importance for RF <strong>regressor</strong></p>
+<p><img alt="Image 11" src="https://explained.ai/rf-importance/images/cls_permute_random_R.svg" />
+<strong>Figure 6(a)</strong>. R's type=1 permutation importance for RF <strong>classifier</strong>.</p>
+<p><img alt="Image 12" src="https://explained.ai/rf-importance/images/cls_permute_random.svg" />
+<strong>Figure 6(b)</strong>. Python permutation importance for RF <strong>classifier</strong>.
+<a href="https://explained.ai/rf-importance/"></a></p>
+<h4 id="r-drop-column-importance">R drop-column importance<a class="headerlink" href="#r-drop-column-importance" title="Permanent link">&para;</a></h4>
+<p>For completeness, we implemented drop-column importance in R and compared it to our Python implementation, as shown in <strong>Figure 8</strong> for regression and <strong>Figure 9</strong> for classification.</p>
+<p><img alt="Image 13" src="https://explained.ai/rf-importance/images/regr_drop_random_R.svg" />
+<strong>Figure 8(a)</strong>. Importances derived by dropping each column, retraining an RF <strong>regressor</strong> in R, and computing the change in out-of-bag R <span class="arithmatex">\(^2\)</span>.</p>
+<p><img alt="Image 14" src="https://explained.ai/rf-importance/images/regr_dropcol_random.svg" />
+<strong>Figure 8(b)</strong>. Importances derived by dropping each column, retraining a scikit RF <strong>regressor</strong>, and computing the change in out-of-bag R <span class="arithmatex">\(^2\)</span>.</p>
+<p><img alt="Image 15" src="https://explained.ai/rf-importance/images/cls_drop_random_R.svg" />
+<strong>Figure 9(a)</strong>. Importances derived by dropping each column, retraining an RF <strong>classifier</strong> in R, and computing the change in out-of-bag accuracy.</p>
+<p><img alt="Image 16" src="https://explained.ai/rf-importance/images/cls_dropcol_random.svg" />
+<strong>Figure 9(b)</strong>. Importances derived by dropping each column, retraining a scikit RF <strong>classifier</strong>, and computing the change in out-of-bag accuracy.
+<a href="https://explained.ai/rf-importance/"></a></p>
+<h3 id="experimental-results">Experimental results<a class="headerlink" href="#experimental-results" title="Permanent link">&para;</a></h3>
+<p><a href="https://explained.ai/rf-importance/"></a></p>
+<h4 id="model-neutral-permutation-importance">Model-neutral permutation importance<a class="headerlink" href="#model-neutral-permutation-importance" title="Permanent link">&para;</a></h4>
+<p>The permutation importance code shown above uses out-of-bag (OOB) samples as validation samples, which limits its use to RFs. If we rely on the standard scikit score() function on models, it's a simple matter to alter the permutation importance to work on any model. Also, instead of passing in the training data, from which OOB samples are drawn, we have to pass in a validation set. (Don't pass in your test set, which should only used as a final step to measure final model generality; the validation set is used to tune and probe a model.) Here's the core of the model-neutral version:</p>
+<div class="highlight"><pre><span></span><code><span class="n">baseline</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+<span class="n">imp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_valid</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+ <span class="n">save</span> <span class="o">=</span> <span class="n">X_valid</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+ <span class="n">X_valid</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X_valid</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+ <span class="n">m</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+ <span class="n">X_valid</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">save</span>
+ <span class="n">imp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baseline</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span>
+</code></pre></div>
+<p>See our function <a href="https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L23">importances()</a> in the rfpimp package. <a href="https://explained.ai/rf-importance/"></a></p>
+<h4 id="performance-considerations">Performance considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h4>
+<p>The use of OOB samples for permutation importance computation also has strongly negative performance implications. Using OOB samples means iterating through the trees with a Python loop rather than using the highly vectorized code inside scikit/numpy for making predictions. For even data sets of modest size, the permutation function described in the main body of this article based upon OOB samples is extremely slow.</p>
+<p>On a (confidential) data set we have laying around with 452,122 training records and 36 features, OOB-based permutat</p>
+<h2 id="key-insights">💡 Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Default Random Forest feature importance (mean decrease in impurity or Gini importance) in scikit-learn and R is biased, tending to inflate the importance of continuous or high-cardinality categorical variables.</li>
+<li>Permutation importance is a more reliable, model-agnostic technique that measures feature importance by observing the drop in model accuracy (or R^2 score) when a feature's values are randomly shuffled.</li>
+<li>Drop-column importance, while computationally expensive due to requiring model retraining for each dropped feature, provides the most accurate 'ground truth' for feature importance.</li>
+<li>For reliable results in Python, use permutation importance (e.g., via the <code>rfpimp</code> package). In R, enable <code>importance=T</code> in the <code>randomForest</code> constructor and use <code>type=1</code> and <code>scale=F</code> in the <code>importance()</code> function.</li>
+<li>Accurate feature importance is crucial for model interpretation, understanding predictive drivers, and making informed decisions, especially when default methods yield counter-intuitive or misleading results.</li>
+</ul>
+<h2 id="references">📚 References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Terence Parr, Kerem Turgutlu, Christopher Csiszar, and Jeremy Howard, "Beware Default Random Forest Importances", explained.ai, March 26, 2018 (updated June 8, 2020), https://explained.ai/rf-importance/ <em>(source)</em></li>
+<li>Leo Breiman, "Statistical Modeling: The Two Cultures", Statistical Science, 2001, https://projecteuclid.org/euclid.ss/1009213726 <em>(cited)</em></li>
+<li>Strobl, C., Boulesteix, A.-L., Zeileis, A. et al., "Bias in random forest variable importance measures: Illustrations, sources and a solution", BMC Bioinformatics, 2007, https://link.springer.com/article/10.1186%2F1471-2105-8-25 <em>(cited)</em></li>
+<li>Strobl, C., Boulesteix, A.-L., Kneib, T. et al., "Conditional variable importance for random forests", BMC Bioinformatics, 2008, https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-307 <em>(cited)</em></li>
+<li>Terence Parr, James D. Wilson, Jeff Hamrick, "Nonparametric Feature Impact and Importance", arXiv preprint arXiv:2006.04750, 2020, https://arxiv.org/abs/2006.04750 <em>(cited)</em></li>
+<li>Terence Parr, Jeremy Howard, "Partial Dependence through Stratification", arXiv preprint arXiv:1907.06698, 2019, https://arxiv.org/abs/1907.06698 <em>(cited)</em></li>
+<li>scikit-learn, "ENH Add permutation importance", GitHub Pull Request #13146, 2019, https://github.com/scikit-learn/scikit-learn/pull/13146 <em>(cited)</em></li>
+<li>Terence Parr, "rfpimp package", GitHub, https://github.com/parrt/random-forest-importances/tree/master/src <em>(cited)</em></li>
+<li>Terence Parr, "ANTLR parser generator", http://www.antlr.org/ <em>(cited)</em></li>
+<li>Jeremy Howard, "fast.ai courses", http://course.fast.ai/ <em>(cited)</em></li>
+<li>University of San Francisco, "MS in Data Science program", https://www.usfca.edu/arts-sciences/graduate-programs/data-science <em>(cited)</em></li>
+<li>Stack Overflow, "How are feature importances in RandomForestClassifier determined?", https://stackoverflow.com/questions/15810339/how-are-feature-importances-in-randomforestclassifier-determined <em>(cited)</em></li>
+<li>Breiman, L., Cutler, A., "Random Forests: Variable Importance", https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm#varimp <em>(cited)</em></li>
+<li>Kaggle, "Two Sigma Connect: Rental Listing Inquiries competition", https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries <em>(cited)</em></li>
+<li>Terence Parr, "rent.csv data file", GitHub, https://github.com/parrt/random-forest-importances/blob/master/notebooks/data/rent.csv <em>(cited)</em></li>
+<li>Terence Parr, "OOB classifier accuracy function", GitHub, https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L237 <em>(cited)</em></li>
+<li>Terence Parr, "OOB regression R2 score function", GitHub, https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L263 <em>(cited)</em></li>
+<li>Terence Parr, "dropcol_importances implementation", GitHub, https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L57 <em>(cited)</em></li>
+<li>Terence Parr, "model-neutral importances() function", GitHub, https://github.com/parrt/random-forest-importances/blob/master/src/rfpimp.py#L23 <em>(cited)</em></li>
+</ul>
+<h2 id="classification">🏷️ Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<p>The content focuses on advanced techniques and best practices for interpreting machine learning models (specifically Random Forests) by addressing biases in feature importance calculations, which is a core topic in Data Science.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

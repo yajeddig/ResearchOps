@@ -1,0 +1,5401 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fiches de veille R&D, rapports mensuels et recherches">
+      
+      
+      
+        <link rel="canonical" href="https://yajeddig.github.io/ResearchOps/content/Industrial_Systems/20260214_091222_autonomy_edge_quick_start_guide__cloud_based_indus/">
+      
+      
+        <link rel="prev" href="../20260121_172455_the_future_of_industrial_process_control__virtual_/">
+      
+      
+        <link rel="next" href="../20260514_211513_making_sure_you_re_not_a_bot____anubis_anti_scrapi/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3 - ResearchOps — Knowledge Base</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#relevance" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-header__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ResearchOps — Knowledge Base
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-nav__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ResearchOps — Knowledge Base
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResearchOps — Knowledge Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20251230_180116_openflodata__real_time_simulation___streaming_of_v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenFloData: Real-Time Simulation & Streaming of Volve Oil & Gas Production Data for Data Engineering & Surveillance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093050_postgrest__automatic_rest_api_generation_for_postg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgREST: Automatic REST API Generation for PostgreSQL Databases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093144_github___bytebytegohq_system_design_101__explain_c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub - ByteByteGoHq/system-design-101: Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260115_072117_pointblank__data_validation_and_quality_monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pointblank: Data Validation and Quality Monitoring Toolkit for Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260204_073433_pg_duckdb__duckdb_extension_for_high_performance_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pg_duckdb: DuckDB Extension for High-Performance Analytics in PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260214_091228_duckdb_shell__in_browser_sql_client_for_analytical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DuckDB Shell: In-Browser SQL Client for Analytical Data Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Science
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_175647_bofire__experimental_design_and_multi_objective_ba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bofire: Experimental Design and Multi-Objective Bayesian Optimization Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_181646_code__a_global_approach_to_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CODE: A Global Approach to Ordinary Differential Equation (ODE) Dynamics Learning with Polynomial Chaos Expansion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_181745_sindybrid__automated_hybrid_model_generation_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SINDybrid: Automated Hybrid Model Generation for Dynamic Systems using MILP and Sparse Identification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_192456_artificial_intelligence_in_chemical_engineering__a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artificial Intelligence in Chemical Engineering: A White Paper on AI/ML Applications, Challenges, and Future Directions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251230_152511_optimistik__industrial_ai_analytics_software_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimistik: Industrial AI Analytics Software for Digital Transformation and Sustainable Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260101_211512_convergence_rate_proof_for_gradient_flow_of_convex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convergence Rate Proof for Gradient Flow of Convex Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260102_135419_llm_council__multi_agent_llm_orchestration_for_enh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Council: Multi-Agent LLM Orchestration for Enhanced Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_093401_darts__a_python_library_for_user_friendly_time_ser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Darts: A Python Library for User-Friendly Time Series Forecasting and Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112257_d_veloppement_d_un_jumeau_num_rique_hybride__adm1_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Développement d'un Jumeau Numérique Hybride (ADM1 + UDE) pour la Méthanisation Industrielle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112304_mod_lisation_hybride_adm1_ude_pour_digestion_ana_r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112308_advanced_modeling_and_control_of_anaerobic_digesti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Control of Anaerobic Digestion for Biogas Production: A Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112312_advanced_modeling_and_data_science_techniques_for_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Data Science Techniques for Anaerobic Digestion Process Control and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260108_200801_ui_tars_desktop__open_source_multimodal_ai_agent_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI-TARS-desktop: Open-Source Multimodal AI Agent Stack by ByteDance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260108_210152_hybridation_de_mod_les_physiques_et_machine_learni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybridation de Modèles Physiques et Machine Learning pour Équations Différentielles (EDO/EDP): Taxonomie, Comparaison et Applications en Traitement des Eaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260109_201727_specializing_large_language_models_for_process_mod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specializing Large Language Models for Process Modeling via Reinforcement Learning with Verifiable and Universal Rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260110_092444_rag_anything__all_in_one_multimodal_retrieval_augm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG-Anything: All-in-One Multimodal Retrieval-Augmented Generation (RAG) Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260110_092746_demystifying_r___understanding_its_true_meaning_an/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying R²: Understanding its True Meaning and Limitations in Data Science Model Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260118_082823_reliable_feature_importance_for_random_forests__ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260120_210628_ai_prompt_builder_for_structured_interaction_with_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Prompt Builder for Structured Interaction with Large Language Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260122_152149_agentic_physics_informed_digital_twin_for_trustwor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Physics-Informed Digital Twin for Trustworthy Cyber-Physical System Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260122_193732_fluidgym__plug_and_play_benchmarking_of_reinforcem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260123_204308_pinneapple__open_source_physics_ai_toolkit_for_phy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PINNeAPPle: Open-source Physics AI Toolkit for Physics-Informed Neural Networks and Scientific ML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260123_215808_deepthermomix__classical_thermodynamics_flavored_w/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepThermoMix: Classical Thermodynamics Flavored with Modern Deep Learning for Multicomponent Activity Coefficient Prediction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260130_060010_the__physics_based_model__myth__why_industrial_rea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The 'Physics-Based Model' Myth: Why Industrial Reality Defies Textbook Assumptions in AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260131_162921_github_platform_features_for_ai_and_software_devel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for AI and Software Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260203_073601_explainable_artificial_intelligence_in_process_eng/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eXplainable Artificial Intelligence in Process Engineering: Promises, Facts, and Current Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260227_181227_ai_driven_digital_twins_for_predictive_control_in_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-driven Digital Twins for Predictive Control in Data Center Cooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260227_181228_autonomous_ai_tuning_of_pid_control_loops_for_ener/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous AI Tuning of PID Control Loops for Energy-Efficient Cooling Infrastructure via Digital Twins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260327_190541_analysis_of_physics_constrained_neural_ode_for_mic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Physics-Constrained Neural ODE for Microbial Community Dynamics (Neural Species Mediator)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260327_190630_physics_constrained_neural_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physics-constrained neural ordinary differential equation models to discover and predict microbial community dynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260425_071200_recursive_language_models__a_general_inference_par/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursive Language Models: A General Inference Paradigm for Long Prompts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260527_132324_it_takes_two_neurons_to_ride_a_bicycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    It Takes Two Neurons To Ride a Bicycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260606_073206_ce_que_scipy_ne_vous_dit_pas_sur_l_ajustement_de_g/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ce que scipy ne vous dit pas sur l’ajustement de GEV non stationnaire à grande échelle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Industrial Systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Industrial Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_112943_enterprise_architecture_s_strategic_role_in_digita/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Architecture's Strategic Role in Digital Transformation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260102_213542_python_gui_development_with_guizero__building_inte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python GUI Development with guizero: Building Interactive Applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_111222_note_de_cadrage_strat_gique___modernisation_de_l_i/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Note de Cadrage Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260103_111224_rapport_strat_gique___modernisation_de_l_infrastru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rapport Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT et Transformation des Opérations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260104_081536_automatisch__open_source_workflow_automation_platf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisch: Open-Source Workflow Automation Platform (Zapier Alternative)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260113_115307_copapy__tracing_based_copy___patch_compiler_for_py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copapy: Tracing Based Copy & Patch Compiler for Python for Deterministic Real-time Embedded Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260121_172455_the_future_of_industrial_process_control__virtual_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Future of Industrial Process Control: Virtual PLCs and Software-Defined Automation with Emerson DeltaV IQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-autonomy-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Autonomy Edge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Autonomy Edge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-autonomy-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Autonomy Edge?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iec-61131-3-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IEC 61131-3 Programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-set-up-an-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up an Orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Set Up an Orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-start-the-new-orchestrator-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Start the New Orchestrator Wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-enter-orchestrator-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Enter Orchestrator Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-install-the-agent-on-your-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Install the Agent on Your Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-link-the-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Link the Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-a-vplc-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create a vPLC Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-create-a-new-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create a New Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-declare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Declare Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Declare Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-timer-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Timer Variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-the-output-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Output Variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-write-the-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Write the Program
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-configure-remote-io-modbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Configure Remote I/O (Modbus)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Configure Remote I/O (Modbus)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-remote-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Remote Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-an-io-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add an IO Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-connect-to-the-vplc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Connect to the vPLC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Connect to the vPLC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-time-user-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time User Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-compile-and-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Compile and Deploy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-your-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Your Program
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expand-your-programming-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand Your Programming Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connect-to-real-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect to Real Devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-your-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Your Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vplc-shows-stopped-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vPLC shows "Stopped" status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-connect-to-vplc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot connect to vPLC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestrator-id-expired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator ID expired
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260514_211513_making_sure_you_re_not_a_bot____anubis_anti_scrapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making sure you're not a bot! - Anubis Anti-Scraping System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260607_101437_open_process_library__mtp_compatible__cross_vendor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open Process Library: MTP-compatible, Cross-Vendor Industrial Process Automation Library for PLC/DCS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Process_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Process Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20251229_181238_demystifying_industry_4_0__navigating_automation_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying Industry 4.0: Navigating Automation and Augmentation in Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260102_163639_simcraft__an_open_source_discrete_event_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimCraft: An Open-Source Discrete Event Simulation Framework for Industrial Modeling and AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260108_200401_baram__open_source_cfd_software_with_gui_for_openf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BARAM: Open-Source CFD Software with GUI for OpenFOAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260112_225400_reasoning_agent_driven_process_simulation__optimiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reasoning-agent-driven process simulation, optimization, carbon accounting and decarbonization of distillation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260113_211312_modeling_of_industrial_multiphase_reactors__advanc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modeling of Industrial Multiphase Reactors: Advances in AI, HPC, and Quantum Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260119_223617_modelpredictivecontrol_jl__open_source_model_predi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ModelPredictiveControl.jl: Open-Source Model Predictive Control Package for Julia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083245_ai_driven_predictive_control_for_natural_gas_conde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Natural Gas Condensate Stabilization: A Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260124_083655_ai_driven_predictive_control_for_condensate_stabil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Condensate Stabilization – IntelliDynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260126_074550_white_paper__how_does_pat_apply_to_the_bioreactor_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Paper: How Does PAT Apply to the Bioreactor?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162831_pathsim__a_python_framework_for_block_diagram_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathSim: A Python Framework for Block Diagram-based Dynamical System Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Process_Engineering/20260131_162921_pathview__web_based_visual_editor_for_dynamic_syst/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Strategy_Business/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategy Business
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategy Business
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20251229_112211_data_strategy_pack__building_impactful_data_teams_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Strategy Pack: Building Impactful Data Teams and Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260103_111227_strat_gies_de_modernisation_ot_it_industrielle___c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stratégies de Modernisation OT/IT Industrielle : Convergence, Coûts du Vendor Lock-in, ROI de l'IA et Défis des Compétences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260219_183041_digital_transformation_framework___people__process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Transformation Framework - People, Process, Technology, & Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260314_203204_analysis_of_goldman_sachs__halo_effect_thesis__ind/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Goldman Sachs' HALO Effect Thesis: Industrial Asset Valuation vs. Operational Reality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../_Inbox/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+     Inbox
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+     Inbox
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251229_111800_generic_test_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Test Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20251230_173046_github_platform_features_for_software_development_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for Software Development and Collaboration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_082850_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_083229_404___page_not_found/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    404 - Page Not Found
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260103_105532_security_verification_page___perplexity_ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Perplexity AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135228_employee_payslip_for_siaap_engineer__december_2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Employee Payslip for SIAAP Engineer (December 2025)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260109_135415_sciencedirect_access_denied___captcha_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScienceDirect Access Denied / Captcha Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260110_221817_access_denied__captcha_forbidden_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Denied: CAPTCHA/Forbidden Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260121_201259_captcha_challenge___bot_detection_page__elsevier_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CAPTCHA Challenge / Bot Detection Page (Elsevier ScienceDirect)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260124_084721_security_compromise_error__ddos_attack_suspected_o/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Compromise Error: DDoS Attack Suspected on DOI Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_204725_flat_payload_test_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flat Payload Test Message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260314_210559_image_content_unavailable_for_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image content unavailable for analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260329_204124_security_verification_page___content_unavailable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification Page - Content Unavailable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_071331_unanalyzed_image_content/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unanalyzed Image Content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260425_084724_access_issue__security_verification_on_pnas_org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Access Issue: Security Verification on pnas.org
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_075122_security_verification___content_inaccessible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Verification - Content Inaccessible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_082550_generic_content_placeholder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generic Content Placeholder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260512_140059_reference_to_unanalyzed_pdf_document__s02638762260/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document (S0263876226002455)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260517_083330_empty_content_input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Empty Content Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260527_122215_reference_to_unanalyzed_pdf_document/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference to Unanalyzed PDF Document
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260604_191342_linkedin_page_not_found_error__404_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error (404)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123455_web_navigation_error__connection_reset_to_orca_tel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Navigation Error: Connection Reset to Orca Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123457_linkedin_404_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn 404 Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../_Inbox/20260917_123501_linkedin_page_not_found_error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LinkedIn Page Not Found Error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reports
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reports
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-01_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Monthly Intelligence - January 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-02_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Janvier 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-03_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Février 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-04_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mars 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-05_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Avril 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-06_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mai 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-07_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Juin 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-08_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — July 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-09_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Août 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-autonomy-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Autonomy Edge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Autonomy Edge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-autonomy-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Autonomy Edge?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iec-61131-3-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IEC 61131-3 Programming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-set-up-an-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set Up an Orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Set Up an Orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-start-the-new-orchestrator-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Start the New Orchestrator Wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-enter-orchestrator-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Enter Orchestrator Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-install-the-agent-on-your-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Install the Agent on Your Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-link-the-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Link the Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-a-vplc-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create a vPLC Device
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-create-a-new-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Create a New Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-declare-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Declare Variables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Declare Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-timer-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Timer Variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-the-output-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Output Variable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-write-the-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Write the Program
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-configure-remote-io-modbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Configure Remote I/O (Modbus)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Configure Remote I/O (Modbus)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-remote-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Remote Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-an-io-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add an IO Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-connect-to-the-vplc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Connect to the vPLC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Connect to the vPLC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-time-user-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Time User Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-compile-and-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Compile and Deploy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-your-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Your Program
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expand-your-programming-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand Your Programming Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connect-to-real-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect to Real Devices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-your-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Your Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vplc-shows-stopped-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vPLC shows "Stopped" status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cannot-connect-to-vplc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cannot connect to vPLC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestrator-id-expired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator ID expired
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">IEC 61131-3</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">IT/OT convergence</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Modbus</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">OpenPLC</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">PLC programming</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">cloud platform</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">containerization</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">edge computing</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">industrial automation</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">orchestrator</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">vPLC</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">virtual PLC</span>
+      
+    
+  </nav>
+
+
+
+  <h1>Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3</h1>
+
+<h2 id="relevance">🎯 Relevance<a class="headerlink" href="#relevance" title="Permanent link">&para;</a></h2>
+<p>This content is highly useful for process engineers and industrial data scientists looking to modernize industrial control systems. It offers a learning opportunity for understanding IT/OT convergence, edge computing, and virtualized PLC environments. The platform's features (remote management, cloud collaboration, browser-based development) can lead to significant ROI through reduced operational costs, improved development efficiency, and enhanced scalability of industrial automation solutions.</p>
+<h2 id="content">📖 Content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h2>
+<h2 id="quick-start-guide">Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permanent link">&para;</a></h2>
+<p>This guide walks you through creating your first automation project on the Autonomy Edge platform, from setting up your environment to deploying a simple blinking output program to a virtual PLC.</p>
+<h2 id="understanding-autonomy-edge">Understanding Autonomy Edge<a class="headerlink" href="#understanding-autonomy-edge" title="Permanent link">&para;</a></h2>
+<p>Autonomy Edge is a cloud-based platform for industrial automation that brings modern software development practices to PLC programming. Instead of requiring specialized hardware and proprietary software installations, Autonomy Edge lets you develop, deploy, and manage automation programs entirely from your web browser.</p>
+<h3 id="why-autonomy-edge">Why Autonomy Edge?<a class="headerlink" href="#why-autonomy-edge" title="Permanent link">&para;</a></h3>
+<p>Traditional PLC development requires expensive hardware, proprietary software licenses, and physical access to devices. Autonomy Edge removes these barriers by providing:</p>
+<ul>
+<li><strong>Browser-Based Development</strong>: Write PLC programs using industry-standard IEC 61131-3 languages without installing any software</li>
+<li><strong>Virtual PLCs</strong>: Deploy automation logic to physical devices (PLCs, PACs, Industrial PCs, Servers) running in containerized runtime instances in real-time</li>
+<li><strong>Remote Management</strong>: Deploy programs and monitor devices from anywhere with an internet connection (internet is only required for management, not for running control logic)</li>
+<li><strong>Cloud Collaboration</strong>: Share projects with team members and maintain version history automatically</li>
+</ul>
+<h3 id="platform-architecture">Platform Architecture<a class="headerlink" href="#platform-architecture" title="Permanent link">&para;</a></h3>
+<p>The Autonomy Edge ecosystem consists of four key components that work together:</p>
+<p><strong>Autonomy Edge Platform</strong>: The cloud-based web application where you manage projects, users, and devices. It includes the browser-based OpenPLC Editor IDE for writing automation programs.</p>
+<p><strong>Orchestrator</strong>: An agent that runs on an edge device (like a linux-based PLC, PAC, industrial PC, or on-prem server) and manages your vPLC instances. It maintains a secure connection to the cloud and handles container orchestration, networking, and system monitoring.</p>
+<p><strong>vPLC (Virtual PLC)</strong>: A containerized instance of OpenPLC Runtime v4 that executes your automation programs. Each vPLC runs independently and can communicate with physical devices through industrial protocols like Modbus, EtherCAT, or EtherNet/IP.</p>
+<p><strong>Physical I/O and Devices</strong>: The sensors, actuators, remote I/O modules, HMIs, and other industrial equipment that connect to your vPLCs through industrial protocols like Modbus TCP/IP, Modbus RTU, EtherCAT, or EtherNet/IP.</p>
+<h3 id="iec-61131-3-programming">IEC 61131-3 Programming<a class="headerlink" href="#iec-61131-3-programming" title="Permanent link">&para;</a></h3>
+<p>Autonomy Edge supports all five standard IEC 61131-3 programming languages:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Type</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Structured Text (ST)</strong></td>
+<td>Textual</td>
+<td>Complex algorithms, calculations, data processing</td>
+</tr>
+<tr>
+<td><strong>Ladder Diagram (LD)</strong></td>
+<td>Graphical</td>
+<td>Discrete logic, familiar to electricians</td>
+</tr>
+<tr>
+<td><strong>Function Block Diagram (FBD)</strong></td>
+<td>Graphical</td>
+<td>Process control, signal flow visualization</td>
+</tr>
+<tr>
+<td><strong>Instruction List (IL)</strong></td>
+<td>Textual</td>
+<td>Low-level control, legacy system migration</td>
+</tr>
+<tr>
+<td><strong>Sequential Function Chart (SFC)</strong></td>
+<td>Graphical</td>
+<td>State machines, sequential processes</td>
+</tr>
+</tbody>
+</table>
+<p>Additionally, you can extend functionality with <strong>Python</strong> and <strong>C++</strong> function blocks for advanced use cases like machine learning integration or custom protocol handlers.</p>
+<h2 id="what-youll-build">What You'll Build<a class="headerlink" href="#what-youll-build" title="Permanent link">&para;</a></h2>
+<p>In this guide, you'll create a complete automation workflow from scratch:</p>
+<ol>
+<li><strong>Set up infrastructure</strong>: Install the orchestrator agent on your device and provision a vPLC instance</li>
+<li><strong>Develop a program</strong>: Write a "Hello World" blinking output program in Structured Text</li>
+<li><strong>Configure communication</strong>: Set up Modbus TCP/IP to expose your outputs to external devices</li>
+<li><strong>Deploy and run</strong>: Compile and upload your program to the vPLC</li>
+</ol>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Autonomy Edge account</strong>: Sign up at <a href="https://edge.autonomylogic.com/">edge.autonomylogic.com</a> if you haven't already</li>
+<li><strong>Modern web browser</strong>: Chrome, Firefox, or Safari recommended for the best experience</li>
+<li><strong>Linux device</strong>: Any Linux-based device where you have SSH or terminal access (PLC, PAC, Industrial PC, Server, Raspberry Pi, etc.)</li>
+<li><strong>Modbus slave device</strong>: A remote I/O module or device with at least one digital output that supports Modbus TCP/IP. This will receive the blinking output signal from your program.</li>
+</ul>
+<hr />
+<h2 id="step-1-set-up-an-orchestrator">Step 1: Set Up an Orchestrator<a class="headerlink" href="#step-1-set-up-an-orchestrator" title="Permanent link">&para;</a></h2>
+<p>An orchestrator is an edge agent that manages your vPLC devices. It runs on your physical hardware and maintains a secure connection to the Autonomy Edge cloud.</p>
+<h3 id="11-start-the-new-orchestrator-wizard">1.1 Start the New Orchestrator Wizard<a class="headerlink" href="#11-start-the-new-orchestrator-wizard" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log in to the Autonomy Edge platform at <a href="https://edge.autonomylogic.com/">edge.autonomylogic.com</a></li>
+<li>Navigate to <strong>Orchestrators</strong> in the left sidebar</li>
+<li>Click the <strong>Add Orchestrator</strong> button</li>
+</ol>
+<p><img alt="Image 1: New Orchestrator wizard - Details step" src="https://edge.autonomylogic.com/docs/platform-features/orchestrator-management/images/add-orchestrator-step1.png" /></p>
+<h3 id="12-enter-orchestrator-details">1.2 Enter Orchestrator Details<a class="headerlink" href="#12-enter-orchestrator-details" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Enter a name for your orchestrator (e.g., "QuickStartOrchestrator")</li>
+<li>Optionally add a description</li>
+<li>Click <strong>Next</strong> to proceed to the Install step</li>
+</ol>
+<h3 id="13-install-the-agent-on-your-device">1.3 Install the Agent on Your Device<a class="headerlink" href="#13-install-the-agent-on-your-device" title="Permanent link">&para;</a></h3>
+<p>The wizard provides a curl command to install the orchestrator agent on your Linux device.</p>
+<p><img alt="Image 2: New Orchestrator wizard - Install step" src="https://edge.autonomylogic.com/docs/platform-features/orchestrator-management/images/add-orchestrator-step2.png" /></p>
+<ol>
+<li>Click <strong>Copy</strong> to copy the installation command</li>
+<li>Open a terminal on your Linux device (via SSH or directly)</li>
+<li>Paste and run the command: <code>curl https://getedge.me | bash</code></li>
+<li>Follow the on-screen prompts to complete the installation</li>
+<li>When the installation completes, the agent will display an <strong>Orchestrator ID</strong></li>
+</ol>
+<h3 id="14-link-the-orchestrator">1.4 Link the Orchestrator<a class="headerlink" href="#14-link-the-orchestrator" title="Permanent link">&para;</a></h3>
+<p>After installation, the agent generates an ID that you need to enter in the platform.</p>
+<p><img alt="Image 3: New Orchestrator wizard - Link step" src="https://edge.autonomylogic.com/docs/platform-features/orchestrator-management/images/add-orchestrator-step3.png" /></p>
+<ol>
+<li>Copy the <strong>Orchestrator ID</strong> from your terminal</li>
+<li>Paste it into the <strong>ID Orchestrator</strong> field</li>
+<li>Click <strong>Create Orchestrator</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> The orchestrator ID expires after 5 minutes. If it expires, run the installation command again to generate a new ID.</p>
+</blockquote>
+<p>Once linked, your orchestrator will appear in the list with its connection status.</p>
+<p><img alt="Image 4: Orchestrators list showing connected orchestrator" src="https://edge.autonomylogic.com/docs/platform-features/orchestrator-management/images/orchestrators-list.png" /></p>
+<hr />
+<h2 id="step-2-create-a-vplc-device">Step 2: Create a vPLC Device<a class="headerlink" href="#step-2-create-a-vplc-device" title="Permanent link">&para;</a></h2>
+<p>A vPLC (virtual PLC) is a containerized runtime that executes your automation programs. One of the key advantages of Autonomy Edge is the ability to run multiple vPLC instances on a single physical device. Each vPLC runs in complete isolation with real-time execution, and appears on the network with its own IP address as if it were an independent physical PLC. This allows you to maximize hardware utilization—especially on modern multicore PLCs, PACs, and industrial PCs that are often underutilized when running traditional single-threaded PLC runtimes.</p>
+<ol>
+<li>Click on your orchestrator to open its details</li>
+<li>Navigate to the <strong>Devices</strong> tab</li>
+<li>Click <strong>Add Device</strong></li>
+</ol>
+<p><img alt="Image 5: Add New Device dialog" src="https://edge.autonomylogic.com/docs/platform-features/vplc-management/images/add-device-modal.png" /></p>
+<ol>
+<li>Enter a device name (e.g., "Demo vPLC")</li>
+<li>
+<p>Configure the network settings:</p>
+<ul>
+<li>A default virtual NIC (veth0) is created automatically with DHCP</li>
+<li>Click on the NIC to configure static IP if needed</li>
+</ul>
+</li>
+<li>
+<p>Click <strong>Create</strong> to provision the vPLC</p>
+</li>
+</ol>
+<p>The vPLC will start automatically and show a "success" status when ready.</p>
+<p><img alt="Image 6: Devices list showing the created vPLC" src="https://edge.autonomylogic.com/docs/platform-features/vplc-management/images/devices-list-with-vplc.png" /></p>
+<hr />
+<h2 id="step-3-create-a-new-project">Step 3: Create a New Project<a class="headerlink" href="#step-3-create-a-new-project" title="Permanent link">&para;</a></h2>
+<p>Now let's create a project for our blinking output program.</p>
+<ol>
+<li>Navigate to <strong>Projects</strong> in the left sidebar</li>
+<li>Click <strong>New Project</strong></li>
+<li>Enter a project name (e.g., "BlinkingOutput")</li>
+<li>Select <strong>Structured Text</strong> as the programming language</li>
+<li>Click <strong>Create</strong></li>
+</ol>
+<p>The project will open in the OpenPLC Editor IDE.</p>
+<p><img alt="Image 7: OpenPLC Editor IDE with new project" src="https://edge.autonomylogic.com/docs/getting-started/images/blank-editor.png" /></p>
+<hr />
+<h2 id="step-4-declare-variables">Step 4: Declare Variables<a class="headerlink" href="#step-4-declare-variables" title="Permanent link">&para;</a></h2>
+<p>In the IDE, you'll see the variables table at the top and the program editor below. We need two variables:</p>
+<ol>
+<li>A timer to control the blink interval</li>
+<li>An output variable to toggle</li>
+</ol>
+<h3 id="add-the-timer-variable">Add the Timer Variable<a class="headerlink" href="#add-the-timer-variable" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click the <strong>+</strong> button in the variables table toolbar to add a new row</li>
+<li>Set the following values:<ul>
+<li><strong>Name</strong>: <code>blink_timer</code></li>
+<li><strong>Class</strong>: Local</li>
+<li><strong>Type</strong>: TON (search for "TON" in the type dropdown under System)</li>
+</ul>
+</li>
+</ol>
+<h3 id="add-the-output-variable">Add the Output Variable<a class="headerlink" href="#add-the-output-variable" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click <strong>+</strong> again to add another variable</li>
+<li>Set the following values:<ul>
+<li><strong>Name</strong>: <code>output_state</code></li>
+<li><strong>Class</strong>: Output</li>
+<li><strong>Type</strong>: BOOL (found under Base Type)</li>
+<li><strong>Location</strong>: <code>%QX0.0</code></li>
+</ul>
+</li>
+</ol>
+<p>The <strong>Location</strong> field is critical - it maps your program variable to the physical I/O address. The <code>%QX0.0</code> address corresponds to the first digital output coil, which we'll configure to communicate via Modbus in Step 6.</p>
+<blockquote>
+<p><strong>Understanding Located Variables</strong>: In IEC 61131-3, the <code>%Q</code> prefix indicates an output, <code>X</code> indicates a bit (boolean), and <code>0.0</code> is the address (byte 0, bit 0). This creates a direct link between your program variable and the Modbus coil address.</p>
+</blockquote>
+<hr />
+<h2 id="step-5-write-the-program">Step 5: Write the Program<a class="headerlink" href="#step-5-write-the-program" title="Permanent link">&para;</a></h2>
+<p><img alt="Image 8: Variables and program code" src="https://edge.autonomylogic.com/docs/getting-started/images/program.png" /></p>
+<p>Click in the program editor area (below the variables table) and enter the following Structured Text code:</p>
+<div class="highlight"><pre><span></span><code>PROGRAM BlinkingOutput
+VAR
+    blink_timer: TON;
+    output_state: BOOL AT %QX0.0;
+END_VAR
+
+blink_timer(IN := NOT blink_timer.Q, PT := T#500ms);
+
+IF blink_timer.Q THEN
+    output_state := NOT output_state;
+END_IF;
+</code></pre></div>
+<p>This program:</p>
+<ul>
+<li>Uses a TON timer that triggers every 500ms</li>
+<li>Toggles the <code>output_state</code> each time the timer completes</li>
+<li>Creates a 1-second blink cycle (500ms on, 500ms off)</li>
+</ul>
+<p>Press <strong>Cmd+S</strong> (Mac) or <strong>Ctrl+S</strong> (Windows) to save your project.</p>
+<hr />
+<h2 id="step-6-configure-remote-io-modbus">Step 6: Configure Remote I/O (Modbus)<a class="headerlink" href="#step-6-configure-remote-io-modbus" title="Permanent link">&para;</a></h2>
+<p>To connect your program outputs to external devices, we'll configure a Modbus Remote Device.</p>
+<h3 id="add-a-remote-device">Add a Remote Device<a class="headerlink" href="#add-a-remote-device" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click the blue <strong>+</strong> button in the left sidebar</li>
+<li>Select <strong>Remote Device</strong> from the dropdown menu</li>
+<li>Enter a device name (e.g., "ModbusCoils")</li>
+<li>Select <strong>Modbus</strong> as the protocol</li>
+<li>Click <strong>Create</strong></li>
+</ol>
+<p><img alt="Image 9: Add Remote Device dialog" src="https://edge.autonomylogic.com/docs/getting-started/images/add-remote-device.png" /></p>
+<p>The Remote Device configuration panel will open:</p>
+<p><img alt="Image 10: Remote Device configuration panel" src="https://edge.autonomylogic.com/docs/getting-started/images/configure-remote-device.png" /></p>
+<p>Configure the connection settings:</p>
+<ul>
+<li><strong>Transport</strong>: Select TCP/IP for network communication (or RTU for serial)</li>
+<li><strong>IP Address</strong>: Enter the IP address of your Modbus slave device (e.g., <code>192.168.1.100</code>). The device must be accessible on the same network where the vPLC was configured.</li>
+<li><strong>Port</strong>: Default is <code>502</code> (standard Modbus TCP port)</li>
+<li><strong>Timeout (ms)</strong>: Response timeout in milliseconds (default <code>1000</code>)</li>
+<li><strong>Slave ID</strong>: The Modbus slave/unit identifier (default <code>1</code>)</li>
+</ul>
+<h3 id="add-an-io-group">Add an IO Group<a class="headerlink" href="#add-an-io-group" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the <strong>IO Tag Mapping</strong> section, click the <strong>+</strong> button</li>
+<li>
+<p>Configure the IO Group:</p>
+<ul>
+<li><strong>Name</strong>: BlinkCoils</li>
+<li><strong>Function Code</strong>: Write Multiple Coils (FC 15)</li>
+<li><strong>Cycle Time (ms)</strong>: 100</li>
+<li><strong>Offset</strong>: 0</li>
+<li><strong>Length</strong>: 8</li>
+<li><strong>Error Handling</strong>: Keep last value</li>
+</ul>
+</li>
+<li>
+<p>Click <strong>Create</strong></p>
+</li>
+</ol>
+<p><img alt="Image 11: New IO Group dialog" src="https://edge.autonomylogic.com/docs/getting-started/images/add-io-group.png" /></p>
+<p>The IO Group will appear in the table. Click the expand arrow to see individual coil mappings:</p>
+<p><img alt="Image 12: IO Group expanded showing coil mappings" src="https://edge.autonomylogic.com/docs/getting-started/images/expand-io-group.png" /></p>
+<p>The table shows:</p>
+<ul>
+<li><strong>BlinkCoils</strong> (parent): Digital Output (Multiple Coils), Address <code>%QX0.0</code>, Function Code Write Multiple Coils (FC 15)</li>
+<li><strong>BlinkCoils_0</strong> through <strong>BlinkCoils_7</strong>: Individual coils mapped to <code>%QX0.0</code> through <code>%QX0.7</code></li>
+</ul>
+<p>This configuration maps 8 digital outputs starting at address <code>%QX0.0</code> to Modbus coils. Since our <code>output_state</code> variable is located at <code>%QX0.0</code>, it will be automatically written to the Modbus device whenever its value changes.</p>
+<hr />
+<h2 id="step-7-connect-to-the-vplc">Step 7: Connect to the vPLC<a class="headerlink" href="#step-7-connect-to-the-vplc" title="Permanent link">&para;</a></h2>
+<p>Now let's connect to the vPLC to deploy your program.</p>
+<ol>
+<li>In the IDE, expand <strong>Devices</strong> in the left sidebar</li>
+<li>Click on <strong>Orchestrators</strong> to open the Device Orchestrators panel</li>
+<li>Expand your orchestrator (e.g., "QuickStartOrchestrator") to see your vPLC</li>
+<li>Click on your vPLC (e.g., "Demo vPLC") to select it (it should show "Running" status)</li>
+<li>Click the <strong>Connect</strong> button</li>
+</ol>
+<h3 id="first-time-user-setup">First-Time User Setup<a class="headerlink" href="#first-time-user-setup" title="Permanent link">&para;</a></h3>
+<p>When connecting to a new vPLC for the first time, you'll need to create an OpenPLC Runtime user account. This account is separate from your Autonomy Edge platform account and is used to authenticate with the PLC runtime.</p>
+<p><img alt="Image 13: Create First User dialog" src="https://edge.autonomylogic.com/docs/getting-started/images/first-login-runtime.png" /></p>
+<ol>
+<li>The <strong>Create First User</strong> dialog will appear</li>
+<li>Enter a username (e.g., "admin")</li>
+<li>Enter a password and confirm it</li>
+<li>Click <strong>Create User</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> If users have already been created on this vPLC, you'll see a login dialog instead. Enter your OpenPLC Runtime credentials to connect.</p>
+</blockquote>
+<p>Once connected, the vPLC status will show both "Running" and "Connected", and the PLC Status will show "EMPTY" (no program loaded yet).</p>
+<p><img alt="Image 14: vPLC showing Connected status" src="https://edge.autonomylogic.com/docs/getting-started/images/first-connect-runtime.png" /></p>
+<hr />
+<h2 id="step-8-compile-and-deploy">Step 8: Compile and Deploy<a class="headerlink" href="#step-8-compile-and-deploy" title="Permanent link">&para;</a></h2>
+<p>After connecting to the vPLC:</p>
+<ol>
+<li>Click the <strong>Download</strong> button in the left sidebar (folder icon with a down arrow) to compile and deploy your program</li>
+<li>Check the Console panel at the bottom for compilation progress</li>
+<li>If compilation succeeds, the program will be uploaded automatically</li>
+<li>The PLC Status will change to "RUNNING" when the program is active</li>
+</ol>
+<p><img alt="Image 15: Program running with Scan Cycle Statistics" src="https://edge.autonomylogic.com/docs/getting-started/images/runtime-running.png" /></p>
+<p>The Scan Cycle Statistics panel shows real-time performance metrics:</p>
+<ul>
+<li><strong>Scan Count</strong>: Number of program cycles executed</li>
+<li><strong>Overruns</strong>: Cycles that exceeded the target time (should be 0)</li>
+<li><strong>Scan Time (avg)</strong>: Average execution time per cycle</li>
+<li><strong>Cycle Time (avg)</strong>: Time between scan starts</li>
+<li><strong>Cycle Latency (avg)</strong>: Scheduling delay</li>
+</ul>
+<hr />
+<h2 id="verifying-your-program">Verifying Your Program<a class="headerlink" href="#verifying-your-program" title="Permanent link">&para;</a></h2>
+<p>Once deployed, your blinking output program is running on the vPLC. You can verify this by:</p>
+<ul>
+<li>Watching the Scan Count increment in the Scan Cycle Statistics</li>
+<li>Check the output coils of your Modbus slave device</li>
+<li>Checking the PLC Logs tab for runtime messages</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Now that you understand the basics, explore these topics to build more sophisticated automation systems:</p>
+<h3 id="expand-your-programming-skills">Expand Your Programming Skills<a class="headerlink" href="#expand-your-programming-skills" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://edge.autonomylogic.com/docs/openplc-editor/programming-languages">Programming Languages</a></strong> - Learn Ladder Diagram for discrete logic or Function Block Diagram for process control</li>
+<li><strong><a href="https://edge.autonomylogic.com/docs/openplc-editor/standard-function-blocks">Standard Function Blocks</a></strong> - Master timers (TON, TOF, TP), counters (CTU, CTD), and edge detection (R_TRIG, F_TRIG)</li>
+<li><strong><a href="https://edge.autonomylogic.com/docs/openplc-editor/custom-languages">Custom Languages</a></strong> - Extend your PLCs with Python or C++ function blocks</li>
+</ul>
+<h3 id="connect-to-real-devices">Connect to Real Devices<a class="headerlink" href="#connect-to-real-devices" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://edge.autonomylogic.com/docs/openplc-editor/communication">Communication Protocols</a></strong> - Configure Modbus servers, clients, and OPC-UA for device integration</li>
+<li><strong><a href="https://edge.autonomylogic.com/docs/openplc-editor/hardware-configuration">Hardware Configuration</a></strong> - Map program variables to physical I/O pins on supported boards</li>
+</ul>
+<h3 id="scale-your-deployment">Scale Your Deployment<a class="headerlink" href="#scale-your-deployment" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://edge.autonomylogic.com/docs/platform-features/orchestrator-management">Orchestrator Management</a></strong> - Deploy orchestrators to edge devices across multiple sites</li>
+<li><strong><a href="https://edge.autonomylogic.com/docs/platform-features/vplc-management">vPLC Management</a></strong> - Run multiple vPLCs on a single edge device for workload consolidation</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="vplc-shows-stopped-status">vPLC shows "Stopped" status<a class="headerlink" href="#vplc-shows-stopped-status" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check that your orchestrator is connected (green status indicator)</li>
+<li>Verify network connectivity between the orchestrator and the platform</li>
+<li>Check the orchestrator logs for error messages</li>
+</ul>
+<h3 id="compilation-errors">Compilation errors<a class="headerlink" href="#compilation-errors" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Ensure all variables are declared before use</li>
+<li>Check for syntax errors in your Structured Text code</li>
+<li>Verify that function block types (like TON) are spelled correctly</li>
+</ul>
+<h3 id="cannot-connect-to-vplc">Cannot connect to vPLC<a class="headerlink" href="#cannot-connect-to-vplc" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Ensure the vPLC is in "Running" status</li>
+<li>Check that your project is saved before attempting to connect</li>
+<li>Try refreshing the Orchestrators panel (click the refresh icon)</li>
+</ul>
+<h3 id="orchestrator-id-expired">Orchestrator ID expired<a class="headerlink" href="#orchestrator-id-expired" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run the installation command again on your Linux device</li>
+<li>A new ID will be generated that you can paste into the Link step</li>
+</ul>
+<p>For more help, visit the <a href="https://edge.autonomylogic.com/docs/advanced-topics/troubleshooting">Troubleshooting</a> section or contact support.</p>
+<h2 id="key-insights">💡 Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Autonomy Edge is a cloud-based platform for industrial automation, enabling browser-based development, deployment, and management of PLC programs.</li>
+<li>The platform utilizes a modern IT/OT architecture comprising a cloud-based web application, an edge Orchestrator agent, containerized Virtual PLCs (vPLCs) running OpenPLC Runtime, and physical I/O devices.</li>
+<li>It supports all five IEC 61131-3 programming languages (Structured Text, Ladder Diagram, Function Block Diagram, Instruction List, Sequential Function Chart) and allows extension with Python/C++ function blocks.</li>
+<li>The guide provides a step-by-step tutorial to set up an orchestrator, provision a vPLC, write a blinking output program in Structured Text, configure Modbus TCP/IP for remote I/O, and deploy it to the vPLC.</li>
+<li>Key benefits include remote management, cloud collaboration, maximized hardware utilization through vPLCs, and reduced reliance on proprietary hardware and software installations.</li>
+</ul>
+<h2 id="references">📚 References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Autonomy Edge, Quick Start Guide, Autonomy Logic, https://edge.autonomylogic.com/docs/getting-started/quick-start <em>(source)</em></li>
+</ul>
+<h2 id="classification">🏷️ Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<p>The content describes a cloud-based platform and its architecture for industrial automation, focusing on edge computing, virtual PLCs, and IT/OT convergence, which directly aligns with the 'Industrial_Systems' category.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
