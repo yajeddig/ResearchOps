@@ -77,7 +77,7 @@ class TestSafeCommit:
         """Build a subprocess.run stub. `fail_on` is a substring of the command."""
         state = {"failures": 0}
 
-        def fake_run(cmd, capture_output=True, text=True):
+        def fake_run(cmd, capture_output=True, text=True, env=None):
             joined = " ".join(cmd)
             result = Mock()
             result.returncode = 0
