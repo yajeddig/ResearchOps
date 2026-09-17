@@ -2,7 +2,7 @@ name: WF2 - Monthly Monitor
 
 on:
   schedule:
-    - cron: '0 6 1 * *'  # 1st of month 6am UTC
+    - cron: '0 6 1 * *'  # 1st of month, 06:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -11,20 +11,24 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+          cache: pip
+
       - name: Install Dependencies
         run: pip install -r requirements.txt
-      
+
       - name: Run Monitor
         env:
-          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
-          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python src/wf2_monitor.py
