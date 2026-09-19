@@ -472,5 +472,18 @@
     "type": "web_page",
     "file": "content/Data_Science/20260917_bd368f63_tam__time_series_additive_model___a_unified_framew.md",
     "added": "2026-09-17T14:00:58.754081"
+  },
+  "5391ab81": {
+    "url": "https://github.com/l0d0v1c/bonsai-apple-silicon",
+    "type": "web_page",
+    "file": "content/Data_Science/20260919_6de0f97b_bonsai_2_27b_ternary_llm_local_deployment_and_perf.md",
+    "added": "2026-09-19T20:13:27.738111"
+  },
+  "6de0f97b63eb": {
+    "content": true,
+    "url": "https://github.com/l0d0v1c/bonsai-apple-silicon",
+    "type": "web_page",
+    "file": "content/Data_Science/20260919_6de0f97b_bonsai_2_27b_ternary_llm_local_deployment_and_perf.md",
+    "added": "2026-09-19T20:13:27.738111"
   }
 }
