@@ -485,5 +485,18 @@
     "type": "web_page",
     "file": "content/Data_Science/20260919_6de0f97b_deployment_and_optimization_of_ternary_bonsai_2_27.md",
     "added": "2026-09-19T20:13:37.893163"
+  },
+  "2b943e61": {
+    "url": "https://www.kinetiro.com/",
+    "type": "web_page",
+    "file": "content/Process_Engineering/20260920_71a6a306_kinetiro_sim___a_wastewater_plant_simulator_whose_.md",
+    "added": "2026-09-20T20:21:34.927146"
+  },
+  "71a6a3061104": {
+    "content": true,
+    "url": "https://www.kinetiro.com/",
+    "type": "web_page",
+    "file": "content/Process_Engineering/20260920_71a6a306_kinetiro_sim___a_wastewater_plant_simulator_whose_.md",
+    "added": "2026-09-20T20:21:34.927146"
   }
 }
