@@ -19,6 +19,7 @@ import requests
 
 from utils import frontmatter
 from utils.content_guard import (
+    extract_pdf_text,
     is_junk_analysis,
     normalize_url,
     validate_note,
@@ -28,6 +29,7 @@ from utils.dedup import add_to_history, content_hash, is_duplicate
 from utils.git_ops import safe_commit
 from utils.logger import get_logger
 from utils.notify import set_output, telegram_notify
+from utils.pii_guard import detect_pii
 
 log = get_logger("WF1")
 
@@ -354,11 +356,27 @@ def main() -> None:
             finish("rejected", f"Rejeté ({reason}) : {url}", "WARNING")
             return
         payload, raw = text, text.encode("utf-8")
-    elif input_type == "raw_note":
+    elif input_type in ("raw_note", "text"):
         ok, reason = validate_note(payload)
         if not ok:
             finish("rejected", f"Rejeté ({reason}) : note vide", "WARNING")
             return
+    elif input_type == "document" and isinstance(payload, str) and payload.lower().endswith(".pdf"):
+        pdf_text = extract_pdf_text(payload)
+        if pdf_text is not None:
+            ok, reason = validate_scraped(pdf_text)
+            if not ok:
+                finish("rejected", f"Rejeté ({reason}) : document PDF", "WARNING")
+                return
+            if detect_pii(pdf_text):
+                finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
+                return
+        # else: scanned/unreadable PDF, no extractable text — fall through to
+        # Gemini and rely on the post-LLM PII/quality gate below.
+
+    if input_type in ("web_page", "raw_note", "text") and detect_pii(payload):
+        finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
+        return
 
     if raw is not None and is_duplicate(content=raw):
         finish("duplicate", f"Doublon ignoré (contenu déjà ingéré) : {ISSUE_TITLE[:80]}", "WARNING")
@@ -370,6 +388,17 @@ def main() -> None:
     analysis = analyze_content(payload, input_type)
     if not analysis:
         finish("failed", f"Échec de l'analyse Gemini : {ISSUE_TITLE[:80]}", "ERROR")
+        return
+
+    # PII on the LLM output itself: catches what OCR/transcription surfaced
+    # from an image or a scanned PDF that slipped past the pre-LLM gates.
+    analysis_text = " ".join([
+        str(analysis.get("title", "")),
+        str(analysis.get("content_body", "")),
+        " ".join(str(i) for i in analysis.get("key_insights", []) or []),
+    ])
+    if detect_pii(analysis_text):
+        finish("rejected_pii", "Contenu rejeté après analyse : données personnelles détectées.", "WARNING")
         return
 
     junk, reason = is_junk_analysis(analysis, SETTINGS.get("reject_threshold", 0.3))

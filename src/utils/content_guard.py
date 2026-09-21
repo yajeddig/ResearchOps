@@ -98,6 +98,26 @@ def validate_note(text: str | None) -> tuple[bool, str | None]:
     return True, None
 
 
+def extract_pdf_text(path: str) -> str | None:
+    """
+    Extract text from a PDF for pre-LLM gating. Returns None on a scanned
+    (text-less) or unreadable PDF, or if pypdf itself can't be loaded, so the
+    caller falls back to sending it to Gemini directly and gates on the
+    post-LLM analysis instead.
+    """
+    try:
+        from pypdf import PdfReader
+        from pypdf.errors import PdfReadError
+    except Exception:
+        return None
+    try:
+        reader = PdfReader(path)
+        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+    except (PdfReadError, OSError):
+        return None
+    return text if text.strip() else None
+
+
 def is_junk_analysis(analysis: dict, reject_threshold: float) -> tuple[bool, str | None]:
     """
     Post-LLM gate: very low confidence, or a title that describes a failure
@@ -105,8 +125,8 @@ def is_junk_analysis(analysis: dict, reject_threshold: float) -> tuple[bool, str
     """
     confidence = float(analysis.get("confidence", 0.0) or 0.0)
     title = str(analysis.get("title", "")).lower()
-    if confidence < reject_threshold:
-        return True, f"confidence {confidence:.2f} < {reject_threshold}"
+    if confidence <= reject_threshold:
+        return True, f"confidence {confidence:.2f} <= {reject_threshold}"
     for pattern in JUNK_TITLE_MARKERS:
         if re.search(pattern, title):
             return True, f"junk title ({pattern})"
