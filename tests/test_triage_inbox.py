@@ -83,7 +83,7 @@ class TestApply:
         body = "> ⚠️ **Inbox Note**: unknown category: Process_Engineering\n\nSome real content."
         path = make_card(tmp_path, "card.md", meta, body)
 
-        dest = triage_inbox.apply_reclassify(path, meta, body, "Process_Engineering")
+        dest = triage_inbox.apply_reclassify(path, meta, body, "Process_Engineering", content_root=tmp_path / "content")
 
         assert not path.exists()
         assert dest.exists()
@@ -127,3 +127,16 @@ class TestMainIntegration:
         triage_inbox.main()
 
         assert not path.exists()
+
+    def test_apply_reclassifies_into_real_content_tree(self, tmp_path, monkeypatch, capsys):
+        self._setup_repo(tmp_path, monkeypatch)
+        meta = {"title": "Real content", "confidence": 0.9}
+        body = "> ⚠️ **Inbox Note**: unknown category: Process_Engineering\n\n" + ("Real content. " * 40)
+        path = make_card(tmp_path, "card.md", meta, body)
+
+        monkeypatch.setattr(sys, "argv", ["triage_inbox.py", "--apply"])
+        triage_inbox.main()
+
+        assert not path.exists()
+        moved = tmp_path / "content" / "Process_Engineering" / "card.md"
+        assert moved.exists()

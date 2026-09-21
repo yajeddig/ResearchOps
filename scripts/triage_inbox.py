@@ -62,7 +62,7 @@ def apply_delete(path: Path) -> None:
     path.unlink()
 
 
-def apply_reclassify(path: Path, meta: dict, body: str, new_category: str) -> Path:
+def apply_reclassify(path: Path, meta: dict, body: str, new_category: str, content_root: Path) -> Path:
     """Move the card to its new category dir, drop the inbox tag/note, return the new path."""
     meta = dict(meta)
     meta["category"] = new_category
@@ -71,7 +71,7 @@ def apply_reclassify(path: Path, meta: dict, body: str, new_category: str) -> Pa
         meta["tags"] = [t for t in tags if not str(t).startswith("inbox:")]
     body = _INBOX_NOTE_RE.sub("", body, count=1).lstrip("\n")
 
-    dest_dir = ROOT / "content" / new_category
+    dest_dir = content_root / new_category
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / path.name
     dest.write_text(frontmatter.dump(meta, body), encoding="utf-8")
@@ -113,7 +113,7 @@ def main() -> None:
             apply_delete(path)
         elif verdict == "reclassify":
             meta, body = frontmatter.parse(path.read_text(encoding="utf-8"))
-            dest = apply_reclassify(path, meta, body, proposed_category)
+            dest = apply_reclassify(path, meta, body, proposed_category, content_root=INBOX.parent)
             print(f"→ {path.name} déplacé vers {dest.relative_to(ROOT)}")
 
 
