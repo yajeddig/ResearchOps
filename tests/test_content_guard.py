@@ -1,5 +1,6 @@
 """Tests for the WF1 quality gate."""
 from utils.content_guard import (
+    extract_pdf_text,
     is_junk_analysis,
     normalize_url,
     validate_note,
@@ -73,3 +74,21 @@ class TestIsJunkAnalysis:
 
     def test_good_analysis_kept(self):
         assert is_junk_analysis({"title": "Hybrid modelling of a CSTR", "confidence": 0.9}, 0.3) == (False, None)
+
+    def test_confidence_exactly_at_reject_threshold_is_junk(self):
+        """confidence == reject_threshold must reject, not fall through to _Inbox (the payslip leak)."""
+        junk, reason = is_junk_analysis({"title": "Employee Payslip", "confidence": 0.30}, 0.3)
+        assert junk and "confidence" in reason
+
+    def test_confidence_just_above_reject_threshold_is_kept(self):
+        assert is_junk_analysis({"title": "Ambiguous but real content", "confidence": 0.31}, 0.3) == (False, None)
+
+
+class TestExtractPdfText:
+    def test_returns_none_for_missing_file(self):
+        assert extract_pdf_text("/nonexistent/path.pdf") is None
+
+    def test_returns_none_for_non_pdf_bytes(self, tmp_path):
+        bogus = tmp_path / "fake.pdf"
+        bogus.write_bytes(b"not a real pdf")
+        assert extract_pdf_text(str(bogus)) is None

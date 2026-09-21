@@ -5,6 +5,7 @@ requests
 tenacity
 PyYAML
 Pillow
+pypdf
 
 # Testing
 pytest>=7.0.0

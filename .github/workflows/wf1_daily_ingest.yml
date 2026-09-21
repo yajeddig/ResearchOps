@@ -65,5 +65,6 @@ jobs:
             saved)     gh issue close "$ISSUE" --comment "✅ $MESSAGE" ;;
             duplicate) gh issue close "$ISSUE" --reason "not planned" --comment "♻️ $MESSAGE" ;;
             rejected)  gh issue close "$ISSUE" --reason "not planned" --comment "🚫 $MESSAGE" ;;
+            rejected_pii) gh issue close "$ISSUE" --reason "not planned" --comment "🔒 $MESSAGE" ;;
             *)         gh issue comment "$ISSUE" --body "❌ WF1 a échoué (${STATUS:-unknown}). Logs : $RUN_URL" ;;
           esac
