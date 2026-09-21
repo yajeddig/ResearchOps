@@ -23,6 +23,9 @@ def copy_markdown(src: Path, dst: Path) -> list[dict]:
     cards = []
     for path in sorted(src.glob("**/*.md")):
         rel = path.relative_to(src)
+        if "_Inbox" in rel.parts:
+            # Unclassified / low-confidence triage content: never publish to the public site.
+            continue
         target = dst / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         text = path.read_text(encoding="utf-8")
