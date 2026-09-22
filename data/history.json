@@ -550,5 +550,18 @@
     "type": "web_page",
     "file": "content/Data_Engineering/20260922_d7e3e9cf_api_console_for_open_data_energy_networks__odr__.md",
     "added": "2026-09-22T12:54:09.320327"
+  },
+  "41190b71": {
+    "url": "https://github.com/AdamPerlinski/micro-ml",
+    "type": "web_page",
+    "file": "content/Data_Science/20260922_9eb7e59a_micro_ml__lightweight_machine_learning___statistic.md",
+    "added": "2026-09-22T12:55:39.784491"
+  },
+  "9eb7e59a5f95": {
+    "content": true,
+    "url": "https://github.com/AdamPerlinski/micro-ml",
+    "type": "web_page",
+    "file": "content/Data_Science/20260922_9eb7e59a_micro_ml__lightweight_machine_learning___statistic.md",
+    "added": "2026-09-22T12:55:39.784491"
   }
 }
