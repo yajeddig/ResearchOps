@@ -1,0 +1,6037 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fiches de veille R&D, rapports mensuels et recherches">
+      
+      
+      
+        <link rel="canonical" href="https://yajeddig.github.io/ResearchOps/content/Process_Engineering/20260131_162921_pathview__web_based_visual_editor_for_dynamic_syst/">
+      
+      
+        <link rel="prev" href="../20260131_162831_pathsim__a_python_framework_for_block_diagram_base/">
+      
+      
+        <link rel="next" href="../20260920_71a6a306_kinetiro_sim___a_wastewater_plant_simulator_whose_/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim - ResearchOps — Knowledge Base</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#relevance" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-header__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ResearchOps — Knowledge Base
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ResearchOps — Knowledge Base" class="md-nav__button md-logo" aria-label="ResearchOps — Knowledge Base" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ResearchOps — Knowledge Base
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/yajeddig/ResearchOps" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ResearchOps — Knowledge Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Content
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Content
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20251230_180116_openflodata__real_time_simulation___streaming_of_v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenFloData: Real-Time Simulation & Streaming of Volve Oil & Gas Production Data for Data Engineering & Surveillance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093050_postgrest__automatic_rest_api_generation_for_postg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgREST: Automatic REST API Generation for PostgreSQL Databases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260103_093144_github___bytebytegohq_system_design_101__explain_c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub - ByteByteGoHq/system-design-101: Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260115_072117_pointblank__data_validation_and_quality_monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pointblank: Data Validation and Quality Monitoring Toolkit for Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260204_073433_pg_duckdb__duckdb_extension_for_high_performance_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pg_duckdb: DuckDB Extension for High-Performance Analytics in PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260214_091228_duckdb_shell__in_browser_sql_client_for_analytical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DuckDB Shell: In-Browser SQL Client for Analytical Data Exploration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260917_52972fec_orca_telemetry_core__analytics_orchestration_frame/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orca Telemetry Core: Analytics Orchestration Framework for AI on Robotics and IoT Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Engineering/20260922_d7e3e9cf_api_console_for_open_data_energy_networks__odr__/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Console for Open Data Energy Networks (ODRÉ)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Data_Science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Science
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Science
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_175647_bofire__experimental_design_and_multi_objective_ba/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bofire: Experimental Design and Multi-Objective Bayesian Optimization Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_181646_code__a_global_approach_to_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CODE: A Global Approach to Ordinary Differential Equation (ODE) Dynamics Learning with Polynomial Chaos Expansion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_181745_sindybrid__automated_hybrid_model_generation_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SINDybrid: Automated Hybrid Model Generation for Dynamic Systems using MILP and Sparse Identification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251229_192456_artificial_intelligence_in_chemical_engineering__a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Artificial Intelligence in Chemical Engineering: A White Paper on AI/ML Applications, Challenges, and Future Directions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20251230_152511_optimistik__industrial_ai_analytics_software_for_d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimistik: Industrial AI Analytics Software for Digital Transformation and Sustainable Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260101_211512_convergence_rate_proof_for_gradient_flow_of_convex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convergence Rate Proof for Gradient Flow of Convex Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260102_135419_llm_council__multi_agent_llm_orchestration_for_enh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Council: Multi-Agent LLM Orchestration for Enhanced Q&A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_093401_darts__a_python_library_for_user_friendly_time_ser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Darts: A Python Library for User-Friendly Time Series Forecasting and Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112257_d_veloppement_d_un_jumeau_num_rique_hybride__adm1_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Développement d'un Jumeau Numérique Hybride (ADM1 + UDE) pour la Méthanisation Industrielle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112304_mod_lisation_hybride_adm1_ude_pour_digestion_ana_r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modélisation Hybride ADM1/UDE pour Digestion Anaérobie Industrielle - État de l'Art 2018-2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112308_advanced_modeling_and_control_of_anaerobic_digesti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Control of Anaerobic Digestion for Biogas Production: A Literature Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260103_112312_advanced_modeling_and_data_science_techniques_for_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Modeling and Data Science Techniques for Anaerobic Digestion Process Control and Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260108_200801_ui_tars_desktop__open_source_multimodal_ai_agent_s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI-TARS-desktop: Open-Source Multimodal AI Agent Stack by ByteDance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260108_210152_hybridation_de_mod_les_physiques_et_machine_learni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybridation de Modèles Physiques et Machine Learning pour Équations Différentielles (EDO/EDP): Taxonomie, Comparaison et Applications en Traitement des Eaux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260109_201727_specializing_large_language_models_for_process_mod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specializing Large Language Models for Process Modeling via Reinforcement Learning with Verifiable and Universal Rewards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260110_092444_rag_anything__all_in_one_multimodal_retrieval_augm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG-Anything: All-in-One Multimodal Retrieval-Augmented Generation (RAG) Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260110_092746_demystifying_r___understanding_its_true_meaning_an/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying R²: Understanding its True Meaning and Limitations in Data Science Model Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260118_082823_reliable_feature_importance_for_random_forests__ad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reliable Feature Importance for Random Forests: Addressing Bias with Permutation and Drop-Column Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260120_210628_ai_prompt_builder_for_structured_interaction_with_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Prompt Builder for Structured Interaction with Large Language Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260122_152149_agentic_physics_informed_digital_twin_for_trustwor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic Physics-Informed Digital Twin for Trustworthy Cyber-Physical System Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260122_193732_fluidgym__plug_and_play_benchmarking_of_reinforcem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260123_204308_pinneapple__open_source_physics_ai_toolkit_for_phy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PINNeAPPle: Open-source Physics AI Toolkit for Physics-Informed Neural Networks and Scientific ML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260123_215808_deepthermomix__classical_thermodynamics_flavored_w/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepThermoMix: Classical Thermodynamics Flavored with Modern Deep Learning for Multicomponent Activity Coefficient Prediction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260130_060010_the__physics_based_model__myth__why_industrial_rea/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The 'Physics-Based Model' Myth: Why Industrial Reality Defies Textbook Assumptions in AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260131_162921_github_platform_features_for_ai_and_software_devel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Platform Features for AI and Software Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260203_073601_explainable_artificial_intelligence_in_process_eng/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    eXplainable Artificial Intelligence in Process Engineering: Promises, Facts, and Current Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260227_181227_ai_driven_digital_twins_for_predictive_control_in_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-driven Digital Twins for Predictive Control in Data Center Cooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260227_181228_autonomous_ai_tuning_of_pid_control_loops_for_ener/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous AI Tuning of PID Control Loops for Energy-Efficient Cooling Infrastructure via Digital Twins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260327_190541_analysis_of_physics_constrained_neural_ode_for_mic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Physics-Constrained Neural ODE for Microbial Community Dynamics (Neural Species Mediator)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260327_190630_physics_constrained_neural_ordinary_differential_e/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physics-constrained neural ordinary differential equation models to discover and predict microbial community dynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260425_071200_recursive_language_models__a_general_inference_par/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recursive Language Models: A General Inference Paradigm for Long Prompts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260527_132324_it_takes_two_neurons_to_ride_a_bicycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    It Takes Two Neurons To Ride a Bicycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260606_073206_ce_que_scipy_ne_vous_dit_pas_sur_l_ajustement_de_g/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ce que scipy ne vous dit pas sur l’ajustement de GEV non stationnaire à grande échelle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260917_bd368f63_tam__time_series_additive_model___a_unified_framew/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TAM (Time series Additive Model): A Unified Framework for Interpretable, Physics-Informed, and High-Performance Time Series Forecasting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260917_c6e0f9b7_spin__spectral_preconditioning_via_in_span_learnin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SPIN: Spectral Preconditioning via IN-span Learning for Adaptive Reduced-Order Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260919_6de0f97b_bonsai_2_27b_ternary_llm_local_deployment_and_perf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bonsai 2 27B Ternary LLM Local Deployment and Performance on Apple Silicon with Custom llama.cpp Binaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260919_6de0f97b_deployment_and_optimization_of_ternary_bonsai_2_27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment and Optimization of Ternary-Bonsai-2-27B LLM on Apple Silicon with Custom llama.cpp Binaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260922_8615300f_timesfm__time_series_foundation_model__by_google_r/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TimesFM (Time Series Foundation Model) by Google Research for Time-Series Forecasting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Data_Science/20260922_9eb7e59a_micro_ml__lightweight_machine_learning___statistic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    micro-ml: Lightweight Machine Learning & Statistics Library for JavaScript (Rust/WASM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Industrial_Systems/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Industrial Systems
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Industrial Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20251229_112943_enterprise_architecture_s_strategic_role_in_digita/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Architecture's Strategic Role in Digital Transformation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260102_213542_python_gui_development_with_guizero__building_inte/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python GUI Development with guizero: Building Interactive Applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111222_note_de_cadrage_strat_gique___modernisation_de_l_i/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Note de Cadrage Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260103_111224_rapport_strat_gique___modernisation_de_l_infrastru/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rapport Stratégique : Modernisation de l'Infrastructure Industrielle OT/IT et Transformation des Opérations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260104_081536_automatisch__open_source_workflow_automation_platf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatisch: Open-Source Workflow Automation Platform (Zapier Alternative)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260113_115307_copapy__tracing_based_copy___patch_compiler_for_py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copapy: Tracing Based Copy & Patch Compiler for Python for Deterministic Real-time Embedded Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260121_172455_the_future_of_industrial_process_control__virtual_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Future of Industrial Process Control: Virtual PLCs and Software-Defined Automation with Emerson DeltaV IQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260214_091222_autonomy_edge_quick_start_guide__cloud_based_indus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomy Edge Quick Start Guide: Cloud-Based Industrial Automation with Virtual PLCs and IEC 61131-3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260514_211513_making_sure_you_re_not_a_bot____anubis_anti_scrapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making sure you're not a bot! - Anubis Anti-Scraping System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Industrial_Systems/20260607_101437_open_process_library__mtp_compatible__cross_vendor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open Process Library: MTP-compatible, Cross-Vendor Industrial Process Automation Library for PLC/DCS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Process Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Process Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20251229_181238_demystifying_industry_4_0__navigating_automation_a/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demystifying Industry 4.0: Navigating Automation and Augmentation in Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260102_163639_simcraft__an_open_source_discrete_event_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimCraft: An Open-Source Discrete Event Simulation Framework for Industrial Modeling and AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260108_200401_baram__open_source_cfd_software_with_gui_for_openf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BARAM: Open-Source CFD Software with GUI for OpenFOAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260112_225400_reasoning_agent_driven_process_simulation__optimiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reasoning-agent-driven process simulation, optimization, carbon accounting and decarbonization of distillation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260113_211312_modeling_of_industrial_multiphase_reactors__advanc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modeling of Industrial Multiphase Reactors: Advances in AI, HPC, and Quantum Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260119_223617_modelpredictivecontrol_jl__open_source_model_predi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ModelPredictiveControl.jl: Open-Source Model Predictive Control Package for Julia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260124_083245_ai_driven_predictive_control_for_natural_gas_conde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Natural Gas Condensate Stabilization: A Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260124_083655_ai_driven_predictive_control_for_condensate_stabil/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI-Driven Predictive Control for Condensate Stabilization – IntelliDynamics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260126_074550_white_paper__how_does_pat_apply_to_the_bioreactor_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Paper: How Does PAT Apply to the Bioreactor?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260131_162831_pathsim__a_python_framework_for_block_diagram_base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathSim: A Python Framework for Block Diagram-based Dynamical System Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pathview-system-modeling-in-the-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PathView - System Modeling in the Browser
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tech-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tech Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wire-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wire Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Abstractions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding New Blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ensure-the-block-exists-in-pathsim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Ensure the block exists in PathSim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-add-to-block-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Add to block configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-labels-from-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Labels from Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-toolboxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Toolboxes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding New Toolboxes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-add-to-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Add to requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-toolbox-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create toolbox config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-optional-add-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. (Optional) Add events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-run-extraction-and-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Run extraction and build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-backend-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Backend System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python Backend System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repl-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPL Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-level-api-bridgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level API (bridge.ts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#svelteflow-vs-graph-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SvelteFlow vs Graph Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsystem-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Formats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sharing-models-via-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing Models via URL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sharing Models via URL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-shorthand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Shorthand
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scripts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Styling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Styling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shapes-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shapes by Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimizations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotly-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plotly Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-previews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Previews
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260920_71a6a306_kinetiro_sim___a_wastewater_plant_simulator_whose_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KinetiRO Sim — a wastewater plant simulator whose arithmetic is published
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260922_2c79dcae_biological_wastewater_treatment_open_access_online/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Biological Wastewater Treatment Open-Access Online Course Series by IHE Delft and GSGS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20260922_41655a02_poopylab__open_source_biological_wastewater_treatm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PooPyLab: Open Source Biological Wastewater Treatment Simulation Software
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Strategy_Business/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategy Business
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategy Business
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20251229_112211_data_strategy_pack__building_impactful_data_teams_/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Strategy Pack: Building Impactful Data Teams and Strategies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260103_111227_strat_gies_de_modernisation_ot_it_industrielle___c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stratégies de Modernisation OT/IT Industrielle : Convergence, Coûts du Vendor Lock-in, ROI de l'IA et Défis des Compétences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260219_183041_digital_transformation_framework___people__process/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Transformation Framework - People, Process, Technology, & Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy_Business/20260314_203204_analysis_of_goldman_sachs__halo_effect_thesis__ind/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis of Goldman Sachs' HALO Effect Thesis: Industrial Asset Valuation vs. Operational Reality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../Sustainability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sustainability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sustainability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Sustainability/20260922_e617a51f_quantitative_sustainable_design__qsd__group__tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantitative Sustainable Design (QSD) Group: Tools for Sustainable Sanitation and Resource Recovery Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reports
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reports
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-01_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Monthly Intelligence - January 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-02_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Janvier 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-03_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Février 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-04_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mars 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-05_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Avril 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-06_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Mai 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-07_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Juin 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-08_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — July 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reports/2026/2026-09_Monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔬 Rapport de Veille Mensuel — Août 2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Relevance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pathview-system-modeling-in-the-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PathView - System Modeling in the Browser
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tech-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tech Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wire-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wire Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Abstractions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding New Blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ensure-the-block-exists-in-pathsim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Ensure the block exists in PathSim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-add-to-block-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Add to block configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-labels-from-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Labels from Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-toolboxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding New Toolboxes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding New Toolboxes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-add-to-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Add to requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-create-toolbox-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Create toolbox config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-optional-add-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. (Optional) Add events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-run-extraction-and-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Run extraction and build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-backend-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Backend System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python Backend System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repl-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REPL Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-level-api-bridgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level API (bridge.ts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#svelteflow-vs-graph-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SvelteFlow vs Graph Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsystem-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyboard-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Formats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sharing-models-via-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing Models via URL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sharing Models via URL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-shorthand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Shorthand
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scripts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Styling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Styling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shapes-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shapes by Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Custom Shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimizations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotly-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plotly Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-previews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Previews
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏷️ Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">PathSim</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Pyodide</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Python</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">SvelteKit</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">block diagram</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">dynamic systems</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">node editor</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">process control</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">process modeling</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">real-time visualization</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">simulation</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">system design</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">web-based</span>
+      
+    
+  </nav>
+
+
+
+  <h1>PathView: Web-based Visual Editor for Dynamic System Simulation with PathSim</h1>
+
+<h2 id="relevance">🎯 Relevance<a class="headerlink" href="#relevance" title="Permanent link">&para;</a></h2>
+<p>This tool provides a user-friendly, web-based environment for dynamic system simulation, which is critical for process engineers in designing, analyzing, and optimizing industrial processes. Its 'no server required' approach and real-time visualization capabilities offer a significant learning opportunity and can accelerate prototyping and collaboration in process development and control system design.</p>
+<h2 id="content">📖 Content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h2>
+<p><a href="https://raw.githubusercontent.com/pathsim/pathview/main/static/pathview_logo.png"><img alt="Image 1: PathView Logo" src="https://raw.githubusercontent.com/pathsim/pathview/main/static/pathview_logo.png" /></a></p>
+<hr />
+<h2 id="pathview-system-modeling-in-the-browser">PathView - System Modeling in the Browser<a class="headerlink" href="#pathview-system-modeling-in-the-browser" title="Permanent link">&para;</a></h2>
+<p>A web-based visual node editor for building and simulating dynamic systems with <a href="https://github.com/pathsim/pathsim">PathSim</a> as the backend. Runs entirely in the browser via Pyodide - no server required. The UI is hosted at <a href="https://view.pathsim.org/">view.pathsim.org</a>, free to use for everyone.</p>
+<h2 id="tech-stack">Tech Stack<a class="headerlink" href="#tech-stack" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://kit.svelte.dev/">SvelteKit 5</a> with Svelte 5 runes</li>
+<li><a href="https://svelteflow.dev/">SvelteFlow</a> for the node editor</li>
+<li><a href="https://pyodide.org/">Pyodide</a> for in-browser Python/NumPy/SciPy</li>
+<li><a href="https://plotly.com/javascript/">Plotly.js</a> for interactive plots</li>
+<li><a href="https://codemirror.net/">CodeMirror 6</a> for code editing</li>
+</ul>
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install
+npm<span class="w"> </span>run<span class="w"> </span>dev
+</code></pre></div>
+<p>For production:</p>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>build
+npm<span class="w"> </span>run<span class="w"> </span>preview
+</code></pre></div>
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>src/
+├── lib/
+│   ├── actions/           # Svelte actions (paramInput)
+│   ├── animation/         # Graph loading animations
+│   ├── components/        # UI components
+│   │   ├── canvas/        # Flow editor utilities (connection, transforms)
+│   │   ├── dialogs/       # Modal dialogs
+│   │   │   └── shared/    # Shared dialog components (ColorPicker, etc.)
+│   │   ├── edges/         # SvelteFlow edge components (ArrowEdge)
+│   │   ├── icons/         # Icon component (Icon.svelte)
+│   │   ├── nodes/         # Node components (BaseNode, EventNode, AnnotationNode, PlotPreview)
+│   │   └── panels/        # Side panels (Simulation, NodeLibrary, CodeEditor, Plot, Console, Events)
+│   ├── constants/         # Centralized constants (nodeTypes, layout, handles)
+│   ├── events/            # Event system
+│   │   └── generated/     # Auto-generated from PathSim
+│   ├── export/            # Export utilities
+│   │   └── svg/           # SVG graph export (renderer, types)
+│   ├── nodes/             # Node type system
+│   │   ├── generated/     # Auto-generated from PathSim
+│   │   └── shapes/        # Node shape definitions
+│   ├── plotting/          # Plot system
+│   │   ├── core/          # Constants, types, utilities
+│   │   ├── processing/    # Data processing, render queue
+│   │   └── renderers/     # Plotly and SVG renderers
+│   ├── routing/           # Orthogonal wire routing (A* pathfinding)
+│   ├── pyodide/           # Python runtime (backend, bridge)
+│   │   └── backend/       # Modular backend system (registry, state, types)
+│   │       └── pyodide/   # Pyodide Web Worker implementation
+│   ├── schema/            # File I/O (save/load, component export)
+│   ├── simulation/        # Simulation metadata
+│   │   └── generated/     # Auto-generated defaults
+│   ├── stores/            # Svelte stores (state management)
+│   │   └── graph/         # Graph state with subsystem navigation
+│   ├── types/             # TypeScript type definitions
+│   └── utils/             # Utilities (colors, download, csvExport, codemirror)
+├── routes/                # SvelteKit pages
+└── app.css                # Global styles with CSS variables
+
+scripts/
+├── config/                # Configuration files for extraction
+│   ├── schemas/           # JSON schemas for validation
+│   ├── pathsim/           # Core PathSim blocks, events, simulation config
+│   ├── pathsim-chem/      # Chemical toolbox blocks
+│   ├── pyodide.json       # Pyodide version and preload packages
+│   ├── requirements-pyodide.txt   # Runtime Python packages
+│   └── requirements-build.txt     # Build-time Python packages
+├── generated/             # Generated files (from extract.py)
+│   └── registry.json      # Block/event registry with import paths
+├── extract.py             # Unified extraction script
+└── pvm2py.py              # Standalone .pvm to Python converter
+</code></pre></div>
+<hr />
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<h3 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    A[Graph Store\n(nodes, edges)] --&gt; B[pathsimRunner\n(code gen)]
+    B --&gt; C[Python Code\n(string)]
+    C --&gt; D[REPL Worker\n(Pyodide)]
+    D --&gt; E[bridge.ts\n(queue + rAF)]
+    E --&gt; F[Plot/Console\n(results)]</code></pre>
+<h3 id="streaming-architecture">Streaming Architecture<a class="headerlink" href="#streaming-architecture" title="Permanent link">&para;</a></h3>
+<p>Simulations run in streaming mode for real-time visualization. The worker runs autonomously and pushes results without waiting for the UI:</p>
+<pre class="mermaid"><code>graph LR
+    Worker["Worker (10 Hz)\n┌──────────────┐\n│ Python loop  │\n│ (autonomous) │\n│              │\n└──────────────┘"] -- "stream-data" --&gt; MainThread["Main Thread\n┌──────────────┐\n│ Result Queue │\n│ (accumulate) │\n│              │\n└──────────────┘"]
+    MainThread -- "rAF\nbatched" --&gt; UI["UI (10 Hz)\n┌──────────────┐\n│ Plotly       │\n│ extendTraces │\n│              │\n└──────────────┘"]</code></pre>
+<ul>
+<li><strong>Decoupled rates</strong>: Python generates data at 10 Hz, UI renders at 10 Hz max</li>
+<li><strong>Queue-based</strong>: Results accumulate in queue, merged on each UI frame</li>
+<li><strong>Non-blocking</strong>: Simulation never waits for plot rendering</li>
+<li><strong>extendTraces</strong>: Scope plots append data incrementally instead of full re-render</li>
+</ul>
+<h3 id="wire-routing">Wire Routing<a class="headerlink" href="#wire-routing" title="Permanent link">&para;</a></h3>
+<p>PathView uses Simulink-style orthogonal wire routing with A* pathfinding:</p>
+<ul>
+<li><strong>Automatic routing</strong>: Wires route around nodes with 90° bends only</li>
+<li><strong>User waypoints</strong>: Press <code>\</code> on selected edge to add manual waypoints</li>
+<li><strong>Draggable waypoints</strong>: Drag waypoint markers to reposition, double-click to delete</li>
+<li><strong>Segment dragging</strong>: Drag segment midpoints to create new waypoints</li>
+<li><strong>Incremental updates</strong>: Spatial indexing (O(1) node updates) for smooth dragging</li>
+<li><strong>Hybrid routing</strong>: Routes through user waypoints: Source → A<em> → W1 → A</em> → Target</li>
+</ul>
+<p>Key files: <code>src/lib/routing/</code> (pathfinder, grid builder, route calculator)</p>
+<h3 id="key-abstractions">Key Abstractions<a class="headerlink" href="#key-abstractions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Purpose</th>
+<th>Key Files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Main App</strong></td>
+<td>Orchestrates panels, shortcuts, file ops</td>
+<td><code>routes/+page.svelte</code></td>
+</tr>
+<tr>
+<td><strong>Flow Canvas</strong></td>
+<td>SvelteFlow wrapper, node/edge sync</td>
+<td><code>components/FlowCanvas.svelte</code></td>
+</tr>
+<tr>
+<td><strong>Flow Updater</strong></td>
+<td>View control, animation triggers</td>
+<td><code>components/FlowUpdater.svelte</code></td>
+</tr>
+<tr>
+<td><strong>Context Menus</strong></td>
+<td>Right-click menus for nodes/canvas/plots</td>
+<td><code>components/ContextMenu.svelte</code>, <code>contextMenuBuilders.ts</code></td>
+</tr>
+<tr>
+<td><strong>Graph Store</strong></td>
+<td>Node/edge state, subsystem navigation</td>
+<td><code>stores/graph/</code></td>
+</tr>
+<tr>
+<td><strong>View Actions</strong></td>
+<td>Fit view, zoom, pan controls</td>
+<td><code>stores/viewActions.ts</code>, <code>stores/viewTriggers.ts</code></td>
+</tr>
+<tr>
+<td><strong>Clipboard</strong></td>
+<td>Copy/paste/duplicate operations</td>
+<td><code>stores/clipboard.ts</code></td>
+</tr>
+<tr>
+<td><strong>Plot Settings</strong></td>
+<td>Per-trace and per-block plot options</td>
+<td><code>stores/plotSettings.ts</code></td>
+</tr>
+<tr>
+<td><strong>Node Registry</strong></td>
+<td>Block type definitions, parameters</td>
+<td><code>nodes/registry.ts</code></td>
+</tr>
+<tr>
+<td><strong>Code Generation</strong></td>
+<td>Graph → Python code</td>
+<td><code>pyodide/pathsimRunner.ts</code></td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>Modular Python execution interface</td>
+<td><code>pyodide/backend/</code></td>
+</tr>
+<tr>
+<td><strong>Backend Registry</strong></td>
+<td>Factory for swappable backends</td>
+<td><code>pyodide/backend/registry.ts</code></td>
+</tr>
+<tr>
+<td><strong>PyodideBackend</strong></td>
+<td>Web Worker Pyodide implementation</td>
+<td><code>pyodide/backend/pyodide/</code></td>
+</tr>
+<tr>
+<td><strong>Simulation Bridge</strong></td>
+<td>High-level simulation API</td>
+<td><code>pyodide/bridge.ts</code></td>
+</tr>
+<tr>
+<td><strong>Schema</strong></td>
+<td>File/component save/load operations</td>
+<td><code>schema/fileOps.ts</code>, <code>schema/componentOps.ts</code></td>
+</tr>
+<tr>
+<td><strong>Export Utils</strong></td>
+<td>SVG/CSV/Python file downloads</td>
+<td><code>utils/download.ts</code>, <code>export/svg/</code>, <code>utils/csvExport.ts</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="centralized-constants">Centralized Constants<a class="headerlink" href="#centralized-constants" title="Permanent link">&para;</a></h3>
+<p>Use these imports instead of magic strings:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NODE_TYPES</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'$lib/constants/nodeTypes'</span><span class="p">;</span>
+<span class="c1">// NODE_TYPES.SUBSYSTEM, NODE_TYPES.INTERFACE</span>
+
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PORT_COLORS</span><span class="p">,</span><span class="w"> </span><span class="nx">DIALOG_COLOR_PALETTE</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'$lib/utils/colors'</span><span class="p">;</span>
+<span class="c1">// PORT_COLORS.default, etc.</span>
+</code></pre></div>
+<hr />
+<h2 id="adding-new-blocks">Adding New Blocks<a class="headerlink" href="#adding-new-blocks" title="Permanent link">&para;</a></h2>
+<p>Blocks are extracted automatically from PathSim using the <code>Block.info()</code> classmethod. The extraction is config-driven for easy maintenance.</p>
+<h3 id="1-ensure-the-block-exists-in-pathsim">1. Ensure the block exists in PathSim<a class="headerlink" href="#1-ensure-the-block-exists-in-pathsim" title="Permanent link">&para;</a></h3>
+<p>The block must be importable from <code>pathsim.blocks</code> (or toolbox module):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathsim.blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">YourNewBlock</span>
+</code></pre></div>
+<h3 id="2-add-to-block-configuration">2. Add to block configuration<a class="headerlink" href="#2-add-to-block-configuration" title="Permanent link">&para;</a></h3>
+<p>Edit <code>scripts/config/pathsim/blocks.json</code> and add the block class name to the appropriate category:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"categories"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Algebraic"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"Adder"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Multiplier"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"YourNewBlock"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Port configurations are automatically extracted from <code>Block.info()</code>:</p>
+<ul>
+<li><code>None</code> → Variable/unlimited ports (UI allows add/remove)</li>
+<li><code>{}</code> → No ports of this type</li>
+<li><code>{"name": index}</code> → Fixed labeled ports (locked count)</li>
+</ul>
+<h3 id="3-run-extraction">3. Run extraction<a class="headerlink" href="#3-run-extraction" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>extract
+</code></pre></div>
+<p>This generates TypeScript files in <code>src/lib/*/generated/</code> with:</p>
+<ul>
+<li>Block metadata (parameters, descriptions, docstrings)</li>
+<li>Port configurations from <code>Block.info()</code></li>
+<li>Pyodide runtime config</li>
+</ul>
+<h3 id="4-verify">4. Verify<a class="headerlink" href="#4-verify" title="Permanent link">&para;</a></h3>
+<p>Start the dev server and check that your block appears in the Block Library panel.</p>
+<h3 id="port-synchronization">Port Synchronization<a class="headerlink" href="#port-synchronization" title="Permanent link">&para;</a></h3>
+<p>Some blocks process inputs as parallel paths where each input has a corresponding output (e.g., Integrator, Amplifier, Sin). For these blocks, the UI only shows input port controls and outputs auto-sync.</p>
+<p>Configure in <code>src/lib/nodes/uiConfig.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">syncPortBlocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">([</span>
+<span class="w">  </span><span class="s1">'Integrator'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Differentiator'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Delay'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'PID'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'PID_Antiwindup'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Amplifier'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Sin'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Cos'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Tan'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Tanh'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Abs'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Sqrt'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Exp'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Log'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Log10'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'Mod'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Clip'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Pow'</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">'SampleHold'</span>
+<span class="p">]);</span>
+</code></pre></div>
+<h3 id="port-labels-from-parameters">Port Labels from Parameters<a class="headerlink" href="#port-labels-from-parameters" title="Permanent link">&para;</a></h3>
+<p>Some blocks derive port names from a parameter (e.g., Scope and Spectrum use <code>labels</code> to name input traces). When the parameter changes, port names update automatically.</p>
+<p>Configure in <code>src/lib/nodes/uiConfig.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">portLabelParams</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">PortLabelConfig</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">PortLabelConfig</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">Scope</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">param</span><span class="o">:</span><span class="w"> </span><span class="s1">'labels'</span><span class="p">,</span><span class="w"> </span><span class="nx">direction</span><span class="o">:</span><span class="w"> </span><span class="s1">'input'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">Spectrum</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">param</span><span class="o">:</span><span class="w"> </span><span class="s1">'labels'</span><span class="p">,</span><span class="w"> </span><span class="nx">direction</span><span class="o">:</span><span class="w"> </span><span class="s1">'input'</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="c1">// Multiple directions supported:</span>
+<span class="w">  </span><span class="c1">// SomeBlock: [</span>
+<span class="w">  </span><span class="c1">// { param: 'input_labels', direction: 'input' },</span>
+<span class="w">  </span><span class="c1">// { param: 'output_labels', direction: 'output' }</span>
+<span class="w">  </span><span class="c1">// ]</span>
+<span class="p">};</span>
+</code></pre></div>
+<hr />
+<h2 id="adding-new-toolboxes">Adding New Toolboxes<a class="headerlink" href="#adding-new-toolboxes" title="Permanent link">&para;</a></h2>
+<p>To add a new PathSim toolbox (like <code>pathsim-chem</code>):</p>
+<h3 id="1-add-to-requirements">1. Add to requirements<a class="headerlink" href="#1-add-to-requirements" title="Permanent link">&para;</a></h3>
+<p>Edit <code>scripts/config/requirements-pyodide.txt</code>:</p>
+<div class="highlight"><pre><span></span><code>--pre
+pathsim
+pathsim-chem&gt;=0.2rc2  # optional
+pathsim-controls      # optional - your new toolbox
+</code></pre></div>
+<p>The <code># optional</code> comment means Pyodide will continue loading if this package fails to install.</p>
+<h3 id="2-create-toolbox-config">2. Create toolbox config<a class="headerlink" href="#2-create-toolbox-config" title="Permanent link">&para;</a></h3>
+<p>Create <code>scripts/config/pathsim-controls/blocks.json</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../schemas/blocks.schema.json"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"toolbox"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pathsim-controls"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"importPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pathsim_controls.blocks"</span><span class="p">,</span>
+
+<span class="w">  </span><span class="nt">"categories"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"Controls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"PIDController"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"StateEstimator"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="3-optional-add-events">3. (Optional) Add events<a class="headerlink" href="#3-optional-add-events" title="Permanent link">&para;</a></h3>
+<p>Create <code>scripts/config/pathsim-controls/events.json</code> if the toolbox has custom events.</p>
+<h3 id="4-run-extraction-and-build">4. Run extraction and build<a class="headerlink" href="#4-run-extraction-and-build" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>run<span class="w"> </span>extract
+npm<span class="w"> </span>run<span class="w"> </span>build
+</code></pre></div>
+<p>No code changes needed - the extraction script automatically discovers toolbox directories.</p>
+<hr />
+<h2 id="python-backend-system">Python Backend System<a class="headerlink" href="#python-backend-system" title="Permanent link">&para;</a></h2>
+<p>The Python runtime uses a modular backend architecture, allowing different execution environments (Pyodide, local Python, remote server) to be swapped without changing application code.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    subgraph Backend Interface
+        A[init(), exec(), evaluate(), startStreaming(), stopStreaming()...]
+    end
+    A --&gt; B(Pyodide Backend\n(Worker))
+    A --&gt; C(Local Backend\n(Flask)):::future
+    A --&gt; D(Remote Backend\n(Server)):::future
+    B --&gt; E(Web Worker\n(Pyodide))
+
+    classDef future fill:#ccc,stroke:#999,stroke-width:1px,color:#333;</code></pre>
+<h3 id="backend-registry">Backend Registry<a class="headerlink" href="#backend-registry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getBackend</span><span class="p">,</span><span class="w"> </span><span class="nx">switchBackend</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'$lib/pyodide/backend'</span><span class="p">;</span>
+
+<span class="c1">// Get current backend (defaults to Pyodide)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getBackend</span><span class="p">();</span>
+
+<span class="c1">// Switch to a different backend type (future)</span>
+<span class="c1">// switchBackend('local'); // Use local Python via Flask</span>
+<span class="c1">// switchBackend('remote'); // Use remote server</span>
+</code></pre></div>
+<h3 id="repl-protocol">REPL Protocol<a class="headerlink" href="#repl-protocol" title="Permanent link">&para;</a></h3>
+<p><strong>Requests</strong> (Main → Worker):</p>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">REPLRequest</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'init'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'exec'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">      </span><span class="c1">// Execute code (no return)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'eval'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">expr</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">      </span><span class="c1">// Evaluate expression (returns JSON)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stream-start'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">expr</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Start streaming loop</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stream-stop'</span><span class="w"> </span><span class="p">}</span><span class="w">                         </span><span class="c1">// Stop streaming loop</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stream-exec'</span><span class="p">;</span><span class="w"> </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">           </span><span class="c1">// Execute code during streaming</span>
+</code></pre></div>
+<p><strong>Responses</strong> (Worker → Main):</p>
+<div class="highlight"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">REPLResponse</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'ready'</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'ok'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">                   </span><span class="c1">// exec succeeded</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'value'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// eval result (JSON)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'error'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">traceback?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stdout'</span><span class="p">;</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stderr'</span><span class="p">;</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'progress'</span><span class="p">;</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stream-data'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Streaming result</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">'stream-done'</span><span class="p">;</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="w">                 </span><span class="c1">// Streaming completed</span>
+</code></pre></div>
+<h3 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">init</span><span class="p">,</span><span class="w"> </span><span class="nx">exec</span><span class="p">,</span><span class="w"> </span><span class="nx">evaluate</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'$lib/pyodide/backend'</span><span class="p">;</span>
+
+<span class="c1">// Initialize backend (Pyodide by default)</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">init</span><span class="p">();</span>
+
+<span class="c1">// Execute Python code</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="sb">`</span>
+<span class="sb">import numpy as np</span>
+<span class="sb">x = np.linspace(0, 10, 100)</span>
+<span class="sb">`</span><span class="p">);</span>
+
+<span class="c1">// Evaluate and get result</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">evaluate</span><span class="o">&lt;</span><span class="kt">number</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">'x.tolist()'</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="high-level-api-bridgets">High-Level API (bridge.ts)<a class="headerlink" href="#high-level-api-bridgets" title="Permanent link">&para;</a></h3>
+<p>For simulation, use the higher-level API in <code>bridge.ts</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">runStreamingSimulation</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">continueStreamingSimulation</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">stopSimulation</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">execDuringStreaming</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'$lib/pyodide/bridge'</span><span class="p">;</span>
+
+<span class="c1">// Run streaming simulation</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">runStreamingSimulation</span><span class="p">(</span><span class="nx">pythonCode</span><span class="p">,</span><span class="w"> </span><span class="nx">duration</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">partialResult</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Progress:'</span><span class="p">,</span><span class="w"> </span><span class="nx">partialResult</span><span class="p">.</span><span class="nx">scopeData</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="c1">// result.scopeData, result.spectrumData, result.nodeNames</span>
+
+<span class="c1">// Continue simulation from where it stopped</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">moreResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">continueStreamingSimulation</span><span class="p">(</span><span class="s1">'5.0'</span><span class="p">);</span>
+
+<span class="c1">// Stop simulation gracefully</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">stopSimulation</span><span class="p">();</span>
+
+<span class="c1">// Execute code during active simulation (queued between steps)</span>
+<span class="nx">execDuringStreaming</span><span class="p">(</span><span class="s1">'source.amplitude = 2.0'</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="state-management">State Management<a class="headerlink" href="#state-management" title="Permanent link">&para;</a></h2>
+<h3 id="svelteflow-vs-graph-store">SvelteFlow vs Graph Store<a class="headerlink" href="#svelteflow-vs-graph-store" title="Permanent link">&para;</a></h3>
+<p>SvelteFlow manages its own UI state (selection, viewport, node positions). The graph store manages application data:</p>
+<table>
+<thead>
+<tr>
+<th>State Type</th>
+<th>Managed By</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UI State</strong></td>
+<td>SvelteFlow</td>
+<td>Selection, viewport, dragging</td>
+</tr>
+<tr>
+<td><strong>App Data</strong></td>
+<td>Graph Store</td>
+<td>Node parameters, connections, subsystems</td>
+</tr>
+</tbody>
+</table>
+<p>Do not duplicate SvelteFlow state in custom stores. Use SvelteFlow's APIs (<code>useSvelteFlow</code>, event handlers) to interact with canvas state.</p>
+<h3 id="store-pattern">Store Pattern<a class="headerlink" href="#store-pattern" title="Permanent link">&para;</a></h3>
+<p>Stores use Svelte's writable with custom wrapper objects:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">internal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">writable</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">initialValue</span><span class="p">);</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">myStore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">subscribe</span><span class="o">:</span><span class="w"> </span><span class="kt">internal.subscribe</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Custom methods</span>
+<span class="w">    </span><span class="nx">doSomething</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">internal</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">state</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">state</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p><strong>Important</strong>: Do NOT wrap <code>.subscribe()</code> in <code>$effect()</code> - this causes infinite loops.</p>
+<div class="highlight"><pre><span></span><code>&lt;script&gt;
+// Correct
+myStore.subscribe(value =&gt; { localState = value; });
+
+// Wrong - causes infinite loop
+$effect(() =&gt; {
+ myStore.subscribe(value =&gt; { localState = value; });
+});
+&lt;/script&gt;
+</code></pre></div>
+<h3 id="subsystem-navigation">Subsystem Navigation<a class="headerlink" href="#subsystem-navigation" title="Permanent link">&para;</a></h3>
+<p>Subsystems are nested graphs with path-based navigation:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">graphStore</span><span class="p">.</span><span class="nx">drillDown</span><span class="p">(</span><span class="nx">subsystemId</span><span class="p">);</span><span class="w">  </span><span class="c1">// Drill into subsystem</span>
+<span class="nx">graphStore</span><span class="p">.</span><span class="nx">drillUp</span><span class="p">();</span><span class="w">               </span><span class="c1">// Go up one level</span>
+<span class="nx">graphStore</span><span class="p">.</span><span class="nx">navigateTo</span><span class="p">(</span><span class="nx">level</span><span class="p">);</span><span class="w">       </span><span class="c1">// Navigate to breadcrumb level</span>
+<span class="nx">graphStore</span><span class="p">.</span><span class="nx">currentPath</span><span class="w">              </span><span class="c1">// Current navigation path</span>
+</code></pre></div>
+<p>The Interface node inside a subsystem mirrors its parent Subsystem's ports (with inverted direction).</p>
+<hr />
+<h2 id="keyboard-shortcuts">Keyboard Shortcuts<a class="headerlink" href="#keyboard-shortcuts" title="Permanent link">&para;</a></h2>
+<p>Press <code>?</code> to see all shortcuts in the app. Key shortcuts:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File</strong></td>
+<td><code>Ctrl+O</code></td>
+<td>Open</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Ctrl+S</code></td>
+<td>Save</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Ctrl+E</code></td>
+<td>Export Python</td>
+</tr>
+<tr>
+<td><strong>Edit</strong></td>
+<td><code>Ctrl+Z/Y</code></td>
+<td>Undo/Redo</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Ctrl+D</code></td>
+<td>Duplicate</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Ctrl+F</code></td>
+<td>Find</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Del</code></td>
+<td>Delete</td>
+</tr>
+<tr>
+<td><strong>Transform</strong></td>
+<td><code>R</code></td>
+<td>Rotate 90°</td>
+</tr>
+<tr>
+<td></td>
+<td><code>X</code> / <code>Y</code></td>
+<td>Flip H/V</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Arrows</code></td>
+<td>Nudge selection</td>
+</tr>
+<tr>
+<td><strong>Wires</strong></td>
+<td><code>\</code></td>
+<td>Add waypoint to selected edge</td>
+</tr>
+<tr>
+<td><strong>View</strong></td>
+<td><code>F</code></td>
+<td>Fit view</td>
+</tr>
+<tr>
+<td></td>
+<td><code>H</code></td>
+<td>Go to root</td>
+</tr>
+<tr>
+<td></td>
+<td><code>T</code></td>
+<td>Toggle theme</td>
+</tr>
+<tr>
+<td><strong>Panels</strong></td>
+<td><code>B</code></td>
+<td>Blocks</td>
+</tr>
+<tr>
+<td></td>
+<td><code>N</code></td>
+<td>Events</td>
+</tr>
+<tr>
+<td></td>
+<td><code>S</code></td>
+<td>Simulation</td>
+</tr>
+<tr>
+<td></td>
+<td><code>V</code></td>
+<td>Results</td>
+</tr>
+<tr>
+<td></td>
+<td><code>C</code></td>
+<td>Console</td>
+</tr>
+<tr>
+<td><strong>Run</strong></td>
+<td><code>Ctrl+Enter</code></td>
+<td>Simulate</td>
+</tr>
+<tr>
+<td></td>
+<td><code>Shift+Enter</code></td>
+<td>Continue</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="file-formats">File Formats<a class="headerlink" href="#file-formats" title="Permanent link">&para;</a></h2>
+<p>PathView uses JSON-based file formats for saving and sharing:</p>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.pvm</code></td>
+<td>Model</td>
+<td>Complete simulation model (graph, events, settings, code)</td>
+</tr>
+<tr>
+<td><code>.blk</code></td>
+<td>Block</td>
+<td>Single block with parameters (for sharing/reuse)</td>
+</tr>
+<tr>
+<td><code>.sub</code></td>
+<td>Subsystem</td>
+<td>Subsystem with internal graph (for sharing/reuse)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="export-options">Export Options<a class="headerlink" href="#export-options" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>File &gt; Save</strong> - Save complete model as <code>.pvm</code></li>
+<li><strong>File &gt; Export Python</strong> - Generate standalone Python script</li>
+<li><strong>Right-click node &gt; Export</strong> - Save individual block/subsystem</li>
+<li><strong>Right-click canvas &gt; Export SVG</strong> - Export graph as vector image</li>
+<li><strong>Right-click plot &gt; Download PNG/SVG</strong> - Export plot as image</li>
+<li><strong>Right-click plot &gt; Export CSV</strong> - Export simulation data as CSV</li>
+<li><strong>Scope/Spectrum node context menu</strong> - Export simulation data as CSV</li>
+</ul>
+<hr />
+<h2 id="sharing-models-via-url">Sharing Models via URL<a class="headerlink" href="#sharing-models-via-url" title="Permanent link">&para;</a></h2>
+<p>Models can be loaded directly from a URL using query parameters:</p>
+<div class="highlight"><pre><span></span><code>https://view.pathsim.org/?model=&lt;url&gt;
+https://view.pathsim.org/?modelgh=&lt;github-shorthand&gt;
+</code></pre></div>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>Direct URL to a <code>.pvm</code> or <code>.json</code> file</td>
+<td><code>?model=https://example.com/mymodel.pvm</code></td>
+</tr>
+<tr>
+<td><code>modelgh</code></td>
+<td>GitHub shorthand (expands to raw.githubusercontent.com)</td>
+<td><code>?modelgh=user/repo/path/to/model.pvm</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="github-shorthand">GitHub Shorthand<a class="headerlink" href="#github-shorthand" title="Permanent link">&para;</a></h3>
+<p>The <code>modelgh</code> parameter expands to a raw GitHub URL:</p>
+<div class="highlight"><pre><span></span><code>modelgh=user/repo/examples/demo.pvm
+→ https://raw.githubusercontent.com/user/repo/main/examples/demo.pvm
+</code></pre></div>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># Load from any URL
+https://view.pathsim.org/?model=https://mysite.com/models/feedback.pvm
+
+# Load from GitHub repository
+https://view.pathsim.org/?modelgh=pathsim/pathview/static/examples/feedback-system.json
+</code></pre></div>
+<hr />
+<h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run dev</code></td>
+<td>Start development server</td>
+</tr>
+<tr>
+<td><code>npm run build</code></td>
+<td>Production build</td>
+</tr>
+<tr>
+<td><code>npm run preview</code></td>
+<td>Preview production build</td>
+</tr>
+<tr>
+<td><code>npm run check</code></td>
+<td>TypeScript/Svelte type checking</td>
+</tr>
+<tr>
+<td><code>npm run lint</code></td>
+<td>Run ESLint</td>
+</tr>
+<tr>
+<td><code>npm run format</code></td>
+<td>Format code with Prettier</td>
+</tr>
+<tr>
+<td><code>npm run extract</code></td>
+<td>Regenerate all definitions from PathSim</td>
+</tr>
+<tr>
+<td><code>npm run extract:blocks</code></td>
+<td>Blocks only</td>
+</tr>
+<tr>
+<td><code>npm run extract:events</code></td>
+<td>Events only</td>
+</tr>
+<tr>
+<td><code>npm run extract:simulation</code></td>
+<td>Simulation params only</td>
+</tr>
+<tr>
+<td><code>npm run extract:deps</code></td>
+<td>Dependencies only</td>
+</tr>
+<tr>
+<td><code>npm run extract:validate</code></td>
+<td>Validate config files</td>
+</tr>
+<tr>
+<td><code>npm run pvm2py -- &lt;file&gt;</code></td>
+<td>Convert <code>.pvm</code> file to standalone Python script</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="node-styling">Node Styling<a class="headerlink" href="#node-styling" title="Permanent link">&para;</a></h2>
+<p>Nodes are styled based on their category, with CSS-driven shapes and colors.</p>
+<h3 id="shapes-by-category">Shapes by Category<a class="headerlink" href="#shapes-by-category" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Shape</th>
+<th>Border Radius</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sources</td>
+<td>Pill</td>
+<td>20px</td>
+</tr>
+<tr>
+<td>Dynamic</td>
+<td>Rectangle</td>
+<td>4px</td>
+</tr>
+<tr>
+<td>Algebraic</td>
+<td>Rectangle</td>
+<td>4px</td>
+</tr>
+<tr>
+<td>Mixed</td>
+<td>Asymmetric</td>
+<td>12px 4px 12px 4px</td>
+</tr>
+<tr>
+<td>Recording</td>
+<td>Pill</td>
+<td>20px</td>
+</tr>
+<tr>
+<td>Subsystem</td>
+<td>Rectangle</td>
+<td>4px</td>
+</tr>
+</tbody>
+</table>
+<p>Shapes are defined in <code>src/lib/nodes/shapes/registry.ts</code> and applied via CSS classes (<code>.shape-pill</code>, <code>.shape-rect</code>, etc.).</p>
+<h3 id="colors">Colors<a class="headerlink" href="#colors" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Default node color</strong>: CSS variable <code>--accent</code> (#0070C0 - PathSim blue)</li>
+<li><strong>Custom colors</strong>: Right-click node → Properties → Color picker (12 colors available)</li>
+<li><strong>Port colors</strong>: <code>PORT_COLORS.default</code> (#969696 gray), customizable per-port</li>
+</ul>
+<p>Colors are CSS-driven - see <code>src/app.css</code> for variables and <code>src/lib/utils/colors.ts</code> for palettes.</p>
+<h3 id="adding-custom-shapes">Adding Custom Shapes<a class="headerlink" href="#adding-custom-shapes" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Register the shape in <code>src/lib/nodes/shapes/registry.ts</code>:</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code><span class="nx">registerShape</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">'hexagon'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'Hexagon'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">cssClass</span><span class="o">:</span><span class="w"> </span><span class="s1">'shape-hexagon'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">borderRadius</span><span class="o">:</span><span class="w"> </span><span class="s1">'0px'</span>
+<span class="p">});</span><span class="w"> </span>
+</code></pre></div>
+2.   Add CSS in <code>src/app.css</code> or component styles:</p>
+<p><div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">shape-hexagon</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">clip-path</span><span class="p">:</span><span class="w"> </span><span class="nb">polygon</span><span class="p">(</span><span class="mi">25</span><span class="kt">%</span><span class="w"> </span><span class="mi">0</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="kt">%</span><span class="w"> </span><span class="mi">0</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="w"> </span><span class="mi">50</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="kt">%</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="kt">%</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="kt">%</span><span class="w"> </span><span class="mi">50</span><span class="kt">%</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+3.   Optionally map categories to the new shape:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">setCategoryShape</span><span class="p">(</span><span class="s1">'MyCategory'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hexagon'</span><span class="p">);</span><span class="w"> </span>
+</code></pre></div>
+<hr />
+<h2 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Python is first-class</strong> - All node parameters are Python expressions stored as strings and passed verbatim to PathSim. PathSim handles all type checking and validation at runtime.</p>
+</li>
+<li>
+<p><strong>Subsystems are nested graphs</strong> - The Interface node inside a subsystem mirrors its parent's ports (inverted direction).</p>
+</li>
+<li>
+<p><strong>No server required</strong> - Everything runs client-side via Pyodide WebAssembly.</p>
+</li>
+<li>
+<p><strong>Registry pattern</strong> - Nodes and events are registered centrally for extensibility.</p>
+</li>
+<li>
+<p><strong>Minimal state</strong> - Derive where possible, avoid duplicating truth. SvelteFlow manages its own UI state.</p>
+</li>
+<li>
+<p><strong>CSS for styling</strong> - Use CSS variables from <code>app.css</code> and component <code>&lt;style&gt;</code> blocks, not JavaScript theme APIs.</p>
+</li>
+<li>
+<p><strong>Svelte 5 runes</strong> - Use <code>$state</code>, <code>$derived</code>, <code>$effect</code> exclusively.</p>
+</li>
+</ol>
+<hr />
+<h2 id="performance-optimizations">Performance Optimizations<a class="headerlink" href="#performance-optimizations" title="Permanent link">&para;</a></h2>
+<h3 id="streaming-simulation">Streaming Simulation<a class="headerlink" href="#streaming-simulation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Autonomous worker</strong>: Python runs in a Web Worker loop, pushing results without waiting for UI acknowledgment</li>
+<li><strong>Queue-based updates</strong>: Results accumulate in a queue, merged in batches via <code>requestAnimationFrame</code></li>
+<li><strong>Decoupled rates</strong>: Simulation @ 10 Hz, UI updates @ 10 Hz max - expensive plots don't slow simulation</li>
+</ul>
+<h3 id="plotly-rendering">Plotly Rendering<a class="headerlink" href="#plotly-rendering" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>extendTraces</strong>: During streaming, scope plots append new data instead of full re-render</li>
+<li><strong>SVG mode</strong>: Uses <code>scatter</code> (SVG) instead of <code>scattergl</code> (WebGL) for stability during streaming</li>
+<li><strong>Visibility API</strong>: Pauses plot updates when browser tab is hidden</li>
+</ul>
+<h3 id="node-previews">Node Previews<a class="headerlink" href="#node-previews" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Separate render queue</strong>: Plot previews in nodes use SVG paths (not Plotly)</li>
+<li><strong>Min-max decimation</strong>: Large datasets downsampled while preserving peaks/valleys</li>
+<li><strong>Deferred rendering</strong>: Shared queue prevents preview updates from blocking main plots</li>
+</ul>
+<hr />
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h2>
+<p>PathView uses a dual deployment strategy with automatic versioning:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>What happens</th>
+<th>Deployed to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Push to <code>main</code></td>
+<td>Build with base path <code>/dev</code></td>
+<td><a href="https://view.pathsim.org/dev/">view.pathsim.org/dev/</a></td>
+</tr>
+<tr>
+<td>Release published</td>
+<td>Bump <code>package.json</code>, build, deploy</td>
+<td><a href="https://view.pathsim.org/">view.pathsim.org/</a></td>
+</tr>
+<tr>
+<td>Manual dispatch</td>
+<td>Choose <code>dev</code> or <code>release</code></td>
+<td>Respective path</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Both versions deploy to the <code>deployment</code> branch using GitHub Actions</li>
+<li>Dev builds update only the <code>/dev</code> folder, preserving the release at root</li>
+<li>Release builds update root, preserving <code>/dev</code></li>
+<li>Version in <code>package.json</code> is automatically bumped from the release tag (e.g., <code>v0.4.0</code> → <code>0.4.0</code>)</li>
+</ol>
+<h3 id="creating-a-release">Creating a release<a class="headerlink" href="#creating-a-release" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a GitHub release with a version tag (e.g., <code>v0.4.0</code>)</li>
+<li>The workflow automatically: <ul>
+<li>Updates <code>package.json</code> to match the tag</li>
+<li>Commits the version bump to <code>main</code></li>
+<li>Builds and deploys to production</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p>MIT</p>
+<h2 id="key-insights">💡 Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">&para;</a></h2>
+<ul>
+<li>PathView is a web-based visual node editor for building and simulating dynamic systems using PathSim as the Python backend.</li>
+<li>It runs entirely client-side in the browser via Pyodide (Python in WebAssembly), eliminating the need for a server.</li>
+<li>Features a streaming architecture for real-time visualization of simulation results with decoupled simulation and UI update rates.</li>
+<li>Supports Simulink-style orthogonal wire routing with A* pathfinding and user-defined waypoints.</li>
+<li>Offers a modular Python backend architecture, allowing for future integration with local or remote Python execution environments.</li>
+<li>Provides extensibility for adding new PathSim blocks and toolboxes through a configuration-driven extraction process.</li>
+<li>Utilizes JSON-based file formats (.pvm, .blk, .sub) for models and components, and supports URL-based model sharing.</li>
+<li>Includes performance optimizations such as incremental Plotly rendering and min-max decimation for node previews.</li>
+</ul>
+<h2 id="references">📚 References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>pathsim/pathview GitHub Repository, https://github.com/pathsim/pathview <em>(source)</em></li>
+<li>pathsim/pathsim GitHub Repository, https://github.com/pathsim/pathsim <em>(cited)</em></li>
+<li>SvelteKit 5, https://kit.svelte.dev/ <em>(cited)</em></li>
+<li>SvelteFlow, https://svelteflow.dev/ <em>(cited)</em></li>
+<li>Pyodide, https://pyodide.org/ <em>(cited)</em></li>
+<li>Plotly.js, https://plotly.com/javascript/ <em>(cited)</em></li>
+<li>CodeMirror 6, https://codemirror.net/ <em>(cited)</em></li>
+</ul>
+<h2 id="classification">🏷️ Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<p>PathView is a tool specifically designed for building and simulating dynamic systems, which is a core activity in Process Engineering for conception, analysis, and control system design.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
