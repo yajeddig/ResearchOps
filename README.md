@@ -8,7 +8,7 @@ ResearchOps ingère ce que vous lui envoyez (URL, texte, capture d'écran, PDF),
 
 | Workflow | Déclencheur | Ce qu'il fait |
 |---|---|---|
-| **WF1 · Ingest** | Message au bot Telegram (via Make) ou issue `veille` | Garde-fou qualité (404, anti-bot, contenu vide), dédup par hash de contenu, analyse Gemini, fiche Markdown dans `content/<Catégorie>/`, notification Telegram |
+| **WF1 · Ingest** | Message au bot Telegram (via Make) ou issue `veille` | Garde-fou qualité (404, anti-bot, contenu vide, PII), dédup par hash de contenu, analyse Claude, fiche Markdown dans `content/<Catégorie>/`, notification Telegram |
 | **WF2 · Monitor** | Le 1er du mois, ou manuel | Synthèse Claude des captures du mois + nouvelles publications Semantic Scholar sur vos thèmes, rapport cité `[I n]`/`[P n]` dans `reports/` |
 | **WF4 · Ask** | Message Telegram commençant par `?` ou issue `ask` | Sélectionne les fiches pertinentes, répond en français avec citations, poste la réponse sur Telegram et dans l'issue |
 | **Site** | Push sur `main` | Publie `content/` et `reports/` en site MkDocs Material (recherche plein texte, tags, LaTeX, Mermaid) |
@@ -25,7 +25,7 @@ graph LR
         MK -->|label ask, message '?'| I2[Issue]
     end
     subgraph "GitHub Actions"
-        I1 --> WF1[WF1 Ingest<br/>Gemini 2.5 Flash]
+        I1 --> WF1[WF1 Ingest<br/>Claude Sonnet 5]
         I2 --> WF4[WF4 Ask<br/>Claude]
         CRON[1er du mois] --> WF2[WF2 Monitor<br/>Claude + Semantic Scholar]
     end
@@ -64,7 +64,7 @@ docs/                  documentation détaillée
 
 ## Mise en place
 
-1. **Secrets GitHub** : `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Optionnel : `SEMANTIC_SCHOLAR_API_KEY`.
+1. **Secrets GitHub** : `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Optionnel : `SEMANTIC_SCHOLAR_API_KEY`.
 2. **Make** : scénario Telegram → GitHub, voir [docs/make_setup.md](docs/make_setup.md). Le token GitHub doit être stocké dans une clé Make (keychain), jamais dans un module.
 3. **Site** : Settings → Pages → Source « Deploy from a branch », branche `gh-pages`. Le workflow `docs_site.yml` publie à chaque push sur `main`.
 4. **Local** : `cp .env.example .env`, `pip install -r requirements.txt`, `python -m pytest`.

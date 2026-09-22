@@ -5,9 +5,10 @@ Turns a GitHub issue (created by the Make/Telegram bridge or by hand) into a
 classified Markdown knowledge card under content/<Category>/.
 
 Pipeline:
-  route input -> quality gate -> dedup -> Gemini analysis -> post-LLM gate
+  route input -> quality gate -> dedup -> Claude analysis -> post-LLM gate
   -> write card -> commit -> notify (Telegram + workflow outputs)
 """
+import base64
 import json
 import os
 import re
@@ -16,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
+from anthropic import Anthropic
 
 from utils import frontmatter
 from utils.content_guard import (
@@ -34,18 +36,15 @@ from utils.pii_guard import detect_pii
 log = get_logger("WF1")
 
 # --- CONFIGURATION ---
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ISSUE_TITLE = os.getenv("ISSUE_TITLE", "")
 ISSUE_BODY = os.getenv("ISSUE_BODY", "")
 ISSUE_NUMBER = os.getenv("ISSUE_NUMBER", "")
 
-MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-GENERATION_CONFIG = {
-    "temperature": 0.3,
-    "max_output_tokens": 16384,
-    "response_mime_type": "application/json",
-}
+# Sonnet, not Opus: WF1 runs on every capture (potentially several a day),
+# WF2/WF4 run monthly / on-demand and keep Opus for that lower volume.
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
+MAX_TOKENS = 8000
 
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "categories.json"
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
@@ -58,12 +57,11 @@ SETTINGS = CATEGORIES_CONFIG["settings"]
 _client = None
 
 
-def get_client():
-    """Lazy Gemini client so the module can be imported without credentials."""
+def get_client() -> Anthropic:
+    """Lazy Anthropic client so the module can be imported without credentials."""
     global _client
     if _client is None:
-        from google import genai
-        _client = genai.Client(api_key=GOOGLE_API_KEY)
+        _client = Anthropic()
     return _client
 
 
@@ -81,7 +79,7 @@ def get_categories_list() -> str:
     )
 
 
-def route_content(gemini_response: dict, config: dict) -> dict:
+def route_content(analysis: dict, config: dict) -> dict:
     """
     Apply the confidence fallback:
     - confidence < threshold  -> _Inbox (manual triage)
@@ -91,21 +89,21 @@ def route_content(gemini_response: dict, config: dict) -> dict:
     fallback = config["settings"]["fallback_category"]
     valid_categories = list(config["categories"].keys())
 
-    category = gemini_response.get("category", fallback)
-    confidence = gemini_response.get("confidence", 0.0)
+    category = analysis.get("category", fallback)
+    confidence = analysis.get("confidence", 0.0)
 
     if confidence < threshold:
         category = fallback
-        gemini_response["auto_tags"] = ["inbox:low-confidence"]
-        gemini_response["fallback_reason"] = f"confidence {confidence:.2f} < {threshold}"
+        analysis["auto_tags"] = ["inbox:low-confidence"]
+        analysis["fallback_reason"] = f"confidence {confidence:.2f} < {threshold}"
     elif category not in valid_categories:
         original_category = category
         category = fallback
-        gemini_response["auto_tags"] = ["inbox:ambiguous"]
-        gemini_response["fallback_reason"] = f"unknown category: {original_category}"
+        analysis["auto_tags"] = ["inbox:ambiguous"]
+        analysis["fallback_reason"] = f"unknown category: {original_category}"
 
-    gemini_response["category"] = category
-    return gemini_response
+    analysis["category"] = category
+    return analysis
 
 
 def get_save_path(category: str, title: str, content_hash_id: str) -> Path:
@@ -146,10 +144,65 @@ def scrape_url(url: str) -> tuple[str | None, int | None]:
         return None, None
 
 
-def build_classification_prompt(content: str, input_type: str) -> str:
-    """Build the classification prompt for Gemini."""
+def build_classify_tool() -> dict:
+    """Tool schema forcing Claude's classification into structured JSON."""
+    return {
+        "name": "classify_content",
+        "description": (
+            "Classify captured content for a process engineering / industrial data science "
+            "knowledge base and write a detailed, well-researched knowledge card from it."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "description": "Precise technical title based on actual content"},
+                "category": {"type": "string", "enum": [c for c in CATEGORIES if c != "_Inbox"]},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "content_body": {
+                    "type": "string",
+                    "description": (
+                        "Detailed technical write-up in Markdown: full explanation of the concepts, "
+                        "methods and architecture; code blocks with syntax highlighting "
+                        "(```python, ```sql, ...); mathematical equations in LaTeX "
+                        "($E=mc^2$ or $$\\int_0^1 f(x)dx$$); chemical formulas and reaction "
+                        "equations; ASCII or mermaid diagrams for processes/architectures; tables "
+                        "for structured data; step-by-step procedures where applicable. Preserve "
+                        "technical depth — do not over-summarize."
+                    ),
+                },
+                "key_insights": {"type": "array", "items": {"type": "string"}},
+                "references": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {"type": "string", "enum": ["source", "cited"]},
+                            "citation": {"type": "string"},
+                        },
+                        "required": ["type", "citation"],
+                    },
+                },
+                "relevance": {
+                    "type": "string",
+                    "description": "Why this is useful (ROI, industrial application, learning opportunity)",
+                },
+                "auto_tags": {"type": "array", "items": {"type": "string"}, "description": "3-6 free-form topical tags"},
+                "sector_tags": {"type": "array", "items": {"type": "string", "enum": SECTOR_TAGS}},
+                "type": {"type": "string", "enum": ["Article", "Screenshot"]},
+                "source_type": {
+                    "type": "string",
+                    "enum": ["LinkedIn Post", "Article", "Paper", "Tutorial", "Infographic", "Chart", "Other"],
+                },
+                "reason": {"type": "string", "description": "One sentence justifying the category choice"},
+            },
+            "required": ["title", "category", "confidence", "content_body", "relevance", "auto_tags", "reason"],
+        },
+    }
+
+
+def build_analysis_prompt(content: str, input_type: str) -> str:
+    """Build the analysis instructions for Claude."""
     categories_list = get_categories_list()
-    sector_tags_list = ", ".join(SECTOR_TAGS)
 
     extraction_instructions = ""
     if input_type == "image":
@@ -158,7 +211,7 @@ IMPORTANT - IMAGE CONTENT EXTRACTION:
 1. First, extract ALL visible text from the image (OCR): headlines, body text,
    numbers, author names, sources, dates, quotes.
 2. Preserve the original language of the text.
-3. Base your summary on the ACTUAL extracted content, not on a description of the image.
+3. Base your analysis on the ACTUAL extracted content, not on a description of the image.
 4. If the image contains no readable technical content, set confidence to 0.1 and
    title to "Unreadable image".
 """
@@ -172,76 +225,73 @@ INPUT TYPE: {input_type}
 CATEGORIES (pick exactly one):
 {categories_list}
 
-SECTOR TAGS (pick 0-3 if applicable):
-{sector_tags_list}
-
-Respond ONLY with valid JSON:
-{{
-  "title": "Precise technical title based on actual content",
-  "category": "<category_name>",
-  "confidence": <0.0-1.0>,
-
-  "content_body": "DETAILED transcription of the content. Include:
-    - Full explanation of concepts, methods, architecture
-    - Code blocks with syntax highlighting (```python, ```sql, etc.)
-    - Mathematical equations in LaTeX format ($E=mc^2$ or $$\\int_0^1 f(x)dx$$)
-    - Chemical formulas (H₂SO₄) and reaction equations
-    - ASCII diagrams or mermaid diagrams for processes/architectures
-    - Tables for structured data
-    - Step-by-step procedures if applicable
-    Preserve technical depth. Do NOT over-summarize.",
-
-  "key_insights": ["insight1", "insight2", "insight3"],
-
-  "references": [
-    {{"type": "source", "citation": "Author, Title, Year, URL"}},
-    {{"type": "cited", "citation": "Referenced work mentioned in content"}}
-  ],
-
-  "equations": ["LaTeX equation if applicable"],
-  "code_snippets": [{{"language": "python", "code": "...", "description": "..."}}],
-
-  "relevance": "Why is this useful (ROI, Industrial Application, Learning opportunity)",
-  "auto_tags": ["<tag1>", "<tag2>", "<tag3>"],
-  "sector_tags": ["<sector1>"],
-  "type": "Screenshot" if image else "Article",
-  "source_type": "<LinkedIn Post | Article | Paper | Tutorial | Infographic | Chart | Other>",
-  "reason": "<1 sentence justification for category choice>"
-}}
+SECTOR TAGS (pick 0-3 if applicable, only from the enum).
 
 If the content is an error page, a login wall, a bot check or otherwise carries no
-technical content, respond with confidence 0.1 and an explicit title such as
+technical content, set confidence to 0.1 and an explicit title such as
 "Blocked page: <reason>". Do not invent content.
 
-If content doesn't fit any category well, use "_Inbox" with low confidence.
+If content doesn't fit any category well, still pick your best category — low
+confidence routes it to _Inbox automatically, you don't need to do that yourself.
+
+Call classify_content with your analysis.
 
 CONTENT:
 {content[:30000]}
 """
 
 
+def _image_media_type(path: str) -> str:
+    ext = os.path.splitext(path)[1].lower()
+    return {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+            ".gif": "image/gif", ".webp": "image/webp"}.get(ext, "image/jpeg")
+
+
 def analyze_content(content_or_path, input_type: str = "text") -> dict | None:
-    """Analyze content with Gemini and return the structured classification."""
-    log.info(f"Gemini analysis ({input_type}, {MODEL_NAME})")
+    """Analyze content with Claude and return the structured classification."""
+    log.info(f"Claude analysis ({input_type}, {CLAUDE_MODEL})")
     client = get_client()
     try:
         if input_type == "image":
-            from PIL import Image
-            img = Image.open(content_or_path)
-            prompt = build_classification_prompt("[Image content - analyze visually]", input_type)
-            response = client.models.generate_content(model=MODEL_NAME, contents=[prompt, img], config=GENERATION_CONFIG)
+            data = base64.standard_b64encode(Path(content_or_path).read_bytes()).decode()
+            prompt = build_analysis_prompt("[Image content - analyze visually]", input_type)
+            content_blocks = [
+                {"type": "image", "source": {"type": "base64", "media_type": _image_media_type(content_or_path), "data": data}},
+                {"type": "text", "text": prompt},
+            ]
         elif input_type == "document":
-            uploaded_file = client.files.upload(file=content_or_path)
-            prompt = build_classification_prompt("[Document content - analyze text]", input_type)
-            response = client.models.generate_content(model=MODEL_NAME, contents=[prompt, uploaded_file], config=GENERATION_CONFIG)
+            if not str(content_or_path).lower().endswith(".pdf"):
+                log.error(f"Unsupported document type for Claude analysis: {content_or_path}")
+                return None
+            data = base64.standard_b64encode(Path(content_or_path).read_bytes()).decode()
+            prompt = build_analysis_prompt("[PDF document - analyze content]", input_type)
+            content_blocks = [
+                {"type": "document", "source": {"type": "base64", "media_type": "application/pdf", "data": data}},
+                {"type": "text", "text": prompt},
+            ]
         else:
-            prompt = build_classification_prompt(content_or_path, input_type)
-            response = client.models.generate_content(model=MODEL_NAME, contents=prompt, config=GENERATION_CONFIG)
+            content_blocks = build_analysis_prompt(content_or_path, input_type)
 
-        result = json.loads(response.text)
-        return route_content(result, CATEGORIES_CONFIG)
+        response = client.beta.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=MAX_TOKENS,
+            betas=["server-side-fallback-2026-07-01"],
+            fallbacks="default",
+            tools=[build_classify_tool()],
+            tool_choice={"type": "tool", "name": "classify_content"},
+            messages=[{"role": "user", "content": content_blocks}],
+        )
+        if response.stop_reason == "refusal":
+            log.warning(f"Claude refused the request: {getattr(response, 'stop_details', None)}")
+            return None
+        tool_use = next((b for b in response.content if b.type == "tool_use"), None)
+        if tool_use is None:
+            log.error("Claude response carried no tool_use block")
+            return None
+        log.info(f"Claude usage: in={response.usage.input_tokens} out={response.usage.output_tokens} model={response.model}")
+        return route_content(tool_use.input, CATEGORIES_CONFIG)
     except Exception as exc:
-        log.exception(f"Gemini error: {exc}")
+        log.exception(f"Claude error: {exc}")
         return None
 
 
@@ -372,7 +422,7 @@ def main() -> None:
                 finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
                 return
         # else: scanned/unreadable PDF, no extractable text — fall through to
-        # Gemini and rely on the post-LLM PII/quality gate below.
+        # Claude and rely on the post-LLM PII/quality gate below.
 
     if input_type in ("web_page", "raw_note", "text") and detect_pii(payload):
         finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
@@ -387,7 +437,7 @@ def main() -> None:
     # --- ANALYSIS ---
     analysis = analyze_content(payload, input_type)
     if not analysis:
-        finish("failed", f"Échec de l'analyse Gemini : {ISSUE_TITLE[:80]}", "ERROR")
+        finish("failed", f"Échec de l'analyse : {ISSUE_TITLE[:80]}", "ERROR")
         return
 
     # PII on the LLM output itself: catches what OCR/transcription surfaced

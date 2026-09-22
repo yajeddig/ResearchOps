@@ -2,9 +2,9 @@
 Quality gate for WF1.
 
 21% of the cards produced before this module were 404 pages, anti-bot
-interstitials, empty inputs or test messages that Gemini dutifully turned into
-"intelligence cards". Everything here runs BEFORE the LLM call (cheap) or right
-after it (to catch what slipped through).
+interstitials, empty inputs or test messages that the LLM dutifully turned
+into "intelligence cards". Everything here runs BEFORE the LLM call (cheap)
+or right after it (to catch what slipped through).
 """
 import re
 from urllib.parse import parse_qs, unquote, urlparse
@@ -36,7 +36,7 @@ JUNK_MARKERS = [
     r"connection reset",
 ]
 
-# Titles Gemini produces when it had nothing to analyse
+# Titles the LLM produces when it had nothing to analyse
 JUNK_TITLE_MARKERS = [
     r"not found", r"\b404\b", r"unavailable", r"inaccessible", r"security verification",
     r"unanalyzed", r"empty content", r"placeholder", r"test message", r"error",
@@ -102,7 +102,7 @@ def extract_pdf_text(path: str) -> str | None:
     """
     Extract text from a PDF for pre-LLM gating. Returns None on a scanned
     (text-less) or unreadable PDF, or if pypdf itself can't be loaded, so the
-    caller falls back to sending it to Gemini directly and gates on the
+    caller falls back to sending it to the LLM directly and gates on the
     post-LLM analysis instead.
     """
     try:
