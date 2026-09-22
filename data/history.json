@@ -537,5 +537,18 @@
     "type": "web_page",
     "file": "content/Sustainability/20260922_e617a51f_quantitative_sustainable_design__qsd__group__tools.md",
     "added": "2026-09-22T12:44:34.317000"
+  },
+  "20e2a0fd": {
+    "url": "https://odre.opendatasoft.com/api-console/explore/v2.1/",
+    "type": "web_page",
+    "file": "content/Data_Engineering/20260922_d7e3e9cf_api_console_for_open_data_energy_networks__odr__.md",
+    "added": "2026-09-22T12:54:09.320327"
+  },
+  "d7e3e9cfc6bd": {
+    "content": true,
+    "url": "https://odre.opendatasoft.com/api-console/explore/v2.1/",
+    "type": "web_page",
+    "file": "content/Data_Engineering/20260922_d7e3e9cf_api_console_for_open_data_energy_networks__odr__.md",
+    "added": "2026-09-22T12:54:09.320327"
   }
 }
