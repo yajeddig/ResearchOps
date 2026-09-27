@@ -3,7 +3,7 @@ P1 - Triage content/_Inbox/ without calling an LLM.
 
 _Inbox held 23 cards on 2026-09-21, almost all 404/captcha/test-message
 artifacts predating the P0 quality gate. This classifies each card
-deterministically (no Gemini call, no API cost) and prints a review table.
+deterministically (no LLM call, no API cost) and prints a review table.
 Dry-run by default; --apply acts on it.
 
 Usage:

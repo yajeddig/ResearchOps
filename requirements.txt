@@ -1,10 +1,8 @@
 # Runtime (WF1 / WF2 / WF4)
-google-genai
 anthropic
 requests
 tenacity
 PyYAML
-Pillow
 pypdf
 
 # Testing
