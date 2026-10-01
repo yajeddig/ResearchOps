@@ -590,5 +590,18 @@
     "type": "text",
     "file": "content/Data_Analytics/20260925_b76b8ca0_m_thodologie_d_analyse_r_trospective_d__v_nements_.md",
     "added": "2026-09-25T08:52:07.604011"
+  },
+  "44cd3539": {
+    "url": "https://www.dsme.rwth-aachen.de/go/id/bvlatr",
+    "type": "web_page",
+    "file": "content/Data_Science/20261001_54115a9e_free_online_course__learning_based_control__lbc__a.md",
+    "added": "2026-10-01T04:09:00.093205"
+  },
+  "54115a9ea525": {
+    "content": true,
+    "url": "https://www.dsme.rwth-aachen.de/go/id/bvlatr",
+    "type": "web_page",
+    "file": "content/Data_Science/20261001_54115a9e_free_online_course__learning_based_control__lbc__a.md",
+    "added": "2026-10-01T04:09:00.093205"
   }
 }
