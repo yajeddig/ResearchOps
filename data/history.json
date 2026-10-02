@@ -603,5 +603,18 @@
     "type": "web_page",
     "file": "content/Data_Science/20261001_54115a9e_free_online_course__learning_based_control__lbc__a.md",
     "added": "2026-10-01T04:09:00.093205"
+  },
+  "e0321004": {
+    "url": "https://www.systemsnotcode.com/labs/pumptwin/",
+    "type": "web_page",
+    "file": "content/Data_Science/20261002_61bc8e59_pumptwin__a_live_digital_twin_for_predictive_maint.md",
+    "added": "2026-10-02T19:05:06.106755"
+  },
+  "61bc8e599d41": {
+    "content": true,
+    "url": "https://www.systemsnotcode.com/labs/pumptwin/",
+    "type": "web_page",
+    "file": "content/Data_Science/20261002_61bc8e59_pumptwin__a_live_digital_twin_for_predictive_maint.md",
+    "added": "2026-10-02T19:05:06.106755"
   }
 }
