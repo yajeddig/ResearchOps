@@ -2,7 +2,7 @@
 
 **Projet** : ResearchOps — second cerveau R&D sans serveur
 **Utilisateur cible** : responsable R&D / ingénieur docteur / data engineer
-**Stack** : GitHub Actions · Python 3.11 · Gemini 2.5 Flash · Claude Opus 5 · Semantic Scholar · Make.com · MkDocs Material
+**Stack** : GitHub Actions · Python 3.11 · Claude (Sonnet 5 / Opus 5) · Semantic Scholar · Make.com · MkDocs Material
 **Budget** : Make Free (0 €), GitHub Actions (dépôt public, 0 €), API LLM ≈ 2 à 10 €/mois selon volume
 **Date** : septembre 2026 (v1.2 remplace la spec v1.1 de janvier 2025)
 
@@ -38,7 +38,7 @@ graph TB
         R --> SITE
     end
     subgraph "APIs"
-        WF1 --> GEM[Gemini 2.5 Flash]
+        WF1 --> CLS[Claude Sonnet 5]
         WF2 --> S2[Semantic Scholar]
         WF2 --> CL[Claude Opus 5]
         WF4 --> CL
@@ -75,10 +75,10 @@ Un scénario, 4 routes, appels `POST /repos/yajeddig/ResearchOps/issues` via mod
 ## 5. WF1 · Ingest
 
 - Déclencheur : `issues.labeled` = `veille`, auteur OWNER/COLLABORATOR/MEMBER.
-- Routage : `IMG_ID:` → image ; `DOC_ID:` → document (texte lu directement si .md/.txt/.csv/.json, sinon Gemini File API) ; URL → `normalize_url` puis Jina Reader ; sinon note.
-- Garde-fou (`content_guard`) : HTTP ≥ 400, marqueurs 404/anti-bot/login, < 500 caractères, note < 20 caractères → `rejected`.
+- Routage : `IMG_ID:` → image ; `DOC_ID:` → document (texte lu directement si .md/.txt/.csv/.json, sinon PDF envoyé à Claude en pièce jointe) ; URL → `normalize_url` puis Jina Reader ; sinon note.
+- Garde-fou (`content_guard` + `pii_guard`) : HTTP ≥ 400, marqueurs 404/anti-bot/login, < 500 caractères, note < 20 caractères, données personnelles (NIR/IBAN/carte/mots-clés RH) → `rejected` / `rejected_pii`.
 - Dédup : URL et hash de contenu → `duplicate`.
-- Analyse : Gemini 2.5 Flash, JSON strict (titre, catégorie, confiance, corps détaillé, insights, références, tags).
+- Analyse : Claude Sonnet 5, sortie structurée forcée via tool use (titre, catégorie, confiance, corps détaillé, insights, références, tags).
 - Routage de confiance : `< 0.3` rejet ; `0.3–0.6` `_Inbox` ; `≥ 0.6` catégorie.
 - Sortie : fiche YAML + Markdown, commit + push avec retry, `status`/`message` dans `$GITHUB_OUTPUT`, issue fermée avec commentaire, Telegram.
 
@@ -105,8 +105,7 @@ Un scénario, 4 routes, appels `POST /repos/yajeddig/ResearchOps/issues` via mod
 
 | Secret | Utilisé par |
 |---|---|
-| `GOOGLE_API_KEY` | WF1 |
-| `ANTHROPIC_API_KEY` | WF2, WF4 |
+| `ANTHROPIC_API_KEY` | WF1, WF2, WF4 |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | WF1, WF2, WF4 |
 | `SEMANTIC_SCHOLAR_API_KEY` (optionnel) | WF2 |
 | `GITHUB_TOKEN` (automatique) | fermeture et commentaires d'issues |
@@ -117,7 +116,7 @@ Retirés : `SERPAPI_KEY`, `PERPLEXITY_API_KEY`, `TAVILY_API_KEY`, `OPENAI_API_KE
 
 - `ci.yml` exécute pytest sur chaque push/PR touchant le code.
 - Logs JSON en CI via `utils/logger.py`.
-- Modèles configurables par variables (`GEMINI_MODEL`, `CLAUDE_MODEL`) pour suivre les mises à jour sans toucher au code.
+- Modèle configurable par variable (`CLAUDE_MODEL`, un défaut par process : `claude-sonnet-5` en WF1, `claude-opus-5` en WF2/WF4) pour suivre les mises à jour sans toucher au code.
 
 ## 11. Évolutions envisagées
 

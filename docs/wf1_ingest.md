@@ -21,7 +21,7 @@ graph TD
     D --> F
     E --> F
     F -->|rejet / doublon| X[Issue fermée 'not planned' + Telegram]
-    F --> G[Gemini 2.5 Flash · JSON]
+    F --> G[Claude Sonnet 5 · tool JSON]
     G --> H{Post-analyse}
     H -->|confiance < 0.3 ou titre d'erreur| X
     H -->|0.3 ≤ confiance < 0.6| I[_Inbox]
@@ -57,4 +57,4 @@ Le script écrit `status` (`saved` / `duplicate` / `rejected` / `failed`) et `me
 
 ## Variables
 
-`GOOGLE_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `GITHUB_TOKEN` (fourni par Actions), `GEMINI_MODEL` (optionnel, défaut `gemini-2.5-flash`).
+`ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `GITHUB_TOKEN` (fourni par Actions), `CLAUDE_MODEL` (optionnel, défaut `claude-sonnet-5`).

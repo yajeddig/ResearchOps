@@ -2,7 +2,9 @@
 Unit tests for WF1 content routing logic
 
 These tests are self-contained and don't require external dependencies.
-The routing functions are copied here to avoid import issues with google-genai.
+The routing functions are copied here to keep this file import-free (no
+config/categories.json load, no LLM client). See test_wf1_analysis.py for
+tests against the real wf1_ingest module.
 """
 import pytest
 import re
@@ -13,7 +15,7 @@ from datetime import datetime
 # --- Copy of routing functions for testing ---
 # These mirror the implementation in wf1_ingest.py
 
-def route_content(gemini_response: dict, config: dict) -> dict:
+def route_content(analysis: dict, config: dict) -> dict:
     """
     Apply fallback logic based on confidence threshold.
 
@@ -25,22 +27,22 @@ def route_content(gemini_response: dict, config: dict) -> dict:
     fallback = config["settings"]["fallback_category"]
     valid_categories = list(config["categories"].keys())
 
-    category = gemini_response.get("category", fallback)
-    confidence = gemini_response.get("confidence", 0.0)
+    category = analysis.get("category", fallback)
+    confidence = analysis.get("confidence", 0.0)
 
     # Fallback conditions
     if confidence < threshold:
         category = fallback
-        gemini_response["auto_tags"] = ["inbox:low-confidence"]
-        gemini_response["fallback_reason"] = f"confidence {confidence:.2f} < {threshold}"
+        analysis["auto_tags"] = ["inbox:low-confidence"]
+        analysis["fallback_reason"] = f"confidence {confidence:.2f} < {threshold}"
     elif category not in valid_categories:
         original_category = category
         category = fallback
-        gemini_response["auto_tags"] = ["inbox:ambiguous"]
-        gemini_response["fallback_reason"] = f"unknown category: {original_category}"
+        analysis["auto_tags"] = ["inbox:ambiguous"]
+        analysis["fallback_reason"] = f"unknown category: {original_category}"
 
-    gemini_response["category"] = category
-    return gemini_response
+    analysis["category"] = category
+    return analysis
 
 
 def slugify(text: str) -> str:

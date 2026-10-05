@@ -42,7 +42,7 @@ graph LR
 
 Point d'entrée API : `POST https://api.github.com/repos/yajeddig/ResearchOps/issues`, body JSON `{title, body, labels}`, header `Accept: application/vnd.github+json`.
 
-`IMG_ID:` et `DOC_ID:` doivent être dans le **corps** de l'issue : c'est là que `wf1_ingest.py` les lit. L'ancien scénario les mettait dans le titre (photo) ou sous la forme `**File ID**` (document), ce qui envoyait images et PDF à Gemini comme de simples notes texte.
+`IMG_ID:` et `DOC_ID:` doivent être dans le **corps** de l'issue : c'est là que `wf1_ingest.py` les lit. L'ancien scénario les mettait dans le titre (photo) ou sous la forme `**File ID**` (document), ce qui envoyait images et PDF au LLM comme de simples notes texte.
 
 ## Pourquoi HTTP plutôt que le module GitHub natif
 
