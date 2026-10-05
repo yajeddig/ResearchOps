@@ -55,7 +55,9 @@ src/  wf1_ingest.py · wf2_monitor.py · wf4_ask.py · utils/{content_guard,dedu
 config/  categories.json (taxonomie, seuils) · monitoring.json (thèmes académiques)
 content/<Catégorie>/YYYYMMDD_<hash8>_<slug>.md
 reports/<année>/<AAAA-MM>_Monitor.md
-data/history.json  clés md5(url)[:8] et sha256(contenu)[:12]
+data/history.json  clés md5(url)[:8] et sha256(contenu)[:12] (dédup WF1)
+data/monitor_seen.json  paperId S2 → date du premier rapport (dédup WF2)
+data/ingest_log.jsonl  une ligne par issue WF1 : statut, raison, catégorie
 scripts/build_site.py · mkdocs.yml · requirements.txt · requirements-docs.txt
 tests/  pytest, exécuté par ci.yml
 legacy/  WF3 Tri-Force, stub Triforce, multimodal.py (retirés, à supprimer)
@@ -86,7 +88,8 @@ Un scénario, 4 routes, appels `POST /repos/yajeddig/ResearchOps/issues` via mod
 
 - Déclencheur : cron `0 6 1 * *`, `workflow_dispatch`.
 - Interne : fiches datées du mois précédent, référencées `[I n]`.
-- Externe : Semantic Scholar par `keywords_academic`, période = mois précédent, dédup via `history.json`, `paper_limit` par thème, référencées `[P n]`. Seuls les papiers rapportés sont marqués vus.
+- Externe : sujets actifs de `monitoring.json` v2 (validé au chargement). API Recommendations Semantic Scholar si `seed_paper_ids`, sinon recherche par `keywords_academic` sur le mois précédent ; filtres `min_year` / `exclude_keywords` ; dédup inter-mois via `data/monitor_seen.json` (paperId) ; `paper_limit` par sujet ; référencées `[P n]`. Seuls les papiers rapportés sont marqués vus.
+- Santé du pipeline : section calculée en Python depuis `data/ingest_log.jsonl` (écrit par WF1 à chaque issue), ajoutée après la synthèse.
 - Synthèse : Claude Opus 5, bibliographie fermée recopiée en fin de rapport. Aucun rapport si aucune donnée.
 - Sortie : `reports/<année>/<mois de génération>_Monitor.md`, Telegram avec lien.
 

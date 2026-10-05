@@ -29,6 +29,7 @@ from utils.content_guard import (
 )
 from utils.dedup import add_to_history, content_hash, is_duplicate
 from utils.git_ops import safe_commit
+from utils.ingest_log import log_outcome
 from utils.logger import get_logger
 from utils.notify import set_output, telegram_notify
 from utils.pii_guard import detect_pii
@@ -340,11 +341,16 @@ def build_card(analysis: dict, source_ref: str, hash_id: str) -> str:
     return frontmatter.dump(meta, body)
 
 
-def finish(status: str, message: str, level: str = "INFO") -> None:
-    """Single exit point: workflow outputs + Telegram."""
+def finish(status: str, message: str, level: str = "INFO", reason: str | None = None, category: str | None = None) -> None:
+    """Single exit point: workflow outputs + Telegram + ingest log (committed on every outcome)."""
     set_output("status", status)
     set_output("message", message)
     telegram_notify(message, level)
+    try:
+        log_outcome(status, reason=reason, category=category)
+        safe_commit(files=["data/ingest_log.jsonl"], message=f"WF1 log: {status}")
+    except Exception as exc:  # telemetry must never fail the ingestion itself
+        log.warning(f"Ingest log not recorded: {exc}")
     log.info(f"[{status}] {message}")
 
 
@@ -391,45 +397,48 @@ def main() -> None:
 
     payload, input_type, source_ref, raw = resolve_input()
     if payload is None:
-        finish("rejected", f"Rejeté : fichier Telegram introuvable ({ISSUE_TITLE})", "WARNING")
+        finish("rejected", f"Rejeté : fichier Telegram introuvable ({ISSUE_TITLE})", "WARNING", reason="telegram_file_not_found")
         return
 
     # --- QUALITY GATE + DEDUP (before any LLM spend) ---
     if input_type == "web_page":
         url = payload
         if is_duplicate(url=url):
-            finish("duplicate", f"Doublon ignoré : {url}", "WARNING")
+            finish("duplicate", f"Doublon ignoré : {url}", "WARNING", reason="duplicate_url")
             return
         text, status = scrape_url(url)
         ok, reason = validate_scraped(text, status)
         if not ok:
-            finish("rejected", f"Rejeté ({reason}) : {url}", "WARNING")
+            finish("rejected", f"Rejeté ({reason}) : {url}", "WARNING", reason=reason)
             return
         payload, raw = text, text.encode("utf-8")
     elif input_type in ("raw_note", "text"):
         ok, reason = validate_note(payload)
         if not ok:
-            finish("rejected", f"Rejeté ({reason}) : note vide", "WARNING")
+            finish("rejected", f"Rejeté ({reason}) : note vide", "WARNING", reason=reason)
             return
     elif input_type == "document" and isinstance(payload, str) and payload.lower().endswith(".pdf"):
         pdf_text = extract_pdf_text(payload)
         if pdf_text is not None:
             ok, reason = validate_scraped(pdf_text)
             if not ok:
-                finish("rejected", f"Rejeté ({reason}) : document PDF", "WARNING")
+                finish("rejected", f"Rejeté ({reason}) : document PDF", "WARNING", reason=reason)
                 return
-            if detect_pii(pdf_text):
-                finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
+            pii_reasons = detect_pii(pdf_text)
+            if pii_reasons:
+                finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING", reason=",".join(pii_reasons))
                 return
         # else: scanned/unreadable PDF, no extractable text — fall through to
         # Claude and rely on the post-LLM PII/quality gate below.
 
-    if input_type in ("web_page", "raw_note", "text") and detect_pii(payload):
-        finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING")
-        return
+    if input_type in ("web_page", "raw_note", "text"):
+        pii_reasons = detect_pii(payload)
+        if pii_reasons:
+            finish("rejected_pii", "Contenu rejeté : données personnelles détectées.", "WARNING", reason=",".join(pii_reasons))
+            return
 
     if raw is not None and is_duplicate(content=raw):
-        finish("duplicate", f"Doublon ignoré (contenu déjà ingéré) : {ISSUE_TITLE[:80]}", "WARNING")
+        finish("duplicate", f"Doublon ignoré (contenu déjà ingéré) : {ISSUE_TITLE[:80]}", "WARNING", reason="duplicate_content")
         return
 
     hash_id = content_hash(raw) if raw is not None else datetime.now().strftime("%H%M%S")
@@ -437,7 +446,7 @@ def main() -> None:
     # --- ANALYSIS ---
     analysis = analyze_content(payload, input_type)
     if not analysis:
-        finish("failed", f"Échec de l'analyse : {ISSUE_TITLE[:80]}", "ERROR")
+        finish("failed", f"Échec de l'analyse : {ISSUE_TITLE[:80]}", "ERROR", reason="analysis_failed")
         return
 
     # PII on the LLM output itself: catches what OCR/transcription surfaced
@@ -447,13 +456,14 @@ def main() -> None:
         str(analysis.get("content_body", "")),
         " ".join(str(i) for i in analysis.get("key_insights", []) or []),
     ])
-    if detect_pii(analysis_text):
-        finish("rejected_pii", "Contenu rejeté après analyse : données personnelles détectées.", "WARNING")
+    pii_reasons = detect_pii(analysis_text)
+    if pii_reasons:
+        finish("rejected_pii", "Contenu rejeté après analyse : données personnelles détectées.", "WARNING", reason=",".join(pii_reasons))
         return
 
     junk, reason = is_junk_analysis(analysis, SETTINGS.get("reject_threshold", 0.3))
     if junk:
-        finish("rejected", f"Rejeté après analyse ({reason}) : {analysis.get('title', ISSUE_TITLE)[:80]}", "WARNING")
+        finish("rejected", f"Rejeté après analyse ({reason}) : {analysis.get('title', ISSUE_TITLE)[:80]}", "WARNING", reason=reason)
         return
 
     # --- WRITE + COMMIT ---
@@ -480,6 +490,7 @@ def main() -> None:
         "saved",
         f"Fiche créée : {analysis['title']}\nCatégorie : {analysis['category']}{inbox_note}\nConfiance : {confidence:.0%}\nFichier : {filepath}",
         "SUCCESS" if analysis["category"] != "_Inbox" else "WARNING",
+        category=analysis["category"],
     )
 
     if input_type in ["image", "document"] and isinstance(payload, str) and os.path.exists(payload):

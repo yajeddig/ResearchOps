@@ -93,6 +93,34 @@ def test_concurrent_history_conflict_is_auto_merged(repos, monkeypatch):
     assert not (b / ".git" / "rebase-merge").exists()
 
 
+def test_concurrent_jsonl_conflict_keeps_both_lines(repos, monkeypatch):
+    remote, a, b = repos
+    (a / "data" / "ingest_log.jsonl").write_text('{"status": "base"}\n')
+    git("add", ".", cwd=a)
+    git("commit", "-q", "-m", "seed jsonl", cwd=a)
+    git("push", "-q", cwd=a)
+    for clone in (a, b):
+        git("pull", "-q", cwd=clone)
+
+    (a / "data" / "ingest_log.jsonl").write_text('{"status": "base"}\n{"status": "a1"}\n')
+    git("add", ".", cwd=a)
+    git("commit", "-q", "-m", "WF1: A log", cwd=a)
+    git("push", "-q", cwd=a)
+
+    monkeypatch.chdir(b)
+    (b / "data" / "ingest_log.jsonl").write_text('{"status": "base"}\n{"status": "b1"}\n')
+
+    assert safe_commit(["data/ingest_log.jsonl"], "WF1: B log") is True
+
+    out = subprocess.run(
+        ["git", "show", "main:data/ingest_log.jsonl"], cwd=remote, capture_output=True, text=True, check=True
+    )
+    lines = [line for line in out.stdout.splitlines() if line.strip()]
+    assert lines == ['{"status": "base"}', '{"status": "a1"}', '{"status": "b1"}']
+    assert git("status", "--porcelain", cwd=b).stdout.strip() == ""
+    assert not (b / ".git" / "rebase-merge").exists()
+
+
 def test_unmergeable_conflict_raises_cleanly(repos, monkeypatch):
     remote, a, b = repos
     (a / "shared.md").write_text("version A")
