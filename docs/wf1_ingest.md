@@ -21,7 +21,7 @@ graph TD
     D --> F
     E --> F
     F -->|rejet / doublon| X[Issue fermée 'not planned' + Telegram]
-    F --> G[Claude Sonnet 5 · tool JSON]
+    F --> G[Claude Sonnet 5.5 · sortie structurée]
     G --> H{Post-analyse}
     H -->|confiance < 0.3 ou titre d'erreur| X
     H -->|0.3 ≤ confiance < 0.6| I[_Inbox]
@@ -49,7 +49,19 @@ Avant ce garde-fou, 21 % des fiches étaient des pages d'erreur.
 
 ## Fiche produite
 
-Frontmatter YAML (`title`, `date`, `category`, `confidence`, `tags`, `source`, `type`, `source_type`, `hash`) puis sections Relevance, Content, Key Insights, References, Classification.
+Frontmatter YAML (`title`, `date`, `category`, `confidence`, `tags`, `sectors`, `projects` si configurés, `source`, `type`, `source_type`, `hash`) puis sections Relevance, Content, Key Insights, References, Classification.
+
+## Taxonomie à facettes
+
+| Facette | Cardinalité | Source |
+|---|---|---|
+| `category` | 1 parmi 6 (+ `_Inbox` par routage) | `config/categories.json` |
+| `tags` | 1 à 5, vocabulaire fermé | `config/tags.json` |
+| `sectors` | 0 à n, liste fermée | `sector_tags` de `config/categories.json` |
+| `projects` | 0 à n, liste fermée | `config/projects.local.json` (non versionné ; facette désactivée s'il est absent) |
+| `new_tag_candidates` | 0 à 3, texte libre | jamais sur la fiche : écrit dans `data/ingest_log.jsonl`, agrégé dans le rapport mensuel |
+
+Le prompt et le schéma JSON (sortie structurée `output_config.format`) sont générés à partir de ces fichiers : ajouter un tag à `tags.json` suffit. Les bornes que le schéma ne sait pas exprimer (nombre de tags, confiance dans [0, 1]) sont appliquées en Python après la réponse.
 
 ## Sorties du job
 
@@ -57,4 +69,4 @@ Le script écrit `status` (`saved` / `duplicate` / `rejected` / `failed`) et `me
 
 ## Variables
 
-`ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `GITHUB_TOKEN` (fourni par Actions), `CLAUDE_MODEL` (optionnel, défaut `claude-sonnet-5`).
+`ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `GITHUB_TOKEN` (fourni par Actions), `CLAUDE_MODEL` (optionnel, défaut `claude-sonnet-5-5`).

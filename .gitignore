@@ -215,3 +215,6 @@ data/quota_tracker.json
 # Generated site
 site/
 site_src/
+
+# P3: project list stays local (descriptions may name clients)
+config/projects.local.json

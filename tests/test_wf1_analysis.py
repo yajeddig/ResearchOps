@@ -1,4 +1,5 @@
-"""Tests for the Claude-backed analysis in wf1_ingest.py (WF1 Gemini -> Claude migration)."""
+"""Tests for the Claude-backed analysis in wf1_ingest.py (structured outputs, faceted taxonomy)."""
+import json
 import os
 
 os.environ.setdefault("ANTHROPIC_API_KEY", "sk-test-fake")
@@ -20,7 +21,7 @@ class _Usage:
 
 
 class FakeResponse:
-    def __init__(self, content, stop_reason="tool_use", model="claude-sonnet-5"):
+    def __init__(self, content, stop_reason="end_turn", model="claude-sonnet-5-5"):
         self.content = content
         self.stop_reason = stop_reason
         self.model = model
@@ -33,11 +34,25 @@ class FakeMessages:
         self._exc = exc
         self._capture = capture
 
-    def create(self, **kwargs):
+    def stream(self, **kwargs):
         if self._capture is not None:
             self._capture.append(kwargs)
         if self._exc:
             raise self._exc
+        return _FakeStream(self._response)
+
+
+class _FakeStream:
+    def __init__(self, response):
+        self._response = response
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def get_final_message(self):
         return self._response
 
 
@@ -51,35 +66,41 @@ class FakeClient:
         self.beta = FakeBeta(FakeMessages(response, exc, capture))
 
 
-def _tool_use_response(**fields):
+def _json_response(**fields):
     payload = {
         "title": "Hybrid modelling of a CSTR",
-        "category": "Process_Engineering",
+        "category": "Process_Modeling",
         "confidence": 0.9,
         "content_body": "Detailed technical write-up.",
         "key_insights": ["insight 1"],
         "references": [],
         "relevance": "Useful for reactor design.",
-        "auto_tags": ["reactor", "hybrid-model"],
-        "sector_tags": [],
+        "tags": ["reactor-cstr", "hybrid-modeling"],
+        "sectors": [],
+        "new_tag_candidates": [],
         "type": "Article",
         "source_type": "Article",
-        "reason": "Matches Process_Engineering.",
+        "reason": "Matches Process_Modeling.",
     }
     payload.update(fields)
-    return FakeResponse([_Block("tool_use", input=payload)])
+    return FakeResponse([_Block("text", text=json.dumps(payload))])
 
 
-class TestBuildClassifyTool:
+class TestOutputSchema:
     def test_category_enum_excludes_inbox(self):
-        tool = wf1_ingest.build_classify_tool()
-        assert "_Inbox" not in tool["input_schema"]["properties"]["category"]["enum"]
+        schema = wf1_ingest.TAXONOMY.output_schema(wf1_ingest.CONTENT_PROPERTIES)
+        assert "_Inbox" not in schema["properties"]["category"]["enum"]
 
-    def test_required_fields_present(self):
-        tool = wf1_ingest.build_classify_tool()
-        required = tool["input_schema"]["properties"]
-        for field in ("title", "category", "confidence", "content_body", "relevance", "auto_tags", "reason"):
-            assert field in required
+    def test_every_field_required_and_closed(self):
+        schema = wf1_ingest.TAXONOMY.output_schema(wf1_ingest.CONTENT_PROPERTIES)
+        assert set(schema["required"]) == set(schema["properties"])
+        assert schema["additionalProperties"] is False
+        for field in ("title", "content_body", "category", "tags", "sectors", "new_tag_candidates"):
+            assert field in schema["properties"]
+
+    def test_tags_constrained_to_vocabulary(self):
+        schema = wf1_ingest.TAXONOMY.output_schema(wf1_ingest.CONTENT_PROPERTIES)
+        assert schema["properties"]["tags"]["items"]["enum"] == wf1_ingest.TAXONOMY.tags
 
 
 class TestBuildAnalysisPrompt:
@@ -108,28 +129,50 @@ class TestImageMediaType:
 
 
 class TestAnalyzeContentText:
-    def test_forces_tool_choice_and_returns_routed_result(self, monkeypatch):
+    def test_uses_structured_output_and_returns_routed_result(self, monkeypatch):
         capture = []
-        client = FakeClient(response=_tool_use_response(), capture=capture)
+        client = FakeClient(response=_json_response(), capture=capture)
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         result = wf1_ingest.analyze_content("some article text", "web_page")
 
         assert result["title"] == "Hybrid modelling of a CSTR"
-        assert result["category"] == "Process_Engineering"  # confidence 0.9 clears the threshold
+        assert result["category"] == "Process_Modeling"  # confidence 0.9 clears the threshold
+        assert result["tags"] == ["reactor-cstr", "hybrid-modeling"]
         call = capture[0]
-        assert call["tool_choice"] == {"type": "tool", "name": "classify_content"}
+        assert call["output_config"]["format"]["type"] == "json_schema"
+        assert "tool_choice" not in call  # forced tool use is a 400 on Sonnet 5.5
+        assert "Controlled vocabulary" in call["system"]
         assert call["model"] == wf1_ingest.CLAUDE_MODEL
+        assert call["output_config"]["effort"] == "high"
         assert isinstance(call["messages"][0]["content"], str)
 
+    def test_off_vocabulary_and_excess_tags_dropped(self, monkeypatch):
+        tags = ["not-a-real-tag", "reactor-cstr", "pinn", "control-mpc", "lca", "n2o", "transport-kla"]
+        client = FakeClient(response=_json_response(tags=tags, new_tag_candidates=["pinn", "Sludge-Age ", "a", "b", "c"]))
+        monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
+
+        result = wf1_ingest.analyze_content("some article text", "web_page")
+
+        assert result["tags"] == ["reactor-cstr", "pinn", "control-mpc", "lca", "n2o"]
+        # a candidate already in the vocabulary is not a candidate; max 3
+        assert result["new_tag_candidates"] == ["sludge-age", "a", "b"]
+
+    def test_max_tokens_truncation_returns_none(self, monkeypatch):
+        client = FakeClient(response=FakeResponse([_Block("text", text='{"title": "trunc')], stop_reason="max_tokens"))
+        monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
+
+        assert wf1_ingest.analyze_content("some article text", "web_page") is None
+
     def test_low_confidence_routes_to_inbox(self, monkeypatch):
-        client = FakeClient(response=_tool_use_response(confidence=0.1))
+        client = FakeClient(response=_json_response(confidence=0.1))
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         result = wf1_ingest.analyze_content("some article text", "web_page")
 
         assert result["category"] == "_Inbox"
         assert "fallback_reason" in result
+        assert result["tags"] == ["reactor-cstr", "hybrid-modeling"]  # kept, no inbox marker
 
     def test_refusal_returns_none(self, monkeypatch):
         client = FakeClient(response=FakeResponse([], stop_reason="refusal"))
@@ -137,8 +180,8 @@ class TestAnalyzeContentText:
 
         assert wf1_ingest.analyze_content("some article text", "web_page") is None
 
-    def test_no_tool_use_block_returns_none(self, monkeypatch):
-        client = FakeClient(response=FakeResponse([_Block("text", text="I'd rather not.")]))
+    def test_no_text_block_returns_none(self, monkeypatch):
+        client = FakeClient(response=FakeResponse([_Block("thinking", thinking="")]))
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         assert wf1_ingest.analyze_content("some article text", "web_page") is None
@@ -155,7 +198,7 @@ class TestAnalyzeContentMultimodal:
         img = tmp_path / "capture.png"
         img.write_bytes(b"\x89PNG\r\n\x1a\nfake")
         capture = []
-        client = FakeClient(response=_tool_use_response(), capture=capture)
+        client = FakeClient(response=_json_response(), capture=capture)
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         result = wf1_ingest.analyze_content(str(img), "image")
@@ -171,7 +214,7 @@ class TestAnalyzeContentMultimodal:
         pdf = tmp_path / "paper.pdf"
         pdf.write_bytes(b"%PDF-1.4 fake")
         capture = []
-        client = FakeClient(response=_tool_use_response(), capture=capture)
+        client = FakeClient(response=_json_response(), capture=capture)
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         result = wf1_ingest.analyze_content(str(pdf), "document")
@@ -185,7 +228,7 @@ class TestAnalyzeContentMultimodal:
         docx = tmp_path / "report.docx"
         docx.write_bytes(b"fake docx")
         capture = []
-        client = FakeClient(response=_tool_use_response(), capture=capture)
+        client = FakeClient(response=_json_response(), capture=capture)
         monkeypatch.setattr(wf1_ingest, "get_client", lambda: client)
 
         result = wf1_ingest.analyze_content(str(docx), "document")
@@ -205,7 +248,7 @@ class TestFinish:
 
         wf1_ingest.finish("rejected", "Rejeté (too_short) : x", "WARNING", reason="too_short")
 
-        assert logged == [{"status": "rejected", "reason": "too_short", "category": None}]
+        assert logged == [{"status": "rejected", "reason": "too_short", "category": None, "new_tag_candidates": None}]
         assert committed == [(["data/ingest_log.jsonl"], "WF1 log: rejected")]
 
     def test_log_push_failure_does_not_raise(self, monkeypatch):
@@ -228,4 +271,4 @@ class TestFinish:
 
         wf1_ingest.finish("saved", "Fiche créée", "SUCCESS", category="Process_Engineering")
 
-        assert logged == [{"status": "saved", "reason": None, "category": "Process_Engineering"}]
+        assert logged == [{"status": "saved", "reason": None, "category": "Process_Engineering", "new_tag_candidates": None}]
