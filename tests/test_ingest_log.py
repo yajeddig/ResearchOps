@@ -53,3 +53,12 @@ def test_load_entries_skips_malformed_lines(tmp_path, monkeypatch):
 def test_load_entries_missing_file_returns_empty(tmp_path, monkeypatch):
     monkeypatch.setattr(ingest_log, "LOG_FILE", tmp_path / "nope.jsonl")
     assert ingest_log.load_entries(date(2026, 9, 1), date(2026, 9, 30)) == []
+
+
+def test_log_outcome_records_tag_candidates(tmp_path, monkeypatch):
+    path = tmp_path / "ingest_log.jsonl"
+    monkeypatch.setattr(ingest_log, "LOG_FILE", path)
+
+    ingest_log.log_outcome("saved", category="Hybrid_SciML", new_tag_candidates=["latent-sde"])
+
+    assert '"new_tag_candidates": ["latent-sde"]' in path.read_text(encoding="utf-8")

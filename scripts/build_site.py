@@ -44,6 +44,10 @@ def _clean_meta(meta: dict) -> dict:
     if isinstance(tags, str):
         tags = [t.strip() for t in tags.strip("[]").split(",") if t.strip()]
     meta["tags"] = [str(t) for t in tags if str(t).strip()]
+    # Sectors are a separate facet on the card; fold them into the site's tag index.
+    sectors = meta.get("sectors", [])
+    if isinstance(sectors, list):
+        meta["tags"] += [str(s) for s in sectors if str(s).strip() and str(s) not in meta["tags"]]
     if "title" in meta:
         meta["title"] = str(meta["title"])
     return meta

@@ -336,6 +336,7 @@ def render_health_section(entries: list[dict], internal_by_category: dict, paper
     inbox_count = sum(1 for e in saved if e.get("category") == "_Inbox")
     by_category = Counter(category for category, docs in internal_by_category.items() for _ in docs)
     by_topic = Counter(p["topic"] for p in papers)
+    tag_candidates = Counter(c for e in entries for c in e.get("new_tag_candidates", []) or [])
 
     lines = ["## 🩺 Santé du pipeline", ""]
     lines.append(
@@ -354,6 +355,11 @@ def render_health_section(entries: list[dict], internal_by_category: dict, paper
         lines.append("- **Répartition par catégorie** : " + ", ".join(f"{c} ({n})" for c, n in by_category.most_common()))
     if by_topic:
         lines.append("- **Papiers par sujet de veille** : " + ", ".join(f"{t} ({n})" for t, n in by_topic.most_common()))
+    if tag_candidates:
+        lines.append(
+            "- **Tags candidats** (absents du vocabulaire, à ajouter à `config/tags.json` si récurrents) : "
+            + ", ".join(f"{t} ({n})" for t, n in tag_candidates.most_common(15))
+        )
     return "\n".join(lines) + "\n"
 
 

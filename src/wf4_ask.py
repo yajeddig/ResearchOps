@@ -48,7 +48,9 @@ def build_index(cards: list[dict]) -> str:
         meta = card["meta"]
         tags = meta.get("tags", [])
         tags = ", ".join(map(str, tags[:8])) if isinstance(tags, list) else str(tags)
-        lines.append(f"[{n}] {meta.get('title', card['path'])} | {card['category']} | {meta.get('date', '')} | {tags}")
+        sectors = meta.get("sectors", [])
+        sectors = ", ".join(map(str, sectors)) if isinstance(sectors, list) else str(sectors)
+        lines.append(f"[{n}] {meta.get('title', card['path'])} | {card['category']} | {meta.get('date', '')} | {tags} | {sectors}")
     return "\n".join(lines)
 
 
@@ -58,7 +60,7 @@ def select_cards(client: Anthropic, question: str, cards: list[dict]) -> list[di
 
 QUESTION : {question}
 
-INDEX (numéro | titre | catégorie | date | tags) :
+INDEX (numéro | titre | catégorie | date | tags | secteurs) :
 {build_index(cards)}
 
 Sélectionne les fiches les plus pertinentes pour répondre à la question (au plus {MAX_SELECTED}).

@@ -25,7 +25,7 @@ graph LR
         MK -->|label ask, message '?'| I2[Issue]
     end
     subgraph "GitHub Actions"
-        I1 --> WF1[WF1 Ingest<br/>Claude Sonnet 5]
+        I1 --> WF1[WF1 Ingest<br/>Claude Sonnet 5.5]
         I2 --> WF4[WF4 Ask<br/>Claude]
         CRON[1er du mois] --> WF2[WF2 Monitor<br/>Claude + Semantic Scholar]
     end
@@ -53,7 +53,9 @@ src/
     notify.py          Telegram, commentaires d'issue, outputs Actions
     logger.py          logs JSON en CI
 config/
-  categories.json      taxonomie + seuils (confidence 0.6, reject 0.3)
+  categories.json      6 catégories + secteurs + seuils (confidence 0.6, reject 0.3)
+  tags.json            vocabulaire de tags contrôlé
+  projects.example.json  modèle de config/projects.local.json (non versionné)
   monitoring.json      thèmes de veille académique
 content/               fiches (sortie WF1)
 reports/               rapports mensuels (sortie WF2)

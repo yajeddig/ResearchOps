@@ -1,0 +1,55 @@
+name: P3 - Taxonomy migration (dry-run)
+
+# Manual only — it spends API credits (one Claude Sonnet call per card).
+# Re-classifies every card into the faceted taxonomy and pushes the review
+# CSV to a new branch; nothing under content/ is touched. The migration
+# itself is applied later from that reviewed CSV, with no LLM call:
+#   python scripts/migrate_taxonomy.py --apply
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max cards to classify (empty = all) — try 5 first"
+        required: false
+        default: ""
+
+concurrency:
+  group: taxonomy-migration
+  cancel-in-progress: false
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Classify cards
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+        run: python scripts/migrate_taxonomy.py ${LIMIT:+--limit "$LIMIT"}
+
+      - name: Push the review CSV to a branch
+        env:
+          BRANCH: taxonomy-migration-${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          git config user.name "ResearchOps Bot"
+          git config user.email "bot@researchops.local"
+          git checkout -b "$BRANCH"
+          git add data/taxonomy_migration.csv
+          git commit -m "P3: taxonomy migration review CSV"
+          git push origin "$BRANCH"
+          echo "Revue du CSV : https://github.com/$REPO/blob/$BRANCH/data/taxonomy_migration.csv" >> "$GITHUB_STEP_SUMMARY"
