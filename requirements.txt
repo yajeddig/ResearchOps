@@ -4,6 +4,7 @@ requests
 tenacity
 PyYAML
 pypdf
+jsonschema
 
 # Testing
 pytest>=7.0.0

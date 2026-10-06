@@ -3,6 +3,8 @@
     {
       "id": "n2o-emissions",
       "name": "N₂O Emissions in WWTP",
+      "status": "active",
+      "priority": 1,
       "keywords_academic": [
         "nitrous oxide wastewater treatment",
         "N2O emissions modeling WWTP"
@@ -13,16 +15,113 @@
       "paper_limit": 3
     },
     {
-      "id": "digital-twin",
-      "name": "Digital Twin WWTP",
+      "id": "process-digital-twin",
+      "name": "Digital Twin for Process Industries",
+      "status": "active",
+      "priority": 1,
       "keywords_academic": [
-        "digital twin wastewater treatment",
-        "real-time WWTP simulation"
+        "digital twin process industry",
+        "real-time process simulation calibration"
       ],
       "keywords_news": [
-        "digital twin water treatment innovation"
+        "digital twin process industry innovation"
       ],
       "paper_limit": 3
+    },
+    {
+      "id": "hybrid-sciml-bioprocess",
+      "name": "Hybrid SciML for Bioprocesses",
+      "status": "active",
+      "priority": 1,
+      "keywords_academic": [
+        "hybrid modeling bioprocess machine learning",
+        "physics-informed neural network bioreactor",
+        "universal differential equations bioprocess"
+      ],
+      "paper_limit": 3
+    },
+    {
+      "id": "ts-foundation-models-anomaly",
+      "name": "Time Series Foundation Models for Anomaly Detection",
+      "status": "active",
+      "priority": 1,
+      "min_year": 2023,
+      "keywords_academic": [
+        "time series foundation model anomaly detection",
+        "zero-shot forecasting industrial sensors"
+      ],
+      "paper_limit": 3
+    },
+    {
+      "id": "cooling-water-fdd",
+      "name": "Cooling Towers & Chillers: Fault Detection and Diagnosis",
+      "status": "active",
+      "priority": 1,
+      "keywords_academic": [
+        "cooling tower fault detection diagnosis",
+        "chiller fouling corrosion monitoring",
+        "legionella risk cooling water monitoring"
+      ],
+      "exclude_keywords": [
+        "data center cooling"
+      ],
+      "paper_limit": 3
+    },
+    {
+      "id": "latent-ode-multifidelity",
+      "name": "Latent ODE & Multi-Fidelity Identification",
+      "status": "active",
+      "priority": 2,
+      "keywords_academic": [
+        "latent ODE system identification",
+        "multi-fidelity model calibration dynamical systems"
+      ],
+      "paper_limit": 2
+    },
+    {
+      "id": "biofilm-biofilter-modeling",
+      "name": "Biofilm & Biofilter Modeling",
+      "status": "active",
+      "priority": 2,
+      "keywords_academic": [
+        "biofilm reactor modeling",
+        "biofilter wastewater treatment simulation"
+      ],
+      "paper_limit": 2
+    },
+    {
+      "id": "adm1-thermophilic-ad",
+      "name": "ADM1 & Thermophilic Anaerobic Digestion",
+      "status": "active",
+      "priority": 2,
+      "keywords_academic": [
+        "ADM1 anaerobic digestion model",
+        "thermophilic anaerobic digestion kinetics"
+      ],
+      "paper_limit": 2
+    },
+    {
+      "id": "soft-sensors-wwtp",
+      "name": "Soft Sensors for WWTP",
+      "status": "active",
+      "priority": 2,
+      "keywords_academic": [
+        "soft sensor wastewater treatment plant",
+        "virtual sensor activated sludge process"
+      ],
+      "paper_limit": 2
+    },
+    {
+      "id": "tabular-foundation-models",
+      "name": "Tabular Foundation Models",
+      "status": "active",
+      "priority": 3,
+      "min_year": 2023,
+      "keywords_academic": [
+        "tabular foundation model",
+        "pretrained model tabular data industrial"
+      ],
+      "paper_limit": 2
     }
   ]
 }

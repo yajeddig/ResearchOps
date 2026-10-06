@@ -3,19 +3,23 @@ WF2 - Monthly strategic monitor.
 
 Inputs
   A. Internal: knowledge cards captured last month (content/**).
-  B. External: new papers from Semantic Scholar for the topics in
-     config/monitoring.json (free API, optional key). Google Scholar via SerpAPI
-     and Perplexity news were removed: paid, low recall, uncitable.
+  B. External: papers from Semantic Scholar for the active topics in
+     config/monitoring.json (free API, optional key) — keyword search, or
+     the Recommendations API for a topic with seed_paper_ids. Google
+     Scholar via SerpAPI and Perplexity news were removed: paid, low
+     recall, uncitable.
 
 Output
   reports/<year>/<generation-month>_Monitor.md, French, every claim cited as
   [I<n>] (internal) or [P<n>] (paper), with a bibliography built from the same
-  numbering so the model cannot cite something that was not provided.
+  numbering so the model cannot cite something that was not provided. A
+  "Santé du pipeline" section is appended after Claude's narrative, computed
+  in Python from data/ingest_log.jsonl so its numbers can't be hallucinated.
 """
-import calendar
 import json
 import os
 import time
+from collections import Counter
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -23,18 +27,20 @@ import requests
 from anthropic import Anthropic
 
 from utils import frontmatter
-from utils.dedup import compute_hash, load_history, save_history
+from utils.ingest_log import load_entries
 from utils.logger import get_logger
+from utils.monitor_seen import load_seen, mark_seen, save_seen
+from utils.monitoring_config import load_topics
 from utils.notify import telegram_notify
 
 log = get_logger("WF2")
 
 CONFIG_PATH = Path(__file__).parent.parent / "config"
-monitoring_config = json.load(open(CONFIG_PATH / "monitoring.json", encoding="utf-8"))
 categories_config = json.load(open(CONFIG_PATH / "categories.json", encoding="utf-8"))
 
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-opus-5")
-S2_API = "https://api.semanticscholar.org/graph/v1/paper/search"
+S2_SEARCH_API = "https://api.semanticscholar.org/graph/v1/paper/search"
+S2_RECOMMEND_API = "https://api.semanticscholar.org/recommendations/v1/papers"
 S2_FIELDS = "title,authors,year,publicationDate,url,abstract,citationCount,externalIds,venue"
 
 MONTHS_FR = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
@@ -90,13 +96,59 @@ def _card_date(card: dict) -> date | None:
 
 
 # ---------------------------------------------------------------- Section B
-def search_semantic_scholar(topic: dict, period_start: date, period_end: date, history: dict) -> list[dict]:
-    """New papers for a topic, published in the period, not seen before."""
-    headers = {}
+def _s2_headers() -> dict:
     api_key = os.getenv("SEMANTIC_SCHOLAR_API_KEY")
-    if api_key:
-        headers["x-api-key"] = api_key
+    return {"x-api-key": api_key} if api_key else {}
 
+
+def _request_with_backoff(method: str, url: str, **kwargs) -> requests.Response | None:
+    """A couple of retries on 429, matching S2's ~1 req/s unauthenticated limit."""
+    delay = 2.0
+    for attempt in range(3):
+        try:
+            r = requests.request(method, url, timeout=30, **kwargs)
+        except requests.RequestException as exc:
+            log.warning(f"Semantic Scholar request failed: {exc}")
+            return None
+        if r.status_code == 429 and attempt < 2:
+            log.warning(f"Semantic Scholar rate limit hit, waiting {delay:.0f}s")
+            time.sleep(delay)
+            delay *= 2
+            continue
+        return r
+    return None
+
+
+def _normalize_paper(raw: dict, topic_name: str) -> dict | None:
+    pid = raw.get("paperId")
+    link = raw.get("url") or (
+        f"https://doi.org/{raw['externalIds']['DOI']}" if raw.get("externalIds", {}).get("DOI") else ""
+    )
+    if not pid or not link:
+        return None
+    return {
+        "paperId": pid,
+        "title": raw.get("title", ""),
+        "authors": ", ".join(a.get("name", "") for a in (raw.get("authors") or [])[:4]),
+        "year": raw.get("year"),
+        "date": raw.get("publicationDate") or "",
+        "venue": raw.get("venue") or "",
+        "link": link,
+        "abstract": (raw.get("abstract") or "")[:1200],
+        "citations": raw.get("citationCount", 0) or 0,
+        "topic": topic_name,
+    }
+
+
+def _passes_filters(paper: dict, topic: dict) -> bool:
+    if topic.get("min_year") and (paper["year"] or 0) < topic["min_year"]:
+        return False
+    haystack = f"{paper['title']} {paper['abstract']}".lower()
+    return not any(excluded.lower() in haystack for excluded in topic.get("exclude_keywords", []))
+
+
+def search_by_keywords(topic: dict, period_start: date, period_end: date) -> list[dict]:
+    """Papers matching the topic's keywords, published in the period."""
     seen_ids: set[str] = set()
     papers: list[dict] = []
     for query in topic.get("keywords_academic", []):
@@ -106,37 +158,49 @@ def search_semantic_scholar(topic: dict, period_start: date, period_end: date, h
             "fields": S2_FIELDS,
             "limit": 10,
         }
-        try:
-            r = requests.get(S2_API, params=params, headers=headers, timeout=30)
-            if r.status_code == 429:
-                log.warning("Semantic Scholar rate limit hit, waiting 5s")
-                time.sleep(5)
-                r = requests.get(S2_API, params=params, headers=headers, timeout=30)
-            r.raise_for_status()
-            data = r.json().get("data", []) or []
-        except Exception as exc:
-            log.warning(f"Semantic Scholar failed for '{query}': {exc}")
-            data = []
-        for p in data:
-            pid = p.get("paperId")
-            link = p.get("url") or (f"https://doi.org/{p['externalIds']['DOI']}" if p.get("externalIds", {}).get("DOI") else "")
-            if not pid or pid in seen_ids or not link:
+        r = _request_with_backoff("GET", S2_SEARCH_API, params=params, headers=_s2_headers())
+        data = (r.json().get("data") or []) if r is not None and r.status_code == 200 else []
+        for raw in data:
+            paper = _normalize_paper(raw, topic["name"])
+            if not paper or paper["paperId"] in seen_ids:
                 continue
-            seen_ids.add(pid)
-            if compute_hash(link) in history:
-                continue
-            papers.append({
-                "title": p.get("title", ""),
-                "authors": ", ".join(a.get("name", "") for a in (p.get("authors") or [])[:4]),
-                "year": p.get("year"),
-                "date": p.get("publicationDate") or "",
-                "venue": p.get("venue") or "",
-                "link": link,
-                "abstract": (p.get("abstract") or "")[:1200],
-                "citations": p.get("citationCount", 0) or 0,
-            })
+            seen_ids.add(paper["paperId"])
+            papers.append(paper)
         time.sleep(1.1)  # unauthenticated S2 allows ~1 request/second
+    return papers
 
+
+def get_recommendations(topic: dict) -> list[dict]:
+    """
+    Papers similar to the topic's seed_paper_ids (no period filter: the
+    Recommendations API returns the most similar papers overall, not "new
+    this month" — monitor_seen.json is what keeps it from repeating).
+    """
+    body = {"positivePaperIds": topic["seed_paper_ids"], "negativePaperIds": topic.get("negative_paper_ids", [])}
+    r = _request_with_backoff(
+        "POST", S2_RECOMMEND_API, params={"fields": S2_FIELDS, "limit": 20}, headers=_s2_headers(), json=body,
+    )
+    data = (r.json().get("recommendedPapers") or []) if r is not None and r.status_code == 200 else []
+    seen_ids: set[str] = set()
+    papers: list[dict] = []
+    for raw in data:
+        paper = _normalize_paper(raw, topic["name"])
+        if not paper or paper["paperId"] in seen_ids:
+            continue
+        seen_ids.add(paper["paperId"])
+        papers.append(paper)
+    return papers
+
+
+def search_semantic_scholar(topic: dict, period_start: date, period_end: date, seen: dict) -> list[dict]:
+    """New papers for a topic: Recommendations API if seeded, else keyword search."""
+    try:
+        papers = get_recommendations(topic) if topic.get("seed_paper_ids") else search_by_keywords(topic, period_start, period_end)
+    except Exception as exc:
+        log.warning(f"Semantic Scholar failed for topic '{topic['name']}': {exc}")
+        return []
+
+    papers = [p for p in papers if _passes_filters(p, topic) and p["paperId"] not in seen]
     papers.sort(key=lambda p: (p["citations"], p["date"]), reverse=True)
     return papers[: topic.get("paper_limit", 3)]
 
@@ -259,21 +323,60 @@ def synthesize_report(prompt: str) -> str:
     return text
 
 
+# ---------------------------------------------------------------- Health
+def render_health_section(entries: list[dict], internal_by_category: dict, papers: list[dict]) -> str:
+    """
+    Pipeline health for the period, computed in Python from
+    data/ingest_log.jsonl — never asked of the model, so these numbers
+    can't drift from what actually happened.
+    """
+    by_status = Counter(e["status"] for e in entries)
+    reject_reasons = Counter(e.get("reason", "unknown") for e in entries if e["status"] in ("rejected", "rejected_pii", "failed"))
+    saved = [e for e in entries if e["status"] == "saved"]
+    inbox_count = sum(1 for e in saved if e.get("category") == "_Inbox")
+    by_category = Counter(category for category, docs in internal_by_category.items() for _ in docs)
+    by_topic = Counter(p["topic"] for p in papers)
+
+    lines = ["## 🩺 Santé du pipeline", ""]
+    lines.append(
+        f"- **Ingestions traitées** : {len(entries)} "
+        f"(saved : {by_status.get('saved', 0)}, rejected : {by_status.get('rejected', 0)}, "
+        f"rejected_pii : {by_status.get('rejected_pii', 0)}, duplicate : {by_status.get('duplicate', 0)}, "
+        f"failed : {by_status.get('failed', 0)})"
+    )
+    if reject_reasons:
+        lines.append("- **Rejets par raison** : " + ", ".join(f"{r} ({n})" for r, n in reject_reasons.most_common()))
+    if saved:
+        lines.append(f"- **Taux de passage en _Inbox** : {inbox_count / len(saved) * 100:.0f}% ({inbox_count}/{len(saved)})")
+    else:
+        lines.append("- **Taux de passage en _Inbox** : n/a (aucune fiche sauvegardée)")
+    if by_category:
+        lines.append("- **Répartition par catégorie** : " + ", ".join(f"{c} ({n})" for c, n in by_category.most_common()))
+    if by_topic:
+        lines.append("- **Papiers par sujet de veille** : " + ", ".join(f"{t} ({n})" for t, n in by_topic.most_common()))
+    return "\n".join(lines) + "\n"
+
+
 # ---------------------------------------------------------------- Main
 def main() -> None:
     period_start, period_end = previous_month()
     log.info(f"Generating report for {month_label_fr(period_start)}")
 
+    try:
+        topics = load_topics(CONFIG_PATH / "monitoring.json")
+    except ValueError as exc:
+        log.error(str(exc))
+        telegram_notify(f"Veille {month_label_fr(period_start)} : config/monitoring.json invalide — {exc}", "ERROR")
+        raise
+
     internal_by_category = get_monthly_internal_content(period_start, period_end)
     total_docs = sum(len(v) for v in internal_by_category.values())
     log.info(f"{total_docs} internal documents in {len(internal_by_category)} categories")
 
-    history = load_history()
+    seen = load_seen()
     papers: list[dict] = []
-    for topic in monitoring_config["topics"]:
-        found = search_semantic_scholar(topic, period_start, period_end, history)
-        for p in found:
-            p["topic"] = topic["name"]
+    for topic in topics:
+        found = search_semantic_scholar(topic, period_start, period_end, seen)
         log.info(f"Topic '{topic['name']}': {len(found)} new papers")
         papers.extend(found)
 
@@ -285,20 +388,22 @@ def main() -> None:
     context, refs = build_structured_context(internal_by_category, papers, period_start)
     report = synthesize_report(build_prompt(context, refs, period_start, total_docs))
 
+    entries = load_entries(period_start, period_end)
+    report += "\n---\n\n" + render_health_section(entries, internal_by_category, papers)
+
     gen_month = date.today().strftime("%Y-%m")
     output_path = Path("reports") / str(date.today().year) / f"{gen_month}_Monitor.md"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(report, encoding="utf-8")
 
-    # Only papers actually reported are marked as seen (previous code burned
-    # every search hit, reported or not).
-    now = datetime.now().isoformat()
+    # Only papers actually reported are marked as seen (burning every search
+    # hit regardless of whether it made the cut would starve future months).
     for p in papers:
-        history[compute_hash(p["link"])] = {"url": p["link"], "type": "paper", "added": now}
-    save_history(history)
+        mark_seen(seen, p["paperId"], date.today())
+    save_seen(seen)
 
     from utils.git_ops import safe_commit
-    safe_commit(files=[str(output_path), "data/history.json"], message=f"WF2: Monthly monitor {gen_month}")
+    safe_commit(files=[str(output_path), "data/monitor_seen.json"], message=f"WF2: Monthly monitor {gen_month}")
 
     repo = os.getenv("GITHUB_REPOSITORY", "")
     link = f"https://github.com/{repo}/blob/main/{output_path}" if repo else str(output_path)

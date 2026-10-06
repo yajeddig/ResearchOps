@@ -20,7 +20,8 @@ from utils.logger import get_logger
 
 log = get_logger("GIT")
 
-MERGEABLE_JSON_FILES = {"data/history.json"}
+MERGEABLE_JSON_FILES = {"data/history.json", "data/monitor_seen.json"}
+MERGEABLE_JSONL_FILES = {"data/ingest_log.jsonl"}
 
 
 def run_cmd(cmd: list[str], check: bool = True, env: dict | None = None) -> subprocess.CompletedProcess:
@@ -57,6 +58,22 @@ def _merge_json_stages(path: str) -> None:
     log.info(f"Auto-merged {path} ({len(merged)} entries)")
 
 
+def _merge_jsonl_stages(path: str) -> None:
+    """
+    Append-only log: each line is an independent record (not a key into the
+    same dict), so both sides' lines are kept, not unioned by key.
+    """
+    upstream = run_cmd(["git", "show", f":2:{path}"], check=False).stdout
+    ours = run_cmd(["git", "show", f":3:{path}"], check=False).stdout
+    upstream_lines = [line for line in upstream.splitlines() if line.strip()]
+    our_lines = [line for line in ours.splitlines() if line.strip()]
+    merged_lines = upstream_lines + [line for line in our_lines if line not in upstream_lines]
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(merged_lines) + ("\n" if merged_lines else ""))
+    run_cmd(["git", "add", path])
+    log.info(f"Auto-merged {path} ({len(merged_lines)} lines)")
+
+
 def _resolve_rebase_conflicts() -> bool:
     """Try to finish an interrupted rebase. Returns True on success."""
     conflicts = _conflicted_files()
@@ -65,6 +82,8 @@ def _resolve_rebase_conflicts() -> bool:
     for path in conflicts:
         if path in MERGEABLE_JSON_FILES:
             _merge_json_stages(path)
+        elif path in MERGEABLE_JSONL_FILES:
+            _merge_jsonl_stages(path)
         else:
             log.error(f"Unmergeable conflict in {path}")
             return False

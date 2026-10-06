@@ -192,3 +192,40 @@ class TestAnalyzeContentMultimodal:
 
         assert result is None
         assert capture == []
+
+
+class TestFinish:
+    def test_logs_outcome_and_commits_the_log_file(self, monkeypatch):
+        logged = []
+        committed = []
+        monkeypatch.setattr(wf1_ingest, "set_output", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "telegram_notify", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "log_outcome", lambda status, **kw: logged.append({"status": status, **kw}))
+        monkeypatch.setattr(wf1_ingest, "safe_commit", lambda files, message: committed.append((files, message)))
+
+        wf1_ingest.finish("rejected", "Rejeté (too_short) : x", "WARNING", reason="too_short")
+
+        assert logged == [{"status": "rejected", "reason": "too_short", "category": None}]
+        assert committed == [(["data/ingest_log.jsonl"], "WF1 log: rejected")]
+
+    def test_log_push_failure_does_not_raise(self, monkeypatch):
+        monkeypatch.setattr(wf1_ingest, "set_output", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "telegram_notify", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "log_outcome", lambda *a, **kw: None)
+
+        def push_fails(files, message):
+            raise RuntimeError("Git push failed after 3 attempts")
+        monkeypatch.setattr(wf1_ingest, "safe_commit", push_fails)
+
+        wf1_ingest.finish("rejected", "Rejeté", "WARNING", reason="too_short")  # must not raise
+
+    def test_saved_outcome_carries_category(self, monkeypatch):
+        logged = []
+        monkeypatch.setattr(wf1_ingest, "set_output", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "telegram_notify", lambda *a: None)
+        monkeypatch.setattr(wf1_ingest, "log_outcome", lambda status, **kw: logged.append({"status": status, **kw}))
+        monkeypatch.setattr(wf1_ingest, "safe_commit", lambda files, message: None)
+
+        wf1_ingest.finish("saved", "Fiche créée", "SUCCESS", category="Process_Engineering")
+
+        assert logged == [{"status": "saved", "reason": None, "category": "Process_Engineering"}]
