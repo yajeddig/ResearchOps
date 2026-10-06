@@ -616,5 +616,18 @@
     "type": "web_page",
     "file": "content/Data_Science/20261002_61bc8e59_pumptwin__a_live_digital_twin_for_predictive_maint.md",
     "added": "2026-10-02T19:05:06.106755"
+  },
+  "360a579b": {
+    "url": "https://github.com/PINNeAPPle-Labs/PINNeAPPle",
+    "type": "web_page",
+    "file": "content/Data_Science/20261006_5ea03637_pinneapple__open_source_physics_informed_neural_ne.md",
+    "added": "2026-10-06T06:15:05.291203"
+  },
+  "5ea03637a7ff": {
+    "content": true,
+    "url": "https://github.com/PINNeAPPle-Labs/PINNeAPPle",
+    "type": "web_page",
+    "file": "content/Data_Science/20261006_5ea03637_pinneapple__open_source_physics_informed_neural_ne.md",
+    "added": "2026-10-06T06:15:05.291203"
   }
 }
