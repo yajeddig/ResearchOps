@@ -124,3 +124,19 @@ class TestRenderHealthSection:
         section = wf2_monitor.render_health_section([], {}, papers)
         assert "n2o-emissions (2)" in section
         assert "process-digital-twin (1)" in section
+
+
+class TestHealthTagCandidates:
+    def test_tag_candidates_aggregated(self):
+        entries = [
+            {"status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["latent-sde", "koopman"]},
+            {"status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["latent-sde"]},
+            {"status": "rejected", "reason": "too_short"},
+        ]
+        section = wf2_monitor.render_health_section(entries, {}, [])
+        assert "latent-sde (2)" in section
+        assert "koopman (1)" in section
+
+    def test_no_candidates_line_when_none(self):
+        section = wf2_monitor.render_health_section([{"status": "saved", "category": "Hybrid_SciML"}], {}, [])
+        assert "Tags candidats" not in section

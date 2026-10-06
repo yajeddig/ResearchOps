@@ -12,8 +12,19 @@ from pathlib import Path
 LOG_FILE = Path("data/ingest_log.jsonl")
 
 
-def log_outcome(status: str, reason: str | None = None, category: str | None = None) -> None:
-    entry = {"timestamp": datetime.now().isoformat(), "status": status, "reason": reason, "category": category}
+def log_outcome(
+    status: str,
+    reason: str | None = None,
+    category: str | None = None,
+    new_tag_candidates: list[str] | None = None,
+) -> None:
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "status": status,
+        "reason": reason,
+        "category": category,
+        "new_tag_candidates": new_tag_candidates,
+    }
     entry = {k: v for k, v in entry.items() if v is not None}
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(LOG_FILE, "a", encoding="utf-8") as f:

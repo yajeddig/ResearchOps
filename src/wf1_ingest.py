@@ -33,6 +33,7 @@ from utils.ingest_log import log_outcome
 from utils.logger import get_logger
 from utils.notify import set_output, telegram_notify
 from utils.pii_guard import detect_pii
+from utils.taxonomy import Taxonomy
 
 log = get_logger("WF1")
 
@@ -44,16 +45,47 @@ ISSUE_NUMBER = os.getenv("ISSUE_NUMBER", "")
 
 # Sonnet, not Opus: WF1 runs on every capture (potentially several a day),
 # WF2/WF4 run monthly / on-demand and keep Opus for that lower volume.
-CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
-MAX_TOKENS = 8000
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5")
+# Streamed, so the cap can leave room for adaptive thinking on top of a long card.
+MAX_TOKENS = 64000
+EFFORT = "high"  # the model's default, pinned: card quality is the point of WF1
 
-CONFIG_PATH = Path(__file__).parent.parent / "config" / "categories.json"
-with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-    CATEGORIES_CONFIG = json.load(f)
+TAXONOMY = Taxonomy()
+SETTINGS = TAXONOMY.settings
 
-CATEGORIES = list(CATEGORIES_CONFIG["categories"].keys())
-SECTOR_TAGS = CATEGORIES_CONFIG["sector_tags"]
-SETTINGS = CATEGORIES_CONFIG["settings"]
+CONTENT_PROPERTIES = {
+    "title": {"type": "string", "description": "Precise technical title based on actual content"},
+    "content_body": {
+        "type": "string",
+        "description": (
+            "Detailed technical write-up in Markdown: full explanation of the concepts, methods and "
+            "architecture; code blocks with syntax highlighting (```python, ```sql, ...); mathematical "
+            "equations in LaTeX ($E=mc^2$ or $$\\int_0^1 f(x)dx$$); chemical formulas and reaction "
+            "equations; ASCII or mermaid diagrams for processes/architectures; tables for structured data; "
+            "step-by-step procedures where applicable. Preserve technical depth — do not over-summarize."
+        ),
+    },
+    "key_insights": {"type": "array", "items": {"type": "string"}},
+    "references": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "type": {"type": "string", "enum": ["source", "cited"]},
+                "citation": {"type": "string"},
+            },
+            "required": ["type", "citation"],
+            "additionalProperties": False,
+        },
+    },
+    "relevance": {"type": "string", "description": "Why this is useful (ROI, industrial application, learning opportunity)"},
+    "type": {"type": "string", "enum": ["Article", "Screenshot"]},
+    "source_type": {
+        "type": "string",
+        "enum": ["LinkedIn Post", "Article", "Paper", "Tutorial", "Infographic", "Chart", "Other"],
+    },
+    "reason": {"type": "string", "description": "One sentence justifying the category choice"},
+}
 
 _client = None
 
@@ -71,39 +103,20 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-zA-Z0-9]", "_", text.lower())
 
 
-def get_categories_list() -> str:
-    """Format categories with descriptions for the prompt (without _Inbox)."""
-    return "\n".join(
-        f"- {name}: {data['description']}"
-        for name, data in CATEGORIES_CONFIG["categories"].items()
-        if name != "_Inbox"
-    )
-
-
-def route_content(analysis: dict, config: dict) -> dict:
+def route_content(analysis: dict, settings: dict, categories: dict) -> dict:
     """
-    Apply the confidence fallback:
-    - confidence < threshold  -> _Inbox (manual triage)
-    - unknown category        -> _Inbox
+    Confidence fallback: below the threshold, or a category outside the
+    taxonomy, the card goes to _Inbox for manual triage. Tags are kept.
     """
-    threshold = config["settings"]["confidence_threshold"]
-    fallback = config["settings"]["fallback_category"]
-    valid_categories = list(config["categories"].keys())
-
-    category = analysis.get("category", fallback)
+    threshold = settings["confidence_threshold"]
+    fallback = settings["fallback_category"]
     confidence = analysis.get("confidence", 0.0)
-
     if confidence < threshold:
-        category = fallback
-        analysis["auto_tags"] = ["inbox:low-confidence"]
         analysis["fallback_reason"] = f"confidence {confidence:.2f} < {threshold}"
-    elif category not in valid_categories:
-        original_category = category
-        category = fallback
-        analysis["auto_tags"] = ["inbox:ambiguous"]
-        analysis["fallback_reason"] = f"unknown category: {original_category}"
-
-    analysis["category"] = category
+        analysis["category"] = fallback
+    elif analysis.get("category") not in categories:
+        analysis["fallback_reason"] = f"unknown category: {analysis.get('category')}"
+        analysis["category"] = fallback
     return analysis
 
 
@@ -145,66 +158,8 @@ def scrape_url(url: str) -> tuple[str | None, int | None]:
         return None, None
 
 
-def build_classify_tool() -> dict:
-    """Tool schema forcing Claude's classification into structured JSON."""
-    return {
-        "name": "classify_content",
-        "description": (
-            "Classify captured content for a process engineering / industrial data science "
-            "knowledge base and write a detailed, well-researched knowledge card from it."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "title": {"type": "string", "description": "Precise technical title based on actual content"},
-                "category": {"type": "string", "enum": [c for c in CATEGORIES if c != "_Inbox"]},
-                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-                "content_body": {
-                    "type": "string",
-                    "description": (
-                        "Detailed technical write-up in Markdown: full explanation of the concepts, "
-                        "methods and architecture; code blocks with syntax highlighting "
-                        "(```python, ```sql, ...); mathematical equations in LaTeX "
-                        "($E=mc^2$ or $$\\int_0^1 f(x)dx$$); chemical formulas and reaction "
-                        "equations; ASCII or mermaid diagrams for processes/architectures; tables "
-                        "for structured data; step-by-step procedures where applicable. Preserve "
-                        "technical depth — do not over-summarize."
-                    ),
-                },
-                "key_insights": {"type": "array", "items": {"type": "string"}},
-                "references": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "type": {"type": "string", "enum": ["source", "cited"]},
-                            "citation": {"type": "string"},
-                        },
-                        "required": ["type", "citation"],
-                    },
-                },
-                "relevance": {
-                    "type": "string",
-                    "description": "Why this is useful (ROI, industrial application, learning opportunity)",
-                },
-                "auto_tags": {"type": "array", "items": {"type": "string"}, "description": "3-6 free-form topical tags"},
-                "sector_tags": {"type": "array", "items": {"type": "string", "enum": SECTOR_TAGS}},
-                "type": {"type": "string", "enum": ["Article", "Screenshot"]},
-                "source_type": {
-                    "type": "string",
-                    "enum": ["LinkedIn Post", "Article", "Paper", "Tutorial", "Infographic", "Chart", "Other"],
-                },
-                "reason": {"type": "string", "description": "One sentence justifying the category choice"},
-            },
-            "required": ["title", "category", "confidence", "content_body", "relevance", "auto_tags", "reason"],
-        },
-    }
-
-
 def build_analysis_prompt(content: str, input_type: str) -> str:
-    """Build the analysis instructions for Claude."""
-    categories_list = get_categories_list()
-
+    """Per-capture instructions; the taxonomy itself lives in the system prompt."""
     extraction_instructions = ""
     if input_type == "image":
         extraction_instructions = """
@@ -218,24 +173,16 @@ IMPORTANT - IMAGE CONTENT EXTRACTION:
 """
 
     return f"""
-Analyze and classify this content for a process engineering / industrial data science knowledge base.
+Analyze and classify this content, then write a detailed knowledge card from it.
 
 INPUT TYPE: {input_type}
 {extraction_instructions}
-
-CATEGORIES (pick exactly one):
-{categories_list}
-
-SECTOR TAGS (pick 0-3 if applicable, only from the enum).
-
 If the content is an error page, a login wall, a bot check or otherwise carries no
 technical content, set confidence to 0.1 and an explicit title such as
 "Blocked page: <reason>". Do not invent content.
 
 If content doesn't fit any category well, still pick your best category — low
 confidence routes it to _Inbox automatically, you don't need to do that yourself.
-
-Call classify_content with your analysis.
 
 CONTENT:
 {content[:30000]}
@@ -273,24 +220,32 @@ def analyze_content(content_or_path, input_type: str = "text") -> dict | None:
         else:
             content_blocks = build_analysis_prompt(content_or_path, input_type)
 
-        response = client.beta.messages.create(
+        with client.beta.messages.stream(
             model=CLAUDE_MODEL,
             max_tokens=MAX_TOKENS,
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
-            tools=[build_classify_tool()],
-            tool_choice={"type": "tool", "name": "classify_content"},
+            system=TAXONOMY.system_prompt(),
+            output_config={
+                "effort": EFFORT,
+                "format": {"type": "json_schema", "schema": TAXONOMY.output_schema(CONTENT_PROPERTIES)},
+            },
             messages=[{"role": "user", "content": content_blocks}],
-        )
+        ) as stream:
+            response = stream.get_final_message()
         if response.stop_reason == "refusal":
             log.warning(f"Claude refused the request: {getattr(response, 'stop_details', None)}")
             return None
-        tool_use = next((b for b in response.content if b.type == "tool_use"), None)
-        if tool_use is None:
-            log.error("Claude response carried no tool_use block")
+        if response.stop_reason == "max_tokens":
+            log.error(f"Claude output truncated at max_tokens={MAX_TOKENS}")
+            return None
+        text = next((b.text for b in response.content if b.type == "text"), None)
+        if text is None:
+            log.error("Claude response carried no text block")
             return None
         log.info(f"Claude usage: in={response.usage.input_tokens} out={response.usage.output_tokens} model={response.model}")
-        return route_content(tool_use.input, CATEGORIES_CONFIG)
+        result = TAXONOMY.validate_facets(json.loads(text))
+        return route_content(result, SETTINGS, TAXONOMY.categories)
     except Exception as exc:
         log.exception(f"Claude error: {exc}")
         return None
@@ -298,18 +253,20 @@ def analyze_content(content_or_path, input_type: str = "text") -> dict | None:
 
 def build_card(analysis: dict, source_ref: str, hash_id: str) -> str:
     """Render the Markdown knowledge card (YAML frontmatter + sections)."""
-    all_tags = list(analysis.get("auto_tags", [])) + list(analysis.get("sector_tags", []))
     meta = {
         "title": str(analysis["title"]),
         "date": datetime.now().strftime("%Y-%m-%d"),
         "category": analysis["category"],
         "confidence": round(float(analysis.get("confidence", 0.0) or 0.0), 2),
-        "tags": all_tags,
+        "tags": list(analysis.get("tags", [])),
+        "sectors": list(analysis.get("sectors", [])),
         "source": source_ref,
         "type": analysis.get("type", "Article"),
         "source_type": analysis.get("source_type", "Unknown"),
         "hash": hash_id,
     }
+    if analysis.get("projects"):
+        meta["projects"] = list(analysis["projects"])
 
     fallback_note = ""
     if analysis["category"] == "_Inbox":
@@ -341,13 +298,20 @@ def build_card(analysis: dict, source_ref: str, hash_id: str) -> str:
     return frontmatter.dump(meta, body)
 
 
-def finish(status: str, message: str, level: str = "INFO", reason: str | None = None, category: str | None = None) -> None:
+def finish(
+    status: str,
+    message: str,
+    level: str = "INFO",
+    reason: str | None = None,
+    category: str | None = None,
+    new_tag_candidates: list[str] | None = None,
+) -> None:
     """Single exit point: workflow outputs + Telegram + ingest log (committed on every outcome)."""
     set_output("status", status)
     set_output("message", message)
     telegram_notify(message, level)
     try:
-        log_outcome(status, reason=reason, category=category)
+        log_outcome(status, reason=reason, category=category, new_tag_candidates=new_tag_candidates)
         safe_commit(files=["data/ingest_log.jsonl"], message=f"WF1 log: {status}")
     except Exception as exc:  # telemetry must never fail the ingestion itself
         log.warning(f"Ingest log not recorded: {exc}")
@@ -491,6 +455,7 @@ def main() -> None:
         f"Fiche créée : {analysis['title']}\nCatégorie : {analysis['category']}{inbox_note}\nConfiance : {confidence:.0%}\nFichier : {filepath}",
         "SUCCESS" if analysis["category"] != "_Inbox" else "WARNING",
         category=analysis["category"],
+        new_tag_candidates=analysis.get("new_tag_candidates") or None,
     )
 
     if input_type in ["image", "document"] and isinstance(payload, str) and os.path.exists(payload):

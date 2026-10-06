@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "id": "projet-a",
+      "description": "Description libre, jamais publiée (ce fichier reste local)"
+    },
+    {
+      "id": "projet-b",
+      "description": "Seuls les id apparaissent sur les fiches : choisis-les génériques"
+    }
+  ]
+}
