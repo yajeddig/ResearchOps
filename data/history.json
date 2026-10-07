@@ -642,5 +642,18 @@
     "type": "web_page",
     "file": "content/Digital_Twin_Ops/20261006_72662b93_processguard_ai_cdu__advisory_digital_twin_prototy.md",
     "added": "2026-10-06T16:27:58.753471"
+  },
+  "685eb7f0": {
+    "url": "https://chetl.org/",
+    "type": "web_page",
+    "file": "content/_Inbox/20261007_b25b9af1_chetl__a_modular_chemical_engineering_teaching_pla.md",
+    "added": "2026-10-07T10:25:02.399713"
+  },
+  "b25b9af1ed54": {
+    "content": true,
+    "url": "https://chetl.org/",
+    "type": "web_page",
+    "file": "content/_Inbox/20261007_b25b9af1_chetl__a_modular_chemical_engineering_teaching_pla.md",
+    "added": "2026-10-07T10:25:02.399713"
   }
 }
