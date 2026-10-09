@@ -655,5 +655,18 @@
     "type": "web_page",
     "file": "content/_Inbox/20261007_b25b9af1_chetl__a_modular_chemical_engineering_teaching_pla.md",
     "added": "2026-10-07T10:25:02.399713"
+  },
+  "c4e9e480": {
+    "url": "https://github.com/yang-ai-lab/OpenSLA",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261009_1133f6c7_opensla__open_sensor_language_action_models__multi.md",
+    "added": "2026-10-09T11:32:12.522199"
+  },
+  "1133f6c74fd0": {
+    "content": true,
+    "url": "https://github.com/yang-ai-lab/OpenSLA",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261009_1133f6c7_opensla__open_sensor_language_action_models__multi.md",
+    "added": "2026-10-09T11:32:12.522199"
   }
 }
