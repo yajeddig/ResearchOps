@@ -668,5 +668,18 @@
     "type": "web_page",
     "file": "content/ML_Industrial_Data/20261009_1133f6c7_opensla__open_sensor_language_action_models__multi.md",
     "added": "2026-10-09T11:32:12.522199"
+  },
+  "18a5e0d4": {
+    "url": "https://yang-ai-lab.github.io/OpenSLA/",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261009_b00ca7aa_opensla__sensor_language_action_models_unifying_se.md",
+    "added": "2026-10-09T11:33:05.311391"
+  },
+  "b00ca7aa1635": {
+    "content": true,
+    "url": "https://yang-ai-lab.github.io/OpenSLA/",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261009_b00ca7aa_opensla__sensor_language_action_models_unifying_se.md",
+    "added": "2026-10-09T11:33:05.311391"
   }
 }
