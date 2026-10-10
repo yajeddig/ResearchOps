@@ -5,3 +5,4 @@
 {"timestamp": "2026-10-09T11:33:07.487408", "status": "saved", "category": "ML_Industrial_Data", "new_tag_candidates": ["sensor-language-model", "multimodal-timeseries", "healthcare-sensing"]}
 {"timestamp": "2026-10-10T17:49:15.968707", "status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["neural-operator", "reduced-order-model", "natural-gradient"]}
 {"timestamp": "2026-10-10T17:50:24.830608", "status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["neural-galerkin", "natural-gradient", "deep-ritz"]}
+{"timestamp": "2026-10-10T20:03:36.963055", "status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["neural-operator", "conformal-prediction", "surrogate-model"]}
