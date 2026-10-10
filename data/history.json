@@ -694,5 +694,18 @@
     "type": "web_page",
     "file": "content/Hybrid_SciML/20261010_8f10cdaf_scimba__open_source_sciml_library_for_pdes_combini.md",
     "added": "2026-10-10T17:49:13.813281"
+  },
+  "e6cd6494": {
+    "url": "https://www.scimba.org/docs/index.html",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261010_4512dc2f_scimba_1_4_0__python_sciml_library_for_parametric_.md",
+    "added": "2026-10-10T17:50:23.111409"
+  },
+  "4512dc2f0de3": {
+    "content": true,
+    "url": "https://www.scimba.org/docs/index.html",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261010_4512dc2f_scimba_1_4_0__python_sciml_library_for_parametric_.md",
+    "added": "2026-10-10T17:50:23.111409"
   }
 }
