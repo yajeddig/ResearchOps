@@ -681,5 +681,18 @@
     "type": "web_page",
     "file": "content/ML_Industrial_Data/20261009_b00ca7aa_opensla__sensor_language_action_models_unifying_se.md",
     "added": "2026-10-09T11:33:05.311391"
+  },
+  "290ed13a": {
+    "url": "https://www.scimba.org/",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261010_8f10cdaf_scimba__open_source_sciml_library_for_pdes_combini.md",
+    "added": "2026-10-10T17:49:13.813281"
+  },
+  "8f10cdafb03d": {
+    "content": true,
+    "url": "https://www.scimba.org/",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261010_8f10cdaf_scimba__open_source_sciml_library_for_pdes_combini.md",
+    "added": "2026-10-10T17:49:13.813281"
   }
 }
