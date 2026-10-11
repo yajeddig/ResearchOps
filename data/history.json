@@ -721,5 +721,18 @@
     "type": "image",
     "file": "content/Hybrid_SciML/20261010_13a44bab_adaptive_ensemble_of_physics_ml_surrogates__fno__g.md",
     "added": "2026-10-10T20:03:37.323932"
+  },
+  "d0922147": {
+    "url": "https://therqon.ca/",
+    "type": "web_page",
+    "file": "content/Process_Modeling/20261011_6e546459_ai_process_simulator__therqon_1_6_1___llm_planned_.md",
+    "added": "2026-10-11T19:17:04.435449"
+  },
+  "6e5464592647": {
+    "content": true,
+    "url": "https://therqon.ca/",
+    "type": "web_page",
+    "file": "content/Process_Modeling/20261011_6e546459_ai_process_simulator__therqon_1_6_1___llm_planned_.md",
+    "added": "2026-10-11T19:17:04.435449"
   }
 }
