@@ -734,5 +734,18 @@
     "type": "web_page",
     "file": "content/Process_Modeling/20261011_6e546459_ai_process_simulator__therqon_1_6_1___llm_planned_.md",
     "added": "2026-10-11T19:17:04.435449"
+  },
+  "6bdcc866": {
+    "url": "https://mistral.ai/news/timestral/",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261016_c389ee80_timestral__mistral_s_time_series_foundation_model_.md",
+    "added": "2026-10-16T08:07:59.411738"
+  },
+  "c389ee80a753": {
+    "content": true,
+    "url": "https://mistral.ai/news/timestral/",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261016_c389ee80_timestral__mistral_s_time_series_foundation_model_.md",
+    "added": "2026-10-16T08:07:59.411738"
   }
 }
