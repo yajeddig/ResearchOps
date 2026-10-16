@@ -747,5 +747,18 @@
     "type": "web_page",
     "file": "content/ML_Industrial_Data/20261016_c389ee80_timestral__mistral_s_time_series_foundation_model_.md",
     "added": "2026-10-16T08:07:59.411738"
+  },
+  "382e8f95": {
+    "url": "https://solaris-jhu.github.io/SD-DPC-website/",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261016_75b7b843_sd_dpc__sparse_dictionary_differentiable_predictiv.md",
+    "added": "2026-10-16T18:57:17.832338"
+  },
+  "75b7b8435940": {
+    "content": true,
+    "url": "https://solaris-jhu.github.io/SD-DPC-website/",
+    "type": "web_page",
+    "file": "content/Hybrid_SciML/20261016_75b7b843_sd_dpc__sparse_dictionary_differentiable_predictiv.md",
+    "added": "2026-10-16T18:57:17.832338"
   }
 }
