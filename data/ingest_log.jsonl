@@ -10,3 +10,4 @@
 {"timestamp": "2026-10-11T19:17:06.258843", "status": "saved", "category": "Process_Modeling", "new_tag_candidates": ["llm-copilot-simulation", "process-simulator-product"]}
 {"timestamp": "2026-10-14T05:46:36.421061", "status": "rejected", "reason": "confidence 0.10 <= 0.3"}
 {"timestamp": "2026-10-16T08:08:01.064748", "status": "saved", "category": "ML_Industrial_Data", "new_tag_candidates": ["time-series-foundation-model", "probabilistic-forecasting", "covariate-aware-attention"]}
+{"timestamp": "2026-10-16T18:57:19.714235", "status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["differentiable-predictive-control", "sparse-policy-learning", "symbolic-control"]}
