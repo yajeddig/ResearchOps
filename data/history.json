@@ -760,5 +760,18 @@
     "type": "web_page",
     "file": "content/Hybrid_SciML/20261016_75b7b843_sd_dpc__sparse_dictionary_differentiable_predictiv.md",
     "added": "2026-10-16T18:57:17.832338"
+  },
+  "65d3c880": {
+    "url": "https://arxiv.org/abs/2610.22358",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261017_52c22cc0_pathfm__fast_generative_forecasting_of_multivariat.md",
+    "added": "2026-10-17T10:43:31.901283"
+  },
+  "52c22cc0e2d7": {
+    "content": true,
+    "url": "https://arxiv.org/abs/2610.22358",
+    "type": "web_page",
+    "file": "content/ML_Industrial_Data/20261017_52c22cc0_pathfm__fast_generative_forecasting_of_multivariat.md",
+    "added": "2026-10-17T10:43:31.901283"
   }
 }
