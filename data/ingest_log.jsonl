@@ -12,3 +12,4 @@
 {"timestamp": "2026-10-16T08:08:01.064748", "status": "saved", "category": "ML_Industrial_Data", "new_tag_candidates": ["time-series-foundation-model", "probabilistic-forecasting", "covariate-aware-attention"]}
 {"timestamp": "2026-10-16T18:57:19.714235", "status": "saved", "category": "Hybrid_SciML", "new_tag_candidates": ["differentiable-predictive-control", "sparse-policy-learning", "symbolic-control"]}
 {"timestamp": "2026-10-17T10:43:33.364401", "status": "saved", "category": "ML_Industrial_Data", "new_tag_candidates": ["flow-matching", "generative-forecasting", "probabilistic-scoring-rules"]}
+{"timestamp": "2026-10-17T12:57:10.167960", "status": "rejected", "reason": "blocked_or_missing_page (just a moment)"}
